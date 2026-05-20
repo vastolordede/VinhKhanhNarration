@@ -6,17 +6,20 @@
 
 Dự án **Thuyết minh tự động đa ngôn ngữ cho phố ẩm thực Vĩnh Khánh**.
 
-Hệ thống được thiết kế theo hướng RESTful API. Backend chịu trách nhiệm xử lý nghiệp vụ, kết nối cơ sở dữ liệu PostgreSQL và cung cấp API cho frontend hoặc các client khác sử dụng.
+Hệ thống gồm:
 
-Frontend hiện tại đang trong quá trình phát triển.
+```text
+backend/   ASP.NET Core RESTful API
+frontend/  React + Vite + TailwindCSS mobile web app
+tests/     Backend automated tests
+```
+
+Backend xử lý nghiệp vụ, kết nối PostgreSQL và cung cấp API.  
+Frontend là web app chạy trên điện thoại, dùng bản đồ, QR code, geofence và Web Speech API để phát thuyết minh.
 
 ---
 
-## 1. Tổng quan dự án
-
-Mục tiêu của hệ thống là hỗ trợ khách tham quan phố ẩm thực Vĩnh Khánh có thể nghe thuyết minh tự động bằng nhiều ngôn ngữ thông qua QR code hoặc geofence.
-
-Các chức năng chính của hệ thống gồm:
+## 1. Chức năng chính
 
 ```text
 - Quản lý tài khoản nội bộ
@@ -26,7 +29,7 @@ Các chức năng chính của hệ thống gồm:
 - Quản lý món ăn
 - Quản lý nội dung thuyết minh
 - Quản lý bản dịch đa ngôn ngữ
-- Quản lý file audio
+- Quản lý file audio hoặc dùng Text-To-Speech
 - Quản lý QR code
 - Tạo phiên khách anonymous
 - Ghi nhận lịch sử nghe
@@ -36,9 +39,36 @@ Các chức năng chính của hệ thống gồm:
 
 ---
 
-## 2. Cấu trúc thư mục
+## 2. Công nghệ sử dụng
 
-Cấu trúc tổng thể của project:
+```text
+Backend:
+- ASP.NET Core Web API
+- PostgreSQL
+- Npgsql
+- Swagger / Swashbuckle
+- BCrypt.Net-Next
+- xUnit
+- FluentAssertions
+- Microsoft.AspNetCore.Mvc.Testing
+
+Frontend:
+- React
+- Vite
+- TypeScript
+- TailwindCSS
+- React Router DOM
+- Axios
+- Leaflet / React Leaflet
+- html5-qrcode
+- Web Speech API
+- Vitest
+- React Testing Library
+```
+
+---
+
+## 3. Cấu trúc project
 
 ```text
 VinhKhanhNarration/
@@ -53,7 +83,6 @@ VinhKhanhNarration/
 │   ├── Swagger/
 │   ├── Utils/
 │   ├── data/
-│   ├── .env
 │   ├── .env.example
 │   ├── appsettings.json
 │   ├── Program.cs
@@ -61,175 +90,77 @@ VinhKhanhNarration/
 │   └── VinhKhanhNarration.Api.csproj
 │
 ├── frontend/
+│   ├── src/
+│   ├── .env.example
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
 │   └── README.md
+│
+├── tests/
+│   └── VinhKhanhNarration.Api.Tests/
 │
 └── README.md
 ```
 
-Trong đó:
-
-```text
-backend/
-- Chứa RESTful API viết bằng ASP.NET Core.
-- Xử lý nghiệp vụ chính của hệ thống.
-- Kết nối PostgreSQL.
-- Cung cấp Swagger để test API.
-
-frontend/
-- Hiện tại đang trong quá trình phát triển.
-- Chi tiết sẽ được cập nhật sau trong README của frontend.
-```
-
 ---
 
-## 3. Công nghệ sử dụng
+## 4. Yêu cầu cài đặt
 
-Backend sử dụng:
+Trước khi chạy project, máy cần có:
 
 ```text
-- ASP.NET Core Web API
+- .NET SDK
+- Node.js LTS
 - PostgreSQL
-- Npgsql
-- Swagger / Swashbuckle
-- BCrypt.Net-Next
-- RESTful API
-- OOP 3 lớp: DTO / DAO / BUS
+- DBeaver hoặc pgAdmin
 ```
 
-Frontend:
+Kiểm tra nhanh:
 
-```text
-- Hiện tại đang trong quá trình phát triển.
+```bash
+dotnet --version
+node -v
+npm -v
 ```
 
 ---
 
-## 4. Cài đặt PostgreSQL trên máy
+## 5. Clone project
 
-Trước khi cấu hình backend, cần cài PostgreSQL trên máy.
-
-Thông tin cần chuẩn bị:
-
-```text
-Host: localhost
-Port: 5432
-Database: vinh_khanh_narration_db
-Username: postgres
-Password: mật khẩu PostgreSQL của máy bạn
+```bash
+git clone <repository-url>
+cd VinhKhanhNarration
 ```
-
-Khi cài PostgreSQL, cần ghi nhớ mật khẩu của user `postgres`.
-
-Ví dụ:
-
-```text
-Username: postgres
-Password: 123456
-```
-
-Mật khẩu này sẽ được dùng để cấu hình file `.env` trong backend.
 
 ---
 
-## 5. Tạo database
+## 6. Setup PostgreSQL
 
-Sau khi cài PostgreSQL, tạo database với tên:
-
-```text
-vinh_khanh_narration_db
-```
-
-Lệnh SQL tạo database:
+Tạo database:
 
 ```sql
 CREATE DATABASE vinh_khanh_narration_db;
 ```
 
-Sau khi tạo database, mở đúng database `vinh_khanh_narration_db` trong công cụ quản lý PostgreSQL như DBeaver hoặc pgAdmin, sau đó chạy script tạo bảng trong thư mục backend.
+Sau đó mở đúng database `vinh_khanh_narration_db` trong DBeaver hoặc pgAdmin.
 
-Script database nằm trong:
+Chạy script tạo bảng trong thư mục:
 
 ```text
 backend/data/
 ```
 
----
-
-## 6. Clone project
-
-Sau khi setup PostgreSQL, clone project về máy.
-
-Cấu trúc sau khi clone nên là:
+Nếu chỉ cần dữ liệu mẫu tối thiểu để frontend hiển thị giao diện, chạy thêm file seed tối thiểu nếu có:
 
 ```text
-VinhKhanhNarration/
-├── backend/
-└── frontend/
+backend/data/seed_minimal.sql
 ```
 
-Nếu clone về mà folder backend có tên khác, có thể đổi tên folder backend lại thành:
+Database tối thiểu cần có dữ liệu cho:
 
 ```text
-backend
-```
-
-Tên folder có thể thay đổi, nhưng nên giữ là `backend` để dễ quản lý và đúng với tài liệu cấu hình.
-
----
-
-## 7. Cấu hình backend
-
-Sau khi clone project và tạo database xong, chuyển sang đọc hướng dẫn cấu hình backend tại:
-
-```text
-backend/README.md
-```
-
-Backend cần cấu hình các thông tin chính sau:
-
-```text
-- DB_HOST
-- DB_PORT
-- DB_NAME
-- DB_USER
-- DB_PASSWORD
-- ASPNETCORE_ENVIRONMENT
-- ASPNETCORE_URLS
-```
-
-Các thông tin này được đặt trong file:
-
-```text
-backend/.env
-```
-
-Không nên ghi trực tiếp connection string vào source code.
-
-Không nên đẩy file `.env` thật lên GitHub vì file này có chứa mật khẩu database.
-
----
-
-## 8. Cấu hình frontend
-
-Frontend hiện tại đang trong quá trình phát triển.
-
-Khi frontend được bổ sung, hướng dẫn cấu hình sẽ được cập nhật trong:
-
-```text
-frontend/README.md
-```
-
----
-
-## 9. Ghi chú về database
-
-Database hiện tại dùng PostgreSQL và bao gồm các nhóm bảng chính:
-
-```text
-admin_users
-
 languages
-
 place_types
 content_types
 target_types
@@ -237,59 +168,231 @@ translation_sources
 trigger_modes
 geofence_event_types
 geofence_event_statuses
-
 places
 dish_categories
 dishes
 place_dishes
-
 narration_contents
 narration_translations
 audio_files
-
 qr_codes
-
-guest_sessions
-guest_poi_states
-geofence_events
-
-listening_histories
-feedbacks
-```
-
-Một số điểm thiết kế quan trọng:
-
-```text
-- Tài khoản nội bộ dùng bảng admin_users.
-- Role nội bộ được fix cứng: Admin, ContentManager, Translator, Reviewer.
-- Khách không cần account riêng.
-- Khách sử dụng guest_session_id.
-- Các loại dữ liệu như place type, content type, target type, translation source, trigger mode, event type, event status được tách thành bảng lookup để dễ CRUD và mở rộng.
-- Geofence dùng places như POI.
-- QR code có thể trỏ tới địa điểm, món ăn hoặc nội dung thuyết minh.
 ```
 
 ---
 
-## 10. Ghi chú phát triển
+## 7. Cấu hình backend
 
-Dự án hiện tại đang tập trung vào backend RESTful API.
-
-Frontend sẽ được phát triển sau.
-
-Backend được thiết kế độc lập để sau này có thể kết nối với nhiều loại client khác nhau, ví dụ:
+Tạo file:
 
 ```text
-- Web frontend
-- Mobile app
-- Admin dashboard
-- Desktop app
+backend/.env
 ```
 
-Miễn client gọi được REST API thì không cần thay đổi kiến trúc backend.
+Có thể copy từ:
 
+```text
+backend/.env.example
+```
 
+Nội dung mẫu:
 
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=vinh_khanh_narration_db
+DB_USER=postgres
+DB_PASSWORD=your_postgres_password
 
+ASPNETCORE_ENVIRONMENT=Development
+ASPNETCORE_URLS=http://localhost:5151
+```
 
+Không commit file `.env` lên GitHub.
 
+---
+
+## 8. Chạy backend
+
+```bash
+cd backend
+dotnet restore
+dotnet run
+```
+
+Backend mặc định chạy tại:
+
+```text
+http://localhost:5151
+```
+
+Swagger để test API:
+
+```text
+http://localhost:5151/swagger
+```
+
+---
+
+## 9. Cấu hình frontend
+
+Tạo file:
+
+```text
+frontend/.env
+```
+
+Có thể copy từ:
+
+```text
+frontend/.env.example
+```
+
+Nội dung mẫu:
+
+```env
+VITE_API_BASE_URL=http://localhost:5151
+VITE_DEFAULT_MAP_LAT=10.7569
+VITE_DEFAULT_MAP_LNG=106.7057
+VITE_DEFAULT_MAP_ZOOM=16
+VITE_GEOFENCE_INTERVAL_MS=10000
+VITE_APP_NAME=VinhKhanhNarration
+VITE_APP_ENV=development
+```
+
+---
+
+## 10. Chạy frontend
+
+Mở terminal mới:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend mặc định chạy tại:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## 11. Chạy test backend
+
+Từ root project:
+
+```bash
+dotnet test tests/VinhKhanhNarration.Api.Tests/VinhKhanhNarration.Api.Tests.csproj
+```
+
+Backend test gồm:
+
+```text
+Unit tests:
+- PasswordHasher
+- SessionGenerator
+- GeoDistanceCalculator
+
+Integration smoke tests:
+- Languages API
+- Places API
+- Guest session API
+- QR resolve API
+- Geofence API
+- Feedback API
+- Listening histories API
+```
+
+Integration test cần PostgreSQL đang chạy và database đã có seed tối thiểu.
+
+---
+
+## 12. Chạy test frontend
+
+```bash
+cd frontend
+npm install
+npm run test:run
+```
+
+Frontend test gồm:
+
+```text
+- useSpeechSynthesis
+- useGeolocation
+- API helper
+- LanguageSelectionScreen
+- NarrationPlayerScreen
+- FeedbackModal
+- QRScannerScreen
+- SettingsScreen
+```
+
+---
+
+## 13. Chạy toàn bộ project khi demo
+
+Terminal 1:
+
+```bash
+cd backend
+dotnet run
+```
+
+Mở Swagger:
+
+```text
+http://localhost:5151/swagger
+```
+
+Terminal 2:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Mở frontend:
+
+```text
+http://localhost:5173
+```
+
+---
+
+## 14. File không nên commit
+
+```text
+backend/.env
+frontend/.env
+backend/bin/
+backend/obj/
+frontend/node_modules/
+frontend/dist/
+.vs/
+.vscode/
+```
+
+---
+
+## 15. File hướng dẫn tạm có thể xóa
+
+Nếu đã cấu hình xong, có thể xóa các file hướng dẫn tạm:
+
+```text
+PATCH_BACKEND_PROGRAM.txt
+PATCH_BACKEND_PROGRAM.md
+PATCH_FRONTEND_PACKAGE_JSON.md
+README_TESTS.md
+```
+
+Chỉ cần giữ các README chính:
+
+```text
+README.md
+backend/README.md
+frontend/README.md
+tests/README.md
+```

@@ -6,27 +6,36 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "tsc -b && vite build",
-    "preview": "vite preview --host 0.0.0.0 --port 4173"
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "typescript": "latest",
+    "axios": "latest",
+    "html5-qrcode": "latest",
+    "leaflet": "latest",
+    "lucide-react": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest",
-    "axios": "latest",
-    "leaflet": "latest",
     "react-leaflet": "latest",
-    "html5-qrcode": "latest",
-    "lucide-react": "latest"
+    "react-router-dom": "latest",
+    "typescript": "latest",
+    "vite": "latest"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.17",
-    "postcss": "latest",
-    "autoprefixer": "latest",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/leaflet": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "@types/leaflet": "latest"
+    "@vitest/coverage-v8": "^4.1.7",
+    "autoprefixer": "latest",
+    "jsdom": "^29.1.1",
+    "postcss": "latest",
+    "tailwindcss": "^3.4.17",
+    "vitest": "^4.1.7"
   }
 }
