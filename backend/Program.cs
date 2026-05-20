@@ -1,4 +1,3 @@
-using Microsoft.OpenApi.Models;
 using VinhKhanhNarration.Api.BUS;
 using VinhKhanhNarration.Api.DAO;
 using VinhKhanhNarration.Api.Database;
@@ -9,10 +8,24 @@ EnvLoader.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Controllers + Swagger
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddVinhKhanhSwagger();
 
+// CORS phải đặt TRƯỚC builder.Build()
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendDev", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+// Common services
 builder.Services.AddSingleton<DbConnectionFactory>();
 builder.Services.AddSingleton<PasswordHasher>();
 builder.Services.AddSingleton<SessionGenerator>();
@@ -78,6 +91,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+// CORS phải đặt trước Authorization và MapControllers
+app.UseCors("FrontendDev");
+
+app.UseAuthorization();
+
 app.MapControllers();
+
 app.Run();
