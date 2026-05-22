@@ -16,13 +16,26 @@ import FeedbackModal from './FeedbackModal';
 const defaultLat = Number(import.meta.env.VITE_DEFAULT_MAP_LAT || 10.7569);
 const defaultLng = Number(import.meta.env.VITE_DEFAULT_MAP_LNG || 106.7057);
 const defaultZoom = Number(import.meta.env.VITE_DEFAULT_MAP_ZOOM || 16);
-const placeIcon = new DivIcon({ className: 'marker-place' });
-const userIcon = new DivIcon({ className: 'marker-user' });
+const placeIcon = new DivIcon({
+  className: '',
+  html: '<div class="marker-place"></div>',
+  iconSize: [28, 28],
+  iconAnchor: [14, 14]
+});
+
+const userIcon = new DivIcon({
+  className: '',
+  html: '<div class="marker-user"></div>',
+  iconSize: [22, 22],
+  iconAnchor: [11, 11]
+});
 
 function MapFocus({ lat, lng }: { lat?: number; lng?: number }) {
   const map = useMap();
   useEffect(() => {
-    if (lat && lng) map.setView([lat, lng], 17);
+    if (lat === undefined || lng === undefined) return;
+
+map.setView([lat, lng], 17);
   }, [lat, lng, map]);
   return null;
 }
@@ -73,8 +86,28 @@ export default function MapExploreScreen() {
     }
   }
 
-  const validPlaces = useMemo(() => places.filter((p) => p.latitude && p.longitude), [places]);
+  const validPlaces = useMemo(
+  () =>
+    places.filter(
+      (p): p is PlaceDTO & { latitude: number; longitude: number } =>
+        p.latitude !== null &&
+        p.latitude !== undefined &&
+        p.longitude !== null &&
+        p.longitude !== undefined
+    ),
+  [places]
+);
+const focusLat =
+  geo.position?.latitude ??
+  selectedPlace?.latitude ??
+  validPlaces[0]?.latitude ??
+  undefined;
 
+const focusLng =
+  geo.position?.longitude ??
+  selectedPlace?.longitude ??
+  validPlaces[0]?.longitude ??
+  undefined;
   return (
     <div className="relative h-screen bg-slate-100 pb-20">
       <MapContainer center={[defaultLat, defaultLng]} zoom={defaultZoom} className="h-full w-full">
@@ -83,7 +116,7 @@ export default function MapExploreScreen() {
           <Marker key={place.placeId} position={[Number(place.latitude), Number(place.longitude)]} icon={placeIcon} eventHandlers={{ click: () => openPlace(place) }} />
         ))}
         {geo.position && <Marker position={[geo.position.latitude, geo.position.longitude]} icon={userIcon} />}
-        <MapFocus lat={geo.position?.latitude} lng={geo.position?.longitude} />
+        <MapFocus lat={focusLat} lng={focusLng} />
       </MapContainer>
 
       <div className="pointer-events-none absolute left-4 right-4 top-4 z-[700] space-y-3">
@@ -92,6 +125,9 @@ export default function MapExploreScreen() {
             <div>
               <p className="font-bold text-slate-900">Bản đồ phố ẩm thực</p>
               <p className="text-xs text-slate-500">{status}</p>
+              <p className="text-xs font-semibold text-teal-700">
+  Places loaded: {validPlaces.length}
+</p>
             </div>
             <Button variant="secondary" onClick={requestLocation}><LocateFixed size={18} /></Button>
           </div>

@@ -103,7 +103,7 @@ INSERT INTO admin_users (full_name, email, password_hash, role, is_active)
 SELECT
     'System Admin',
     'admin@vinhkhanh.local',
-    'DEV_PASSWORD_HASH',
+    '$2a$10$YLcrI6L7gaaeolTeVRDTsOat/mWthdTayXTz/M.IG/EraGbMVobom',
     'Admin',
     TRUE
 WHERE NOT EXISTS (
