@@ -3,6 +3,7 @@ using VinhKhanhNarration.Api.DAO;
 using VinhKhanhNarration.Api.Database;
 using VinhKhanhNarration.Api.Swagger;
 using VinhKhanhNarration.Api.Utils;
+using VinhKhanhNarration.Api.DTO;
 
 EnvLoader.Load();
 
@@ -78,6 +79,7 @@ builder.Services.AddScoped<GuestPoiStateBUS>();
 builder.Services.AddScoped<GeofenceBUS>();
 builder.Services.AddScoped<ListeningHistoryBUS>();
 builder.Services.AddScoped<FeedbackBUS>();
+builder.Services.AddHttpClient<GeocodingBUS>();
 
 var app = builder.Build();
 
@@ -97,6 +99,35 @@ app.UseCors("FrontendDev");
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapPost("/api/admin/geocoding/resolve", async (GeocodingRequestDTO request, GeocodingBUS geocodingBUS) =>
+{
+    if (request == null || string.IsNullOrWhiteSpace(request.Address))
+    {
+        return Results.BadRequest(new
+        {
+            success = false,
+            message = "Address is required."
+        });
+    }
+
+    var result = await geocodingBUS.ResolveAddressAsync(request.Address);
+
+    if (result == null)
+    {
+        return Results.NotFound(new
+        {
+            success = false,
+            message = "Không tìm thấy tọa độ cho địa chỉ này."
+        });
+    }
+
+    return Results.Ok(new
+    {
+        success = true,
+        message = "Geocoding success.",
+        data = result
+    });
+});
 
 app.Run();
 

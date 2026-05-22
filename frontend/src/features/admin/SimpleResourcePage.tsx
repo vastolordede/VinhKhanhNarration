@@ -1,4 +1,5 @@
 import { FormEvent, ReactNode, useEffect, useState } from 'react';
+import type { Dispatch, SetStateAction } from 'react';
 import { createItem, getList, patchItem, updateItem } from '../../api/crud';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
@@ -12,6 +13,7 @@ export type FieldConfig = {
   label: string;
   type?: 'text' | 'number' | 'textarea' | 'checkbox';
   placeholder?: string;
+  disabled?: boolean;
 };
 
 export type ResourceConfig = {
@@ -22,6 +24,13 @@ export type ResourceConfig = {
   fields: FieldConfig[];
   columns: { key: string; label: string; render?: (row: any) => ReactNode }[];
   softDelete?: boolean;
+
+  extraFormActions?: (
+    form: Record<string, any>,
+    setForm: Dispatch<SetStateAction<Record<string, any>>>
+  ) => ReactNode;
+
+  extraFormActionsAfterField?: string;
 };
 
 export default function SimpleResourcePage({ config }: { config: ResourceConfig }) {
@@ -39,10 +48,13 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     }
   }
 
-  useEffect(() => { load(); }, [config.endpoint]);
+  useEffect(() => {
+    load();
+  }, [config.endpoint]);
 
   function getRowId(row: any) {
     if (config.idKey && row[config.idKey] !== undefined) return row[config.idKey];
+
     const key = Object.keys(row).find((k) => k.toLowerCase().endsWith('id'));
     return key ? row[key] : undefined;
   }
@@ -60,9 +72,11 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   async function submit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+
     try {
       if (editing) await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
       else await createItem(config.endpoint, form);
+
       resetForm();
       await load();
     } catch {
@@ -79,40 +93,100 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     }
   }
 
+  function renderField(field: FieldConfig) {
+    return (
+      <label key={field.name} className="block">
+        <span className="mb-1 block text-sm font-semibold text-slate-700">{field.label}</span>
+
+        {field.type === 'textarea' ? (
+          <Textarea
+            value={form[field.name] ?? ''}
+            onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
+            placeholder={field.placeholder}
+            rows={4}
+            disabled={field.disabled}
+          />
+        ) : field.type === 'checkbox' ? (
+          <input
+            type="checkbox"
+            checked={Boolean(form[field.name])}
+            onChange={(e) => setForm({ ...form, [field.name]: e.target.checked })}
+            className="h-5 w-5"
+            disabled={field.disabled}
+          />
+        ) : (
+          <Input
+            type={field.type === 'number' ? 'number' : 'text'}
+            value={form[field.name] ?? ''}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                [field.name]: field.type === 'number' ? Number(e.target.value) : e.target.value
+              })
+            }
+            placeholder={field.placeholder}
+            disabled={field.disabled}
+          />
+        )}
+      </label>
+    );
+  }
+
   const rows = items.map((item) => [
-    ...config.columns.map((col) => col.render ? col.render(item) : String(item[col.key] ?? '')),
+    ...config.columns.map((col) => (col.render ? col.render(item) : String(item[col.key] ?? ''))),
     <div className="flex gap-2" key="actions">
-      <Button variant="secondary" className="px-3 py-2" onClick={() => startEdit(item)}>Sửa</Button>
-      {config.softDelete !== false && <Button variant="danger" className="px-3 py-2" onClick={() => deactivate(item)}>Ẩn</Button>}
+      <Button variant="secondary" className="px-3 py-2" onClick={() => startEdit(item)}>
+        Sửa
+      </Button>
+
+      {config.softDelete !== false && (
+        <Button variant="danger" className="px-3 py-2" onClick={() => deactivate(item)}>
+          Ẩn
+        </Button>
+      )}
     </div>
   ]);
+
+  const extraFormActions = config.extraFormActions?.(form, setForm);
+  const hasPlacedExtraActions =
+    Boolean(config.extraFormActionsAfterField) &&
+    config.fields.some((field) => field.name === config.extraFormActionsAfterField);
 
   return (
     <div>
       <PageHeader title={config.title} description={config.description} />
+
       <div className="grid gap-5 xl:grid-cols-[420px_1fr]">
         <Card>
-          <h2 className="mb-4 font-bold text-slate-900">{editing ? 'Cập nhật dữ liệu' : 'Thêm dữ liệu'}</h2>
+          <h2 className="mb-4 font-bold text-slate-900">
+            {editing ? 'Cập nhật dữ liệu' : 'Thêm dữ liệu'}
+          </h2>
+
           <form className="space-y-3" onSubmit={submit}>
             {config.fields.map((field) => (
-              <label key={field.name} className="block">
-                <span className="mb-1 block text-sm font-semibold text-slate-700">{field.label}</span>
-                {field.type === 'textarea' ? (
-                  <Textarea value={form[field.name] ?? ''} onChange={(e) => setForm({ ...form, [field.name]: e.target.value })} placeholder={field.placeholder} rows={4} />
-                ) : field.type === 'checkbox' ? (
-                  <input type="checkbox" checked={Boolean(form[field.name])} onChange={(e) => setForm({ ...form, [field.name]: e.target.checked })} className="h-5 w-5" />
-                ) : (
-                  <Input type={field.type === 'number' ? 'number' : 'text'} value={form[field.name] ?? ''} onChange={(e) => setForm({ ...form, [field.name]: field.type === 'number' ? Number(e.target.value) : e.target.value })} placeholder={field.placeholder} />
-                )}
-              </label>
+              <div key={field.name} className="space-y-2">
+                {renderField(field)}
+
+                {config.extraFormActionsAfterField === field.name && extraFormActions}
+              </div>
             ))}
+
+            {!hasPlacedExtraActions && extraFormActions}
+
             {error && <p className="text-sm text-rose-600">{error}</p>}
+
             <div className="flex gap-2">
               <Button>{editing ? 'Lưu thay đổi' : 'Tạo mới'}</Button>
-              {editing && <Button type="button" variant="secondary" onClick={resetForm}>Hủy</Button>}
+
+              {editing && (
+                <Button type="button" variant="secondary" onClick={resetForm}>
+                  Hủy
+                </Button>
+              )}
             </div>
           </form>
         </Card>
+
         <DataTable headers={[...config.columns.map((c) => c.label), 'Thao tác']} rows={rows} />
       </div>
     </div>

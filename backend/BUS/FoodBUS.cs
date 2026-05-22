@@ -6,11 +6,55 @@ namespace VinhKhanhNarration.Api.BUS;
 
 public class PlaceBUS : ICrudBUS<PlaceDTO, long>
 {
-    private readonly PlaceDAO _dao;
-    public PlaceBUS(PlaceDAO dao) => _dao = dao;
+   private readonly PlaceDAO _dao;
+private readonly GeocodingBUS _geocodingBUS;
 
-    public long Create(PlaceDTO dto) { ValidatePlace(dto); return _dao.Insert(dto); }
-    public bool Update(PlaceDTO dto) { ValidatePlace(dto); return _dao.Update(dto); }
+public PlaceBUS(PlaceDAO dao, GeocodingBUS geocodingBUS)
+{
+    _dao = dao;
+    _geocodingBUS = geocodingBUS;
+}
+
+public long Create(PlaceDTO dto)
+{
+    TryFillCoordinatesFromAddress(dto);
+    ValidatePlace(dto);
+    return _dao.Insert(dto);
+}
+
+public bool Update(PlaceDTO dto)
+{
+    TryFillCoordinatesFromAddress(dto);
+    ValidatePlace(dto);
+    return _dao.Update(dto);
+}
+
+private void TryFillCoordinatesFromAddress(PlaceDTO dto)
+{
+    var missingCoordinates =
+        dto.Latitude == null ||
+        dto.Longitude == null ||
+        dto.Latitude == 0 ||
+        dto.Longitude == 0;
+
+    if (!missingCoordinates || string.IsNullOrWhiteSpace(dto.Address))
+    {
+        return;
+    }
+
+    var geo = _geocodingBUS
+        .ResolveAddressAsync(dto.Address)
+        .GetAwaiter()
+        .GetResult();
+
+    if (geo == null)
+    {
+        return;
+    }
+
+    dto.Latitude = geo.Latitude;
+    dto.Longitude = geo.Longitude;
+}
     public bool Deactivate(long id) => _dao.SoftDelete(id);
     public bool Restore(long id) => _dao.Restore(id);
     public PlaceDTO? GetById(long id) => _dao.GetById(id);

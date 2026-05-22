@@ -24,5 +24,6 @@ export const endpoints = {
   feedbacks: '/api/public/feedbacks',
   adminFeedbacks: '/api/admin/feedbacks',
   adminListeningHistories: '/api/admin/listening-histories',
-  adminGeofenceEvents: '/api/admin/geofence-events'
+  adminGeofenceEvents: '/api/admin/geofence-events',
+  geocodingResolve: '/api/admin/geocoding/resolve'
 };
