@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { DivIcon } from 'leaflet';
+import { DivIcon, latLngBounds } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
 import { LocateFixed, Volume2 } from 'lucide-react';
 import {
@@ -36,14 +36,57 @@ const userIcon = new DivIcon({
   iconAnchor: [11, 11]
 });
 
-function MapFocus({ lat, lng }: { lat?: number; lng?: number }) {
+function MapAutoFocus({
+  places,
+  selectedPlace,
+  userPosition
+}: {
+  places: Array<PlaceDTO & { latitude: number; longitude: number }>;
+  selectedPlace: PlaceDTO | null;
+  userPosition?: { latitude: number; longitude: number };
+}) {
   const map = useMap();
 
   useEffect(() => {
-    if (lat === undefined || lng === undefined) return;
+    if (userPosition) {
+      map.setView([userPosition.latitude, userPosition.longitude], 17, {
+        animate: true
+      });
+      return;
+    }
 
-    map.setView([lat, lng], 17);
-  }, [lat, lng, map]);
+    if (
+      selectedPlace?.latitude !== null &&
+      selectedPlace?.latitude !== undefined &&
+      selectedPlace?.longitude !== null &&
+      selectedPlace?.longitude !== undefined
+    ) {
+      map.setView([selectedPlace.latitude, selectedPlace.longitude], 17, {
+        animate: true
+      });
+      return;
+    }
+
+    if (places.length === 1) {
+      map.setView([places[0].latitude, places[0].longitude], 17, {
+        animate: true
+      });
+      return;
+    }
+
+    if (places.length > 1) {
+      const bounds = latLngBounds(
+        places.map((place) => [place.latitude, place.longitude])
+      );
+
+      map.fitBounds(bounds, {
+        paddingTopLeft: [40, 140],
+        paddingBottomRight: [40, 120],
+        maxZoom: 17,
+        animate: true
+      });
+    }
+  }, [map, places, selectedPlace, userPosition]);
 
   return null;
 }
@@ -134,17 +177,7 @@ export default function MapExploreScreen() {
     [places]
   );
 
-  const focusLat =
-    geo.position?.latitude ??
-    selectedPlace?.latitude ??
-    validPlaces[0]?.latitude ??
-    undefined;
 
-  const focusLng =
-    geo.position?.longitude ??
-    selectedPlace?.longitude ??
-    validPlaces[0]?.longitude ??
-    undefined;
 
   return (
     <div className="relative h-screen bg-slate-100 pb-20">
@@ -174,7 +207,11 @@ export default function MapExploreScreen() {
           />
         )}
 
-        <MapFocus lat={focusLat} lng={focusLng} />
+        <MapAutoFocus
+  places={validPlaces}
+  selectedPlace={selectedPlace}
+  userPosition={geo.position ?? undefined}
+/>
       </MapContainer>
 
       <div className="pointer-events-none absolute left-4 right-4 top-4 z-[700] space-y-3">
