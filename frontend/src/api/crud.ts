@@ -34,6 +34,9 @@ export type GeocodingResult = {
   displayName: string;
   latitude: number;
   longitude: number;
+  isExactHouseNumber: boolean;
+  matchQuality: string;
+  warning?: string | null;
 };
 
 export async function resolveAddress(address: string): Promise<GeocodingResult> {

@@ -1,0 +1,170 @@
+[
+  {
+    "place_id": 1,
+    "address": "40 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 2,
+    "address": "22 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 3,
+    "address": "58 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 4,
+    "address": "72 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 5,
+    "address": "88 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 6,
+    "address": "102 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 7,
+    "address": "118 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 8,
+    "address": "136 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 9,
+    "address": "154 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 10,
+    "address": "168 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 11,
+    "address": "182 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 12,
+    "address": "198 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 13,
+    "address": "210 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 14,
+    "address": "226 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 15,
+    "address": "240 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 16,
+    "address": "252 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 17,
+    "address": "268 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 18,
+    "address": "282 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 19,
+    "address": "300 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 20,
+    "address": "318 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 21,
+    "address": "Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 22,
+    "address": "188 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 23,
+    "address": "60 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  },
+  {
+    "place_id": 24,
+    "address": "230 Đ. Vĩnh Khánh, Khánh Hội, Hồ Chí Minh, Việt Nam",
+    "ok": false,
+    "status": "REQUEST_DENIED",
+    "error_message": "The provided API key is invalid. "
+  }
+]
