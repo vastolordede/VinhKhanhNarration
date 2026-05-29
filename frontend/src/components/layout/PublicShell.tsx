@@ -1,5 +1,7 @@
 import { Outlet, NavLink } from 'react-router-dom';
 import { Map, QrCode, Settings } from 'lucide-react';
+import { LanguageSwitcher } from '../common/LanguageSwitcher';
+import { useI18n } from '../../i18n/useI18n';
 
 const navItems = [
   { to: '/app/map', label: 'Bản đồ', icon: Map },
@@ -8,9 +10,16 @@ const navItems = [
 ];
 
 export default function PublicShell() {
+  const { tx } = useI18n();
+
   return (
     <div className="public-page-bg">
       <div className="mobile-shell responsive-public-shell relative overflow-hidden">
+        <div className="fixed right-4 top-4 z-[850]">
+          {/* UI language only. This does NOT change narration/listening language. */}
+          <LanguageSwitcher compact />
+        </div>
+
         <main className="min-h-screen pb-20">
           <Outlet />
         </main>
@@ -31,7 +40,7 @@ export default function PublicShell() {
                   }
                 >
                   <Icon size={20} />
-                  <span>{item.label}</span>
+                  <span>{tx(item.label)}</span>
                 </NavLink>
               );
             })}

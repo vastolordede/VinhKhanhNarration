@@ -1,4 +1,5 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { useI18n } from '../../i18n/useI18n';
 
 type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
@@ -9,13 +10,26 @@ const styles: Record<Variant, string> = {
   danger: 'bg-rose-600 text-white hover:bg-rose-700'
 };
 
-export function Button({ children, variant = 'primary', className = '', ...props }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant; children: ReactNode }) {
+export function Button({
+  children,
+  variant = 'primary',
+  className = '',
+  ...props
+}: ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: Variant;
+  children: ReactNode;
+}) {
+  const { tx } = useI18n();
+
+  const translatedChildren =
+    typeof children === 'string' ? tx(children) : children;
+
   return (
     <button
       className={`inline-flex items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50 ${styles[variant]} ${className}`}
       {...props}
     >
-      {children}
+      {translatedChildren}
     </button>
   );
 }

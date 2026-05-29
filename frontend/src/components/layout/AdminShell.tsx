@@ -11,6 +11,8 @@ import {
   ScrollText,
   Utensils
 } from 'lucide-react';
+import { LanguageSwitcher } from '../common/LanguageSwitcher';
+import { useI18n } from '../../i18n/useI18n';
 
 const navItems = [
   { to: '/admin', label: 'Dashboard', icon: BarChart3 },
@@ -28,12 +30,18 @@ const navItems = [
 ];
 
 export default function AdminShell() {
+  const { tx } = useI18n();
+
   return (
     <div className="admin-shell flex min-h-screen w-full bg-slate-50">
       <aside className="hidden min-h-screen w-72 shrink-0 border-r border-slate-200 bg-white p-4 lg:block">
-        <div className="mb-6 rounded-3xl bg-teal-700 p-4 text-white">
-          <p className="text-sm opacity-80">Admin</p>
+        <div className="mb-4 rounded-3xl bg-teal-700 p-4 text-white">
+          <p className="text-sm opacity-80">{tx('Admin')}</p>
           <h1 className="text-xl font-bold">Vĩnh Khánh Narration</h1>
+        </div>
+
+        <div className="mb-5">
+          <LanguageSwitcher />
         </div>
 
         <nav className="space-y-1">
@@ -52,7 +60,7 @@ export default function AdminShell() {
                 }
               >
                 <Icon size={18} />
-                {item.label}
+                {tx(item.label)}
               </NavLink>
             );
           })}
