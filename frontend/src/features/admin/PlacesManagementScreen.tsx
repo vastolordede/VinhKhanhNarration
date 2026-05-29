@@ -23,15 +23,45 @@ export default function PlacesManagementScreen() {
             }
 
             try {
-              const result = await resolveAddress(address);
+            const result = await resolveAddress(address);
 
-              setForm((prev) => ({
-                ...prev,
-                latitude: result.latitude,
-                longitude: result.longitude
-              }));
+if (!result.isExactHouseNumber) {
+  const shouldUseApproximate = window.confirm(
+    `Nominatim chỉ tìm được tọa độ gần đúng cho địa chỉ này.
 
-              alert(`Đã lấy tọa độ: ${result.latitude}, ${result.longitude}`);
+Địa chỉ trả về:
+${result.displayName}
+
+Tọa độ:
+${result.latitude}, ${result.longitude}
+
+Lý do:
+${result.warning ?? 'Kết quả không khớp chính xác số nhà.'}
+
+Bạn có muốn dùng tọa độ gần đúng này không?`
+  );
+
+  if (!shouldUseApproximate) {
+    return;
+  }
+}
+
+setForm((prev) => ({
+  ...prev,
+  latitude: result.latitude,
+  longitude: result.longitude
+}));
+
+alert(
+  `Đã lấy tọa độ:
+${result.latitude}, ${result.longitude}
+
+Địa chỉ trả về:
+${result.displayName}
+
+Độ khớp:
+${result.matchQuality}`
+);
             } catch {
               alert('Không tìm thấy tọa độ cho địa chỉ này.');
             }
@@ -54,20 +84,18 @@ export default function PlacesManagementScreen() {
           { name: 'placeTypeId', label: 'Place Type Id', type: 'number' },
           { name: 'address', label: 'Address' },
           { name: 'description', label: 'Description', type: 'textarea' },
-          {
-            name: 'latitude',
-            label: 'Latitude',
-            type: 'number',
-            placeholder: 'Tự động lấy từ địa chỉ',
-            disabled: true
-          },
-          {
-            name: 'longitude',
-            label: 'Longitude',
-            type: 'number',
-            placeholder: 'Tự động lấy từ địa chỉ',
-            disabled: true
-          },
+         {
+  name: 'latitude',
+  label: 'Latitude',
+  type: 'number',
+  placeholder: 'Tự động lấy từ địa chỉ hoặc nhập tay'
+},
+{
+  name: 'longitude',
+  label: 'Longitude',
+  type: 'number',
+  placeholder: 'Tự động lấy từ địa chỉ hoặc nhập tay'
+},
           { name: 'openingHours', label: 'Opening Hours' },
           { name: 'imageUrl', label: 'Image URL' },
           { name: 'isPoi', label: 'Is POI', type: 'checkbox' },
