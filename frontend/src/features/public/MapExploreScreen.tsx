@@ -6,6 +6,8 @@ import { LocateFixed, Volume2 } from 'lucide-react';
 import {
   getActivePlaces,
   getPlaceDishes,
+  getNarrationsByPlace,
+  getTranslation,
   resolvePlaceNarration
 } from '../../api/publicApi';
 import { BottomSheet } from '../../components/ui/BottomSheet';
@@ -94,7 +96,11 @@ function MapAutoFocus({
 export default function MapExploreScreen() {
   const [places, setPlaces] = useState<PlaceDTO[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceDTO | null>(null);
-  const [menu, setMenu] = useState<PlaceDishDTO[]>([]);
+const [selectedPlaceTranslation, setSelectedPlaceTranslation] = useState<{
+  title: string;
+  text: string;
+} | null>(null);
+const [menu, setMenu] = useState<PlaceDishDTO[]>([]);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [statusKey, setStatusKey] = useState('public.map.defaultStatus');
 
@@ -123,16 +129,50 @@ export default function MapExploreScreen() {
       handlePosition(geo.position);
     }
   }, [geo.position, handlePosition]);
+async function loadSelectedPlaceTranslation(place: PlaceDTO) {
+  if (!language) {
+    setSelectedPlaceTranslation(null);
+    return;
+  }
 
-  const openPlace = useCallback(async (place: PlaceDTO) => {
-    setSelectedPlace(place);
+  try {
+    const narrations = await getNarrationsByPlace(place.placeId);
+    const narration = narrations.find((item) => item.isActive) ?? narrations[0];
 
-    try {
-      setMenu(await getPlaceDishes(place.placeId));
-    } catch {
-      setMenu([]);
+    if (!narration) {
+      setSelectedPlaceTranslation(null);
+      return;
     }
-  }, []);
+
+    const translation = await getTranslation(
+      narration.narrationId,
+      language.languageId
+    );
+
+    setSelectedPlaceTranslation({
+      title: translation?.translatedTitle || narration.title || place.placeName,
+      text:
+        translation?.translatedText ||
+        narration.originalText ||
+        place.description ||
+        ''
+    });
+  } catch {
+    setSelectedPlaceTranslation(null);
+  }
+}
+  const openPlace = useCallback(async (place: PlaceDTO) => {
+  setSelectedPlace(place);
+  setSelectedPlaceTranslation(null);
+
+  try {
+    setMenu(await getPlaceDishes(place.placeId));
+  } catch {
+    setMenu([]);
+  }
+
+  await loadSelectedPlaceTranslation(place);
+}, [language]);
 
   async function listenPlace() {
     if (!selectedPlace || !language) return;
@@ -254,8 +294,8 @@ export default function MapExploreScreen() {
             <div className="flex items-start justify-between gap-3 pr-10">
               <div>
                 <h2 className="text-xl font-bold text-slate-900">
-                  {selectedPlace.placeName}
-                </h2>
+  {selectedPlaceTranslation?.title || selectedPlace.placeName}
+</h2>
 
                 <p className="text-sm text-slate-500">
                   {selectedPlace.address || t('public.map.noAddress')}
@@ -276,8 +316,10 @@ export default function MapExploreScreen() {
             )}
 
             <p className="text-sm leading-6 text-slate-700">
-              {selectedPlace.description || t('public.map.noDescription')}
-            </p>
+  {selectedPlaceTranslation?.text ||
+    selectedPlace.description ||
+    t('public.map.noDescription')}
+</p>  
 
             <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
               <p>

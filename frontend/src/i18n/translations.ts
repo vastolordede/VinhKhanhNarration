@@ -1,9 +1,12 @@
-export type UiLanguage = 'vi' | 'en';
+export type UiLanguage = 'vi' | 'en' | 'ja' | 'ko' | 'zh';
 
 const keyTranslations: Record<UiLanguage, Record<string, string>> = {
   vi: {
     'language.vi': 'Tiếng Việt',
     'language.en': 'English',
+    'language.ja': '日本語',
+'language.ko': '한국어',
+'language.zh': '中文',
     'language.switch': 'Ngôn ngữ',
     'language.current': 'Ngôn ngữ hiện tại',
 
@@ -14,17 +17,15 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
     'public.settings.tracking': 'Theo dõi vị trí',
     'public.settings.trackingDescription': 'Có thể bật/tắt trực tiếp ở màn hình bản đồ.',
         'public.settings.guestSession': 'Phiên khách',
-    'public.settings.uiLanguage': 'Ngôn ngữ giao diện',
-    'public.settings.uiLanguageDescription': 'Dùng nút VI / EN ở góc trên bên phải để đổi ngôn ngữ giao diện.',
-    'public.settings.narrationLanguage': 'Ngôn ngữ thuyết minh',
-    'public.settings.noNarrationLanguage': 'Chưa chọn',
-    'public.settings.narrationLanguageDescription': 'Ngôn ngữ này được dùng để lấy bản dịch và đọc thuyết minh từ hệ thống.',
-    'public.settings.changeNarrationLanguage': 'Đổi ngôn ngữ thuyết minh',
+    'public.settings.narrationLanguage': 'Ngôn ngữ',
+'public.settings.noNarrationLanguage': 'Chưa chọn',
+'public.settings.narrationLanguageDescription': 'Ngôn ngữ này được dùng cho giao diện, bản dịch và đọc thuyết minh từ hệ thống.',
+'public.settings.changeNarrationLanguage': 'Đổi ngôn ngữ',
     'public.settings.enableTracking': 'Bật theo dõi',
     'public.settings.disableTracking': 'Tắt theo dõi',
 
-    'public.languageSelection.title': 'Chọn ngôn ngữ thuyết minh',
-    'public.languageSelection.description': 'Ngôn ngữ này sẽ được dùng để lấy bản dịch và đọc thuyết minh bằng TTS.',
+    'public.languageSelection.title': 'Chọn ngôn ngữ',
+'public.languageSelection.description': 'Ngôn ngữ này sẽ được dùng cho giao diện, bản dịch và giọng đọc thuyết minh.',
     'public.languageSelection.loading': 'Đang tải ngôn ngữ...',
     'public.languageSelection.empty': 'Chưa có ngôn ngữ khả dụng.',
     'public.languageSelection.choose': 'Chọn',
@@ -77,7 +78,20 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
     'public.feedback.title': 'Gửi đánh giá',
     'public.feedback.placeholder': 'Cảm nhận của bạn...',
     'public.feedback.sending': 'Đang gửi...',
-    'public.feedback.submit': 'Gửi feedback'
+    'public.feedback.submit': 'Gửi feedback',
+
+    'public.nav.map': 'Bản đồ',
+'public.nav.qr': 'QR',
+'public.nav.settings': 'Cài đặt',
+
+'public.player.source.geofence': 'Tự động theo vị trí',
+'public.player.source.qr': 'Quét QR',
+'public.player.source.place': 'Địa điểm',
+'public.player.source.dish': 'Món ăn',
+'public.player.source.narration': 'Thuyết minh',
+'public.player.source.manual': 'Thủ công',
+'public.player.audioFile': 'Audio file',
+'public.player.browserTts': 'TTS trình duyệt',
   },
 
   en: {
@@ -95,15 +109,15 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
         'public.settings.guestSession': 'Guest Session',
     'public.settings.uiLanguage': 'Interface language',
     'public.settings.uiLanguageDescription': 'Use the VI / EN switch in the top-right corner to change the interface language.',
-    'public.settings.narrationLanguage': 'Narration language',
-    'public.settings.noNarrationLanguage': 'Not selected',
-    'public.settings.narrationLanguageDescription': 'This language is used to retrieve translations and play narration from the system.',
-    'public.settings.changeNarrationLanguage': 'Change narration language',
+    'public.settings.narrationLanguage': 'Language',
+'public.settings.noNarrationLanguage': 'Not selected',
+'public.settings.narrationLanguageDescription': 'This language is used for the interface, translations, and narration playback.',
+'public.settings.changeNarrationLanguage': 'Change language',
     'public.settings.enableTracking': 'Enable tracking',
     'public.settings.disableTracking': 'Disable tracking',
 
-    'public.languageSelection.title': 'Choose narration language',
-    'public.languageSelection.description': 'This language will be used to retrieve translations and read narration using TTS.',
+    'public.languageSelection.title': 'Choose language',
+'public.languageSelection.description': 'This language will be used for the interface, translations, and narration voice.',
     'public.languageSelection.loading': 'Loading languages...',
     'public.languageSelection.empty': 'No available languages.',
     'public.languageSelection.choose': 'Choose',
@@ -156,7 +170,297 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
     'public.feedback.title': 'Send feedback',
     'public.feedback.placeholder': 'Share your thoughts...',
     'public.feedback.sending': 'Sending...',
-    'public.feedback.submit': 'Submit feedback'
+    'public.feedback.submit': 'Submit feedback',
+    'public.nav.map': 'Map',
+'public.nav.qr': 'QR',
+'public.nav.settings': 'Settings',
+
+'public.player.source.geofence': 'Location-based',
+'public.player.source.qr': 'QR scan',
+'public.player.source.place': 'Place',
+'public.player.source.dish': 'Dish',
+'public.player.source.narration': 'Narration',
+'public.player.source.manual': 'Manual',
+'public.player.audioFile': 'Audio file',
+'public.player.browserTts': 'Browser TTS',
+  },
+    ja: {
+    'language.vi': 'ベトナム語',
+    'language.en': '英語',
+    'language.ja': '日本語',
+    'language.ko': '韓国語',
+    'language.zh': '中国語',
+    'language.switch': '言語',
+    'language.current': '現在の言語',
+
+    'public.settings.title': '設定',
+    'public.settings.noSession': 'なし',
+    'public.settings.noLanguage': '未選択',
+    'public.settings.changeLanguage': '言語を変更',
+    'public.settings.tracking': '位置情報の追跡',
+    'public.settings.trackingDescription': '地図画面で直接オン／オフを切り替えられます。',
+    'public.settings.guestSession': 'ゲストセッション',
+    'public.settings.narrationLanguage': '言語',
+    'public.settings.noNarrationLanguage': '未選択',
+    'public.settings.narrationLanguageDescription': 'この言語は、画面表示、翻訳、音声ガイドに使用されます。',
+    'public.settings.changeNarrationLanguage': '言語を変更',
+    'public.settings.enableTracking': '追跡を有効にする',
+    'public.settings.disableTracking': '追跡を無効にする',
+
+    'public.languageSelection.title': '言語を選択',
+    'public.languageSelection.description': 'この言語は、画面表示、翻訳、音声ガイドに使用されます。',
+    'public.languageSelection.loading': '言語を読み込み中...',
+    'public.languageSelection.empty': '利用可能な言語がありません。',
+    'public.languageSelection.choose': '選択',
+
+    'public.map.title': 'グルメ通りマップ',
+    'public.map.defaultStatus': 'Vinh Khanh グルメ通りエリアを表示しています。',
+    'public.map.placesLoaded': '読み込まれた場所',
+    'public.map.enableTracking': '位置情報の追跡を有効にする',
+    'public.map.disableTracking': '位置情報の追跡を無効にする',
+    'public.map.noAddress': '住所がありません',
+    'public.map.noDescription': 'この場所の説明はまだありません。',
+    'public.map.openingHours': '営業時間',
+    'public.map.geofenceRadius': 'ジオフェンス半径',
+    'public.map.dishesTitle': '料理 / 価格表',
+    'public.map.noDishes': 'この場所の料理情報はまだありません。',
+    'public.map.dish': '料理',
+    'public.map.recommended': 'おすすめ',
+    'public.map.price': '価格',
+    'public.map.notUpdated': '未更新',
+    'public.map.sendFeedback': 'この場所にフィードバックを送信',
+
+    'public.qr.title': 'QRをスキャン',
+    'public.qr.description': '店舗、料理、または音声ガイド地点のQRコードをスキャンします。',
+    'public.qr.manual': 'QRを手動入力',
+    'public.qr.resolve': 'QRを確認',
+    'public.qr.placeholder': 'QR値...',
+    'public.qr.startCamera': 'カメラを開始',
+    'public.qr.stopCamera': 'カメラを停止',
+    'public.qr.scanImage': '画像からスキャン',
+    'public.qr.scannerIdle': 'QRカメラは起動していません',
+    'public.qr.scannerHint': 'カメラで直接スキャンするか、端末からQR画像を選択できます。',
+    'public.qr.needNarrationLanguage': '先に言語を選択し、ゲストセッションを作成してください。',
+    'public.qr.resolveError': 'QRコードを読み取れないか、対応するデータがありません。',
+    'public.qr.cameraInitError': 'QRスキャナーを初期化できません。',
+    'public.qr.cameraOpenError': 'QRカメラを開けません。下の手動入力欄を使用できます。',
+    'public.qr.imageScanError': 'この画像からQRコードを読み取れません。',
+
+    'public.map.locationRequested': '位置情報の許可をリクエストしました。許可されると地図が現在地に移動します。',
+    'public.map.trackingStarted': '位置情報の追跡が有効になり、ジオフェンス確認を送信しています。',
+    'public.map.trackingStopped': '位置情報の追跡を停止しました。',
+
+    'public.player.back': '戻る',
+    'public.player.backToMap': '地図に戻る',
+    'public.player.play': '再生',
+    'public.player.pause': '一時停止',
+    'public.player.stop': '停止',
+    'public.player.sendFeedback': 'フィードバックを送信',
+    'public.player.noNarration': '音声ガイドの内容がありません。',
+
+    'public.feedback.title': '評価を送信',
+    'public.feedback.placeholder': '感想を入力してください...',
+    'public.feedback.sending': '送信中...',
+    'public.feedback.submit': 'フィードバックを送信',
+
+    'public.nav.map': '地図',
+'public.nav.qr': 'QR',
+'public.nav.settings': '設定',
+
+'public.player.source.geofence': '位置情報による自動再生',
+'public.player.source.qr': 'QRスキャン',
+'public.player.source.place': '場所',
+'public.player.source.dish': '料理',
+'public.player.source.narration': '音声ガイド',
+'public.player.source.manual': '手動',
+'public.player.audioFile': '音声ファイル',
+'public.player.browserTts': 'ブラウザTTS',
+  },
+
+  ko: {
+    'language.vi': '베트남어',
+    'language.en': '영어',
+    'language.ja': '일본어',
+    'language.ko': '한국어',
+    'language.zh': '중국어',
+    'language.switch': '언어',
+    'language.current': '현재 언어',
+
+    'public.settings.title': '설정',
+    'public.settings.noSession': '없음',
+    'public.settings.noLanguage': '선택되지 않음',
+    'public.settings.changeLanguage': '언어 변경',
+    'public.settings.tracking': '위치 추적',
+    'public.settings.trackingDescription': '지도 화면에서 직접 켜거나 끌 수 있습니다.',
+    'public.settings.guestSession': '게스트 세션',
+    'public.settings.narrationLanguage': '언어',
+    'public.settings.noNarrationLanguage': '선택되지 않음',
+    'public.settings.narrationLanguageDescription': '이 언어는 화면 표시, 번역, 음성 안내에 사용됩니다.',
+    'public.settings.changeNarrationLanguage': '언어 변경',
+    'public.settings.enableTracking': '추적 켜기',
+    'public.settings.disableTracking': '추적 끄기',
+
+    'public.languageSelection.title': '언어 선택',
+    'public.languageSelection.description': '이 언어는 화면 표시, 번역, 음성 안내에 사용됩니다.',
+    'public.languageSelection.loading': '언어를 불러오는 중...',
+    'public.languageSelection.empty': '사용 가능한 언어가 없습니다.',
+    'public.languageSelection.choose': '선택',
+
+    'public.map.title': '음식 거리 지도',
+    'public.map.defaultStatus': 'Vinh Khanh 음식 거리 기본 구역을 표시하고 있습니다.',
+    'public.map.placesLoaded': '불러온 장소',
+    'public.map.enableTracking': '위치 추적 켜기',
+    'public.map.disableTracking': '위치 추적 끄기',
+    'public.map.noAddress': '주소 없음',
+    'public.map.noDescription': '이 장소에 대한 설명이 아직 없습니다.',
+    'public.map.openingHours': '영업시간',
+    'public.map.geofenceRadius': '지오펜스 반경',
+    'public.map.dishesTitle': '음식 / 가격표',
+    'public.map.noDishes': '이 장소의 음식 정보가 아직 없습니다.',
+    'public.map.dish': '음식',
+    'public.map.recommended': '추천',
+    'public.map.price': '가격',
+    'public.map.notUpdated': '업데이트되지 않음',
+    'public.map.sendFeedback': '이 장소에 피드백 보내기',
+
+    'public.qr.title': 'QR 스캔',
+    'public.qr.description': '가게, 음식 또는 해설 지점의 QR 코드를 스캔합니다.',
+    'public.qr.manual': 'QR 직접 입력',
+    'public.qr.resolve': 'QR 확인',
+    'public.qr.placeholder': 'QR 값...',
+    'public.qr.startCamera': '카메라 시작',
+    'public.qr.stopCamera': '카메라 중지',
+    'public.qr.scanImage': '이미지에서 스캔',
+    'public.qr.scannerIdle': 'QR 카메라가 켜져 있지 않습니다',
+    'public.qr.scannerHint': '카메라로 직접 스캔하거나 기기에서 QR 이미지를 선택할 수 있습니다.',
+    'public.qr.needNarrationLanguage': '먼저 언어를 선택하고 게스트 세션을 생성하세요.',
+    'public.qr.resolveError': 'QR 코드를 읽을 수 없거나 일치하는 데이터가 없습니다.',
+    'public.qr.cameraInitError': 'QR 스캐너를 초기화할 수 없습니다.',
+    'public.qr.cameraOpenError': 'QR 카메라를 열 수 없습니다. 아래 수동 입력을 사용할 수 있습니다.',
+    'public.qr.imageScanError': '이 이미지에서 QR 코드를 읽을 수 없습니다.',
+
+    'public.map.locationRequested': '위치 권한을 요청했습니다. 허용되면 지도가 현재 위치로 이동합니다.',
+    'public.map.trackingStarted': '위치 추적이 켜졌으며 지오펜스 확인을 전송하고 있습니다.',
+    'public.map.trackingStopped': '위치 추적이 꺼졌습니다.',
+
+    'public.player.back': '뒤로',
+    'public.player.backToMap': '지도로 돌아가기',
+    'public.player.play': '듣기',
+    'public.player.pause': '일시정지',
+    'public.player.stop': '정지',
+    'public.player.sendFeedback': '피드백 보내기',
+    'public.player.noNarration': '해설 내용이 없습니다.',
+
+    'public.feedback.title': '평가 보내기',
+    'public.feedback.placeholder': '의견을 입력하세요...',
+    'public.feedback.sending': '전송 중...',
+    'public.feedback.submit': '피드백 보내기',
+
+    'public.nav.map': '지도',
+'public.nav.qr': 'QR',
+'public.nav.settings': '설정',
+
+'public.player.source.geofence': '위치 기반 자동 재생',
+'public.player.source.qr': 'QR 스캔',
+'public.player.source.place': '장소',
+'public.player.source.dish': '음식',
+'public.player.source.narration': '해설',
+'public.player.source.manual': '수동',
+'public.player.audioFile': '오디오 파일',
+'public.player.browserTts': '브라우저 TTS',
+  },
+
+  zh: {
+    'language.vi': '越南语',
+    'language.en': '英语',
+    'language.ja': '日语',
+    'language.ko': '韩语',
+    'language.zh': '中文',
+    'language.switch': '语言',
+    'language.current': '当前语言',
+
+    'public.settings.title': '设置',
+    'public.settings.noSession': '暂无',
+    'public.settings.noLanguage': '未选择',
+    'public.settings.changeLanguage': '更改语言',
+    'public.settings.tracking': '位置跟踪',
+    'public.settings.trackingDescription': '可在地图页面直接开启或关闭。',
+    'public.settings.guestSession': '访客会话',
+    'public.settings.narrationLanguage': '语言',
+    'public.settings.noNarrationLanguage': '未选择',
+    'public.settings.narrationLanguageDescription': '该语言将用于界面、翻译和语音讲解。',
+    'public.settings.changeNarrationLanguage': '更改语言',
+    'public.settings.enableTracking': '开启跟踪',
+    'public.settings.disableTracking': '关闭跟踪',
+
+    'public.languageSelection.title': '选择语言',
+    'public.languageSelection.description': '该语言将用于界面、翻译和语音讲解。',
+    'public.languageSelection.loading': '正在加载语言...',
+    'public.languageSelection.empty': '暂无可用语言。',
+    'public.languageSelection.choose': '选择',
+
+    'public.map.title': '美食街地图',
+    'public.map.defaultStatus': '正在显示 Vinh Khanh 美食街默认区域。',
+    'public.map.placesLoaded': '已加载地点',
+    'public.map.enableTracking': '开启位置跟踪',
+    'public.map.disableTracking': '关闭位置跟踪',
+    'public.map.noAddress': '暂无地址',
+    'public.map.noDescription': '该地点暂无说明。',
+    'public.map.openingHours': '营业时间',
+    'public.map.geofenceRadius': '地理围栏半径',
+    'public.map.dishesTitle': '菜品 / 价格表',
+    'public.map.noDishes': '该地点暂无菜品信息。',
+    'public.map.dish': '菜品',
+    'public.map.recommended': '推荐',
+    'public.map.price': '价格',
+    'public.map.notUpdated': '未更新',
+    'public.map.sendFeedback': '给该地点发送反馈',
+
+    'public.qr.title': '扫描二维码',
+    'public.qr.description': '扫描餐厅、菜品或讲解点的二维码。',
+    'public.qr.manual': '手动输入二维码',
+    'public.qr.resolve': '检查二维码',
+    'public.qr.placeholder': '二维码内容...',
+    'public.qr.startCamera': '打开相机',
+    'public.qr.stopCamera': '关闭相机',
+    'public.qr.scanImage': '从图片扫描',
+    'public.qr.scannerIdle': '二维码相机未开启',
+    'public.qr.scannerHint': '您可以打开相机直接扫描，或从设备中选择二维码图片。',
+    'public.qr.needNarrationLanguage': '请先选择语言并创建访客会话。',
+    'public.qr.resolveError': '无法读取二维码，或系统中没有对应数据。',
+    'public.qr.cameraInitError': '无法初始化二维码扫描器。',
+    'public.qr.cameraOpenError': '无法打开二维码相机。您可以使用下方的手动输入。',
+    'public.qr.imageScanError': '无法从该图片读取二维码。',
+
+    'public.map.locationRequested': '已请求位置权限。如浏览器允许，地图将定位到您的位置。',
+    'public.map.trackingStarted': '位置跟踪已开启，并正在发送地理围栏检查。',
+    'public.map.trackingStopped': '位置跟踪已关闭。',
+
+    'public.player.back': '返回',
+    'public.player.backToMap': '返回地图',
+    'public.player.play': '播放',
+    'public.player.pause': '暂停',
+    'public.player.stop': '停止',
+    'public.player.sendFeedback': '发送反馈',
+    'public.player.noNarration': '暂无讲解内容。',
+
+    'public.feedback.title': '发送评价',
+    'public.feedback.placeholder': '请输入您的感想...',
+    'public.feedback.sending': '正在发送...',
+    'public.feedback.submit': '发送反馈',
+
+    'public.nav.map': '地图',
+'public.nav.qr': '二维码',
+'public.nav.settings': '设置',
+
+'public.player.source.geofence': '基于位置自动播放',
+'public.player.source.qr': '扫码',
+'public.player.source.place': '地点',
+'public.player.source.dish': '菜品',
+'public.player.source.narration': '讲解',
+'public.player.source.manual': '手动',
+'public.player.audioFile': '音频文件',
+'public.player.browserTts': '浏览器语音',
   }
 };
 
@@ -619,7 +923,14 @@ const enText: Record<string, string> = {
 };
 
 export function normalizeUiLanguage(value?: string | null): UiLanguage {
-  return value?.toLowerCase().startsWith('en') ? 'en' : 'vi';
+  const code = value?.toLowerCase() ?? '';
+
+  if (code.startsWith('vi')) return 'vi';
+  if (code.startsWith('ja')) return 'ja';
+  if (code.startsWith('ko')) return 'ko';
+  if (code.startsWith('zh') || code.startsWith('cn')) return 'zh';
+
+  return 'en';
 }
 
 export function translateKey(key: string, language: UiLanguage): string {
@@ -627,5 +938,10 @@ export function translateKey(key: string, language: UiLanguage): string {
 }
 
 export function translateText(text: string, language: UiLanguage): string {
-  return (language === 'vi' ? viText[text] : enText[text]) ?? text;
+  // Admin vẫn chỉ hỗ trợ VI / EN.
+  // Nếu public đang dùng ja/ko/zh mà có chỗ gọi translateText(),
+  // ta fallback về English để tránh crash.
+  const dictionary = language === 'vi' ? viText : enText;
+
+  return dictionary[text] ?? text;
 }
