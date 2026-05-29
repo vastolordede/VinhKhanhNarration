@@ -29,11 +29,11 @@ public class QRScanResultDTO
     public long? PlaceId { get; set; }
     public long? DishId { get; set; }
     public long NarrationId { get; set; }
-    public long TranslationId { get; set; }
-    public long AudioId { get; set; }
+    public long? TranslationId { get; set; }
+    public long? AudioId { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Text { get; set; } = string.Empty;
-    public string AudioUrl { get; set; } = string.Empty;
+    public string? AudioUrl { get; set; }
 }
 
 public class GuestSessionDTO
@@ -115,7 +115,7 @@ public class ListeningHistoryDTO
     [DbColumn("guest_session_id")] public string? GuestSessionId { get; set; }
     [DbColumn("narration_id")] public long NarrationId { get; set; }
     [DbColumn("language_id")] public long LanguageId { get; set; }
-    [DbColumn("audio_id")] public long AudioId { get; set; }
+    [DbColumn("audio_id")] public long? AudioId { get; set; }
     [DbColumn("qr_code_id")] public long? QRCodeId { get; set; }
     [DbColumn("geofence_event_id")] public long? GeofenceEventId { get; set; }
     [DbColumn("trigger_source")] public string TriggerSource { get; set; } = "Manual";
