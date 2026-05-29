@@ -1,0 +1,6 @@
+BEGIN;
+
+ALTER TABLE listening_histories
+ALTER COLUMN audio_id DROP NOT NULL;
+
+COMMIT;

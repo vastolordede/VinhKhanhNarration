@@ -7,6 +7,7 @@ import { Card } from '../../components/ui/Card';
 import { useAppContext } from '../../contexts/AppContext';
 import { useSpeechSynthesis } from '../../hooks/useSpeechSynthesis';
 import FeedbackModal from './FeedbackModal';
+import { ListeningHistoryDTO } from '../../types';
 
 export default function NarrationPlayerScreen() {
   const { currentNarration, language, guestSession } = useAppContext();
@@ -25,20 +26,33 @@ export default function NarrationPlayerScreen() {
     return 'Thủ công';
   }, [currentNarration]);
 
-  useEffect(() => {
-    if (!currentNarration || !language) return;
-    submitListeningHistory({
-      guestSessionId: guestSession?.guestSessionId,
-      narrationId: currentNarration.narrationId,
-      languageId: language.languageId,
-      audioId: currentNarration.audioId,
-      qrCodeId: null,
-      geofenceEventId: null,
-      triggerSource: currentNarration.source === 'geofence' ? 'Geofence' : currentNarration.source === 'qr' ? 'QR' : 'Manual',
-      playbackStatus: 'Played',
-      deviceInfo: navigator.userAgent
-    }).catch(() => undefined);
-  }, [currentNarration, language, guestSession]);
+ useEffect(() => {
+  if (!currentNarration || !language || !guestSession?.guestSessionId) {
+    return;
+  }
+
+  const payload: ListeningHistoryDTO = {
+    guestSessionId: guestSession.guestSessionId,
+    narrationId: currentNarration.narrationId,
+    languageId: language.languageId,
+    triggerSource:
+      currentNarration.source === 'geofence'
+        ? 'Geofence'
+        : currentNarration.source === 'qr'
+          ? 'QR'
+          : 'Manual',
+    playbackStatus: 'Played',
+    deviceInfo: navigator.userAgent
+  };
+
+  if (currentNarration.audioId) {
+    payload.audioId = currentNarration.audioId;
+  }
+
+  submitListeningHistory(payload).catch((error) => {
+    console.error('Submit listening history failed:', error);
+  });
+}, [currentNarration, language, guestSession]);
 
   if (!currentNarration) {
     return (
@@ -52,32 +66,42 @@ export default function NarrationPlayerScreen() {
   }
 
   function play() {
-    if (currentNarration?.audioUrl) {
-      audioRef.current?.play();
-      setPlayingAudio(true);
-    } else {
-      tts.speak(currentNarration.text);
-    }
-  }
+  if (!currentNarration) return;
 
-  function pause() {
-    if (currentNarration?.audioUrl) {
-      audioRef.current?.pause();
-      setPlayingAudio(false);
-    } else {
-      tts.pause();
-    }
+  if (currentNarration.audioUrl) {
+    audioRef.current?.play();
+    setPlayingAudio(true);
+  } else {
+    tts.speak(currentNarration.text);
   }
+}
 
-  function stop() {
-    if (currentNarration?.audioUrl) {
-      audioRef.current?.pause();
-      if (audioRef.current) audioRef.current.currentTime = 0;
-      setPlayingAudio(false);
-    } else {
-      tts.stop();
-    }
+function pause() {
+  if (!currentNarration) return;
+
+  if (currentNarration.audioUrl) {
+    audioRef.current?.pause();
+    setPlayingAudio(false);
+  } else {
+    tts.pause();
   }
+}
+
+function stop() {
+  if (!currentNarration) return;
+
+  if (currentNarration.audioUrl) {
+    audioRef.current?.pause();
+
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0;
+    }
+
+    setPlayingAudio(false);
+  } else {
+    tts.stop();
+  }
+}
 
   return (
     <div className="min-h-screen bg-slate-50 p-5 pt-6">

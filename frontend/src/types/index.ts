@@ -157,7 +157,7 @@ export interface QRScanResultDTO {
   placeId?: ID | null;
   dishId?: ID | null;
   narrationId: ID;
-  translationId: ID;
+  translationId?: ID | null;
   audioId?: ID | null;
   title: string;
   text: string;

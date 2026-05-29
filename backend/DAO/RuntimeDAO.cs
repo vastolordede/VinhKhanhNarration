@@ -1,4 +1,5 @@
 using Npgsql;
+using NpgsqlTypes;
 using VinhKhanhNarration.Api.Database;
 using VinhKhanhNarration.Api.DTO;
 
@@ -329,7 +330,95 @@ public class GeofenceEventDAO : BaseDAO
 public class ListeningHistoryDAO : GenericCrudDAO<ListeningHistoryDTO>
 {
     public ListeningHistoryDAO(DbConnectionFactory factory) : base(factory) { }
+    
+   public new long Insert(ListeningHistoryDTO dto)
+{
+    const string sql = @"
+        INSERT INTO listening_histories
+        (
+            guest_session_id,
+            narration_id,
+            language_id,
+            audio_id,
+            qr_code_id,
+            geofence_event_id,
+            trigger_source,
+            playback_status,
+            device_info,
+            ip_address,
+            listen_duration_seconds
+        )
+        VALUES
+        (
+            @guest,
+            @narration,
+            @language,
+            @audio,
+            @qr,
+            @geofence,
+            @trigger,
+            @status,
+            @device,
+            @ip,
+            @duration
+        )
+        RETURNING history_id;";
 
+    using var conn = CreateConnection();
+    conn.Open();
+
+    using var cmd = new NpgsqlCommand(sql, conn);
+
+    cmd.Parameters.Add("@guest", NpgsqlDbType.Text).Value =
+        string.IsNullOrWhiteSpace(dto.GuestSessionId)
+            ? DBNull.Value
+            : dto.GuestSessionId;
+
+    cmd.Parameters.Add("@narration", NpgsqlDbType.Bigint).Value = dto.NarrationId;
+    cmd.Parameters.Add("@language", NpgsqlDbType.Bigint).Value = dto.LanguageId;
+
+    cmd.Parameters.Add("@audio", NpgsqlDbType.Bigint).Value =
+        dto.AudioId.HasValue && dto.AudioId.Value > 0
+            ? dto.AudioId.Value
+            : DBNull.Value;
+
+    cmd.Parameters.Add("@qr", NpgsqlDbType.Bigint).Value =
+        dto.QRCodeId.HasValue && dto.QRCodeId.Value > 0
+            ? dto.QRCodeId.Value
+            : DBNull.Value;
+
+    cmd.Parameters.Add("@geofence", NpgsqlDbType.Bigint).Value =
+        dto.GeofenceEventId.HasValue && dto.GeofenceEventId.Value > 0
+            ? dto.GeofenceEventId.Value
+            : DBNull.Value;
+
+    cmd.Parameters.Add("@trigger", NpgsqlDbType.Text).Value =
+        string.IsNullOrWhiteSpace(dto.TriggerSource)
+            ? "Manual"
+            : dto.TriggerSource;
+
+    cmd.Parameters.Add("@status", NpgsqlDbType.Text).Value =
+        string.IsNullOrWhiteSpace(dto.PlaybackStatus)
+            ? "Played"
+            : dto.PlaybackStatus;
+
+    cmd.Parameters.Add("@device", NpgsqlDbType.Text).Value =
+        string.IsNullOrWhiteSpace(dto.DeviceInfo)
+            ? DBNull.Value
+            : dto.DeviceInfo;
+
+    cmd.Parameters.Add("@ip", NpgsqlDbType.Text).Value =
+        string.IsNullOrWhiteSpace(dto.IPAddress)
+            ? DBNull.Value
+            : dto.IPAddress;
+
+    cmd.Parameters.Add("@duration", NpgsqlDbType.Integer).Value =
+        dto.ListenDurationSeconds.HasValue
+            ? dto.ListenDurationSeconds.Value
+            : DBNull.Value;
+
+    return Convert.ToInt64(cmd.ExecuteScalar());
+}
     public bool UpdatePlaybackStatus(long historyId, string status)
     {
         using var conn = CreateConnection(); conn.Open();
