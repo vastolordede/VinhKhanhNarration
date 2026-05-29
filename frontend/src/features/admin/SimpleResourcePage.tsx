@@ -7,6 +7,7 @@ import { DataTable } from '../../components/ui/DataTable';
 import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { PageHeader } from '../../components/layout/PageHeader';
+import { useI18n } from '../../i18n/useI18n';
 
 export type FieldConfig = {
   name: string;
@@ -39,6 +40,8 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   const [form, setForm] = useState<Record<string, any>>({});
   const [error, setError] = useState<string | null>(null);
 
+  const { tx } = useI18n();
+
   async function load() {
     try {
       const data = await getList<any>(config.endpoint);
@@ -67,6 +70,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   function resetForm() {
     setEditing(null);
     setForm({});
+    setError(null);
   }
 
   async function submit(e: FormEvent) {
@@ -74,8 +78,11 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     setError(null);
 
     try {
-      if (editing) await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
-      else await createItem(config.endpoint, form);
+      if (editing) {
+        await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
+      } else {
+        await createItem(config.endpoint, form);
+      }
 
       resetForm();
       await load();
@@ -96,13 +103,15 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   function renderField(field: FieldConfig) {
     return (
       <label key={field.name} className="block">
-        <span className="mb-1 block text-sm font-semibold text-slate-700">{field.label}</span>
+        <span className="mb-1 block text-sm font-semibold text-slate-700">
+          {tx(field.label)}
+        </span>
 
         {field.type === 'textarea' ? (
           <Textarea
             value={form[field.name] ?? ''}
             onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
-            placeholder={field.placeholder}
+            placeholder={field.placeholder ? tx(field.placeholder) : undefined}
             rows={4}
             disabled={field.disabled}
           />
@@ -124,7 +133,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
                 [field.name]: field.type === 'number' ? Number(e.target.value) : e.target.value
               })
             }
-            placeholder={field.placeholder}
+            placeholder={field.placeholder ? tx(field.placeholder) : undefined}
             disabled={field.disabled}
           />
         )}
@@ -133,15 +142,30 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   }
 
   const rows = items.map((item) => [
-    ...config.columns.map((col) => (col.render ? col.render(item) : String(item[col.key] ?? ''))),
+    ...config.columns.map((col) => {
+      if (col.render) return col.render(item);
+
+      const value = item[col.key];
+
+      if (value === null || value === undefined || value === '') {
+        return '';
+      }
+
+      if (typeof value === 'boolean') {
+        return tx(value ? 'Yes' : 'No');
+      }
+
+      return tx(String(value));
+    }),
+
     <div className="flex gap-2" key="actions">
       <Button variant="secondary" className="px-3 py-2" onClick={() => startEdit(item)}>
-        Sửa
+        {tx('Sửa')}
       </Button>
 
       {config.softDelete !== false && (
         <Button variant="danger" className="px-3 py-2" onClick={() => deactivate(item)}>
-          Ẩn
+          {tx('Ẩn')}
         </Button>
       )}
     </div>
@@ -159,7 +183,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
       <div className="grid gap-5 xl:grid-cols-[420px_1fr]">
         <Card>
           <h2 className="mb-4 font-bold text-slate-900">
-            {editing ? 'Cập nhật dữ liệu' : 'Thêm dữ liệu'}
+            {tx(editing ? 'Cập nhật dữ liệu' : 'Thêm dữ liệu')}
           </h2>
 
           <form className="space-y-3" onSubmit={submit}>
@@ -173,21 +197,26 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
 
             {!hasPlacedExtraActions && extraFormActions}
 
-            {error && <p className="text-sm text-rose-600">{error}</p>}
+            {error && <p className="text-sm text-rose-600">{tx(error)}</p>}
 
             <div className="flex gap-2">
-              <Button>{editing ? 'Lưu thay đổi' : 'Tạo mới'}</Button>
+              <Button type="submit">
+                {tx(editing ? 'Lưu thay đổi' : 'Tạo mới')}
+              </Button>
 
               {editing && (
                 <Button type="button" variant="secondary" onClick={resetForm}>
-                  Hủy
+                  {tx('Hủy')}
                 </Button>
               )}
             </div>
           </form>
         </Card>
 
-        <DataTable headers={[...config.columns.map((c) => c.label), 'Thao tác']} rows={rows} />
+       <DataTable
+  headers={[...config.columns.map((c) => c.label), 'Thao tác']}
+  rows={rows}
+/>
       </div>
     </div>
   );
