@@ -26,8 +26,7 @@ export default function LanguageSelectionScreen() {
       await updateGuestLanguage(guestSession.guestSessionId, language.languageId);
     }
 
-    // This changes narration/listening language only.
-    // It must not change UI language.
+    // This changes both public interface language and narration/listening language.
     setLanguage(language);
 
     navigate('/app/map');

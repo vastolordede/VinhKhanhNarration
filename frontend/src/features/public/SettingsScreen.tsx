@@ -6,12 +6,11 @@ import { useI18n } from '../../i18n/useI18n';
 
 export default function SettingsScreen() {
   const {
-    guestSession,
-    language,
-    uiLanguage,
-    trackingEnabled,
-    setTrackingEnabled
-  } = useAppContext();
+  guestSession,
+  language,
+  trackingEnabled,
+  setTrackingEnabled
+} = useAppContext();
 
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -33,19 +32,7 @@ export default function SettingsScreen() {
           </p>
         </Card>
 
-        <Card>
-          <p className="text-sm text-slate-500">
-            {t('public.settings.uiLanguage')}
-          </p>
-
-          <p className="mt-1 font-semibold text-slate-900">
-            {uiLanguage === 'vi' ? t('language.vi') : t('language.en')}
-          </p>
-
-          <p className="mt-2 text-sm text-slate-500">
-            {t('public.settings.uiLanguageDescription')}
-          </p>
-        </Card>
+        
 
         <Card>
           <p className="text-sm text-slate-500">

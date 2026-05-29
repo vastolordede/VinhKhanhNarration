@@ -42,13 +42,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     readJson<LanguageDTO>('language')
   );
 
-  const [uiLanguage, setUiLanguageState] = useState<UiLanguage>(() => {
-    const savedUiLanguage = localStorage.getItem('uiLanguage');
-    if (savedUiLanguage) return normalizeUiLanguage(savedUiLanguage);
+const [uiLanguage, setUiLanguageState] = useState<UiLanguage>(() => {
+  const savedLanguage = readJson<LanguageDTO>('language');
 
-    const savedLanguage = readJson<LanguageDTO>('language');
-    return normalizeUiLanguage(savedLanguage?.languageCode);
-  });
+  if (savedLanguage) {
+    return normalizeUiLanguage(savedLanguage.languageCode);
+  }
+
+  const savedUiLanguage = localStorage.getItem('uiLanguage');
+  return normalizeUiLanguage(savedUiLanguage);
+});
 
   const [currentNarration, setCurrentNarration] = useState<NarrationResolveResultDTO | null>(() => {
     const raw = sessionStorage.getItem('currentNarration');
@@ -81,6 +84,13 @@ const setLanguage = (lang: LanguageDTO | null) => {
 
   if (lang) {
     localStorage.setItem('language', JSON.stringify(lang));
+
+    // Public app rule:
+    // selected narration language also controls public UI language.
+    const nextUiLanguage = normalizeUiLanguage(lang.languageCode);
+
+    setUiLanguageState(nextUiLanguage);
+    localStorage.setItem('uiLanguage', nextUiLanguage);
   } else {
     localStorage.removeItem('language');
   }
