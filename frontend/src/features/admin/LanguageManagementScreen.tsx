@@ -3,6 +3,7 @@ import { endpoints } from '../../api/endpoints';
 import { getList } from '../../api/crud';
 import { Card } from '../../components/ui/Card';
 import { LanguageDTO } from '../../types';
+import { StatusBadge } from '../../components/ui/StatusBadge';
 
 const supportedLanguages = [
   {
@@ -148,7 +149,7 @@ export default function LanguageManagementScreen() {
                       </td>
 
                       <td className="px-4 py-3 text-slate-700">
-                        {item.isDefault ? 'Có' : 'Không'}
+                        <StatusBadge active={item.isDefault} />
                       </td>
 
                       <td className="px-4 py-3">
@@ -216,7 +217,7 @@ export default function LanguageManagementScreen() {
                     </td>
 
                     <td className="px-4 py-3 text-slate-700">
-                      {language.isActive ? 'Có' : 'Không'}
+                      <StatusBadge active={language.isActive} />
                     </td>
                   </tr>
                 ))}
