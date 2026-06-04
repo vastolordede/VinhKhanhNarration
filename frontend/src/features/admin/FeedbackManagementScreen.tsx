@@ -5,6 +5,7 @@ import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { FeedbackDTO } from '../../types';
+import { StatusBadge } from '../../components/ui/StatusBadge';
 
 export default function FeedbackManagementScreen() {
   const [items, setItems] = useState<FeedbackDTO[]>([]);
@@ -15,7 +16,7 @@ export default function FeedbackManagementScreen() {
   return <div>
     <PageHeader title="Feedback Management" description="Duyệt hoặc từ chối feedback của khách anonymous." />
     <DataTable headers={['Id','Guest','Target','Rating','Comment','Approved','Actions']} rows={items.map(f => [
-      f.feedbackId, f.guestSessionId || '', `P:${f.placeId ?? '-'} D:${f.dishId ?? '-'} N:${f.narrationId ?? '-'}`, f.rating, f.comment || '', f.isApproved ? 'Yes' : 'No',
+      f.feedbackId, f.guestSessionId || '', `P:${f.placeId ?? '-'} D:${f.dishId ?? '-'} N:${f.narrationId ?? '-'}`, f.rating, f.comment || '', <StatusBadge active={f.isApproved === true} />,
       <div className="flex gap-2" key="a"><Button className="px-3 py-2" onClick={() => approve(f.feedbackId)}>Approve</Button><Button className="px-3 py-2" variant="danger" onClick={() => reject(f.feedbackId)}>Reject</Button></div>
     ])} />
   </div>;

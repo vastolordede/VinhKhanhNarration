@@ -8,6 +8,7 @@ import { Input } from '../../components/ui/Input';
 import { Textarea } from '../../components/ui/Textarea';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { useI18n } from '../../i18n/useI18n';
+import { StatusBadge } from '../../components/ui/StatusBadge';
 
 export type FieldConfig = {
   name: string;
@@ -62,10 +63,10 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     return key ? row[key] : undefined;
   }
 
-  function startEdit(row: any) {
-    setEditing(row);
-    setForm(row);
-  }
+ function startEdit(row: any) {
+  setEditing(row);
+  setForm(row);
+}
 
   function resetForm() {
     setEditing(null);
@@ -74,32 +75,78 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   }
 
   async function submit(e: FormEvent) {
-    e.preventDefault();
-    setError(null);
+  e.preventDefault();
+  setError(null);
 
-    try {
-      if (editing) {
-        await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
-      } else {
-        await createItem(config.endpoint, form);
-      }
+  if (editing) {
+    const confirmed = window.confirm(
+      tx('Are you sure you want to save these changes?')
+    );
 
-      resetForm();
-      await load();
-    } catch {
-      setError('Không lưu được dữ liệu. Kiểm tra dữ liệu nhập hoặc API.');
-    }
+    if (!confirmed) return;
   }
+
+  try {
+    if (editing) {
+      await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
+    } else {
+      await createItem(config.endpoint, form);
+    }
+
+    resetForm();
+    await load();
+  } catch {
+    setError('Không lưu được dữ liệu. Kiểm tra dữ liệu nhập hoặc API.');
+  }
+}
 
   async function deactivate(row: any) {
-    try {
-      await patchItem(`${config.endpoint}/${getRowId(row)}/deactivate`);
-      await load();
-    } catch {
-      setError('Không deactivate được dữ liệu.');
-    }
+  const confirmed = window.confirm(
+    tx('Are you sure you want to hide this record?')
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await patchItem(`${config.endpoint}/${getRowId(row)}/deactivate`);
+    await load();
+  } catch {
+    setError('Không deactivate được dữ liệu.');
+  }
+}
+function renderCellValue(value: ReactNode): ReactNode {
+  if (value === null || value === undefined || value === '') {
+    return '';
   }
 
+  if (typeof value === 'boolean') {
+    return <StatusBadge active={value} />;
+  }
+
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+
+    if (normalized === 'yes' || normalized === 'có' || normalized === 'true') {
+      return <StatusBadge active={true} trueText="Yes" falseText="No" />;
+    }
+
+    if (normalized === 'no' || normalized === 'không' || normalized === 'false') {
+      return <StatusBadge active={false} trueText="Yes" falseText="No" />;
+    }
+
+    if (normalized === 'on' || normalized === 'bật') {
+      return <StatusBadge active={true} trueText="On" falseText="Off" />;
+    }
+
+    if (normalized === 'off' || normalized === 'tắt') {
+      return <StatusBadge active={false} trueText="On" falseText="Off" />;
+    }
+
+    return tx(value);
+  }
+
+  return value;
+}
   function renderField(field: FieldConfig) {
     return (
       <label key={field.name} className="block">
@@ -141,24 +188,14 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     );
   }
 
-  const rows = items.map((item) => [
-    ...config.columns.map((col) => {
-      if (col.render) return col.render(item);
+ const rows = items.map((item) => [
+  ...config.columns.map((col) => {
+    const value = col.render ? col.render(item) : item[col.key];
 
-      const value = item[col.key];
+    return renderCellValue(value);
+  }),
 
-      if (value === null || value === undefined || value === '') {
-        return '';
-      }
-
-      if (typeof value === 'boolean') {
-        return tx(value ? 'Yes' : 'No');
-      }
-
-      return tx(String(value));
-    }),
-
-    <div className="flex gap-2" key="actions">
+  <div className="flex gap-2" key="actions">
       <Button variant="secondary" className="px-3 py-2" onClick={() => startEdit(item)}>
         {tx('Sửa')}
       </Button>

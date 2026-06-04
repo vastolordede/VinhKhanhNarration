@@ -88,13 +88,13 @@ ${result.matchQuality}`
   name: 'latitude',
   label: 'Latitude',
   type: 'number',
-  placeholder: 'Tự động lấy từ địa chỉ hoặc nhập tay'
+  placeholder: 'Auto-fill from address or enter manually'
 },
 {
   name: 'longitude',
   label: 'Longitude',
   type: 'number',
-  placeholder: 'Tự động lấy từ địa chỉ hoặc nhập tay'
+  placeholder: 'Auto-fill from address or enter manually'
 },
           { name: 'openingHours', label: 'Opening Hours' },
           { name: 'imageUrl', label: 'Image URL' },

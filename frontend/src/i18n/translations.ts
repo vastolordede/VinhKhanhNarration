@@ -621,6 +621,7 @@ const viText: Record<string, string> = {
   'Tự động lấy từ địa chỉ': 'Tự động lấy từ địa chỉ',
   'Lấy tọa độ từ địa chỉ': 'Lấy tọa độ từ địa chỉ',
   'Vui lòng nhập địa chỉ trước.': 'Vui lòng nhập địa chỉ trước.',
+  'Auto-fill from address or enter manually': 'Tự động lấy từ địa chỉ hoặc nhập tay',
   'Không tìm thấy tọa độ cho địa chỉ này.': 'Không tìm thấy tọa độ cho địa chỉ này.',
   'Đã lấy tọa độ': 'Đã lấy tọa độ',
 
@@ -629,6 +630,10 @@ const viText: Record<string, string> = {
   'Không deactivate được dữ liệu.': 'Không ẩn được dữ liệu.',
   'Đang tải dữ liệu...': 'Đang tải dữ liệu...',
   'Chưa có dữ liệu': 'Chưa có dữ liệu',
+
+  'Are you sure you want to edit this record?': 'Bạn có chắc muốn sửa dữ liệu này không?',
+'Are you sure you want to hide this record?': 'Bạn có chắc muốn ẩn dữ liệu này không?',
+'Are you sure you want to save these changes?': 'Bạn có chắc muốn lưu các thay đổi này không?',
 
   'Bản đồ': 'Bản đồ',
   QR: 'QR',
@@ -706,6 +711,10 @@ const enText: Record<string, string> = {
   'Sự kiện geofence': 'Geofence Events',
   'Listening Histories': 'Listening Histories',
   'Lịch sử nghe': 'Listening Histories',
+
+'Are you sure you want to edit this record?': 'Are you sure you want to edit this record?',
+'Are you sure you want to hide this record?': 'Are you sure you want to hide this record?',
+'Are you sure you want to save these changes?': 'Are you sure you want to save these changes?',
 
   'Place Types': 'Place Types',
   'Loại địa điểm': 'Place Types',
@@ -893,6 +902,8 @@ const enText: Record<string, string> = {
   'Target Type': 'Target Type',
 
   'Tự động lấy từ địa chỉ': 'Automatically resolved from address',
+  'Auto-fill from address or enter manually': 'Auto-fill from address or enter manually',
+'Tự động lấy từ địa chỉ hoặc nhập tay': 'Auto-fill from address or enter manually',
   'Lấy tọa độ từ địa chỉ': 'Resolve coordinates from address',
   'Vui lòng nhập địa chỉ trước.': 'Please enter the address first.',
   'Không tìm thấy tọa độ cho địa chỉ này.': 'No coordinates were found for this address.',
