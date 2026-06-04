@@ -100,7 +100,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   }
 }
 
-  async function deactivate(row: any) {
+async function deactivate(row: any) {
   const confirmed = window.confirm(
     tx('Are you sure you want to hide this record?')
   );
@@ -109,9 +109,34 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
 
   try {
     await patchItem(`${config.endpoint}/${getRowId(row)}/deactivate`);
+
+    if (editing && getRowId(editing) === getRowId(row)) {
+      resetForm();
+    }
+
     await load();
   } catch {
     setError('Không deactivate được dữ liệu.');
+  }
+}
+
+async function restore(row: any) {
+  const confirmed = window.confirm(
+    tx('Are you sure you want to restore this record?')
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await patchItem(`${config.endpoint}/${getRowId(row)}/restore`);
+
+    if (editing && getRowId(editing) === getRowId(row)) {
+      resetForm();
+    }
+
+    await load();
+  } catch {
+    setError('Không restore được dữ liệu.');
   }
 }
 function renderCellValue(value: ReactNode): ReactNode {
@@ -188,25 +213,49 @@ function renderCellValue(value: ReactNode): ReactNode {
     );
   }
 
- const rows = items.map((item) => [
-  ...config.columns.map((col) => {
-    const value = col.render ? col.render(item) : item[col.key];
+const rows = items.map((item) => {
+  const isInactive = item.isActive === false;
+  const hasActiveStatus = typeof item.isActive === 'boolean';
 
-    return renderCellValue(value);
-  }),
+  return [
+    ...config.columns.map((col) => {
+      const value = col.render ? col.render(item) : item[col.key];
 
-  <div className="flex gap-2" key="actions">
-      <Button variant="secondary" className="px-3 py-2" onClick={() => startEdit(item)}>
+      return renderCellValue(value);
+    }),
+
+    <div className="flex gap-2" key="actions">
+      <Button
+        variant="secondary"
+        className="px-3 py-2"
+        onClick={() => startEdit(item)}
+      >
         {tx('Sửa')}
       </Button>
 
       {config.softDelete !== false && (
-        <Button variant="danger" className="px-3 py-2" onClick={() => deactivate(item)}>
-          {tx('Ẩn')}
+        <Button
+          variant={hasActiveStatus && isInactive ? 'primary' : 'danger'}
+          className="px-3 py-2"
+          onClick={() => {
+            if (hasActiveStatus && isInactive) {
+              restore(item);
+            } else {
+              deactivate(item);
+            }
+          }}
+        >
+          {tx(hasActiveStatus && isInactive ? 'Mở' : 'Ẩn')}
         </Button>
       )}
     </div>
-  ]);
+  ];
+});
+const rowClassNames = items.map((item) =>
+  item.isActive === false
+    ? 'bg-slate-100 text-slate-400'
+    : ''
+);
 
   const extraFormActions = config.extraFormActions?.(form, setForm);
   const hasPlacedExtraActions =
@@ -250,9 +299,10 @@ function renderCellValue(value: ReactNode): ReactNode {
           </form>
         </Card>
 
-       <DataTable
+     <DataTable
   headers={[...config.columns.map((c) => c.label), 'Thao tác']}
   rows={rows}
+  rowClassNames={rowClassNames}
 />
       </div>
     </div>
