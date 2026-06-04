@@ -513,6 +513,7 @@ const viText: Record<string, string> = {
   'Hủy': 'Hủy',
   'Sửa': 'Sửa',
   'Ẩn': 'Ẩn',
+  'Mở': 'Mở',
   'Thao tác': 'Thao tác',
 
   'Add data': 'Thêm dữ liệu',
@@ -522,6 +523,7 @@ const viText: Record<string, string> = {
   Cancel: 'Hủy',
   Edit: 'Sửa',
   Hide: 'Ẩn',
+  Restore: 'Mở',
   Actions: 'Thao tác',
   Approve: 'Duyệt',
   Reject: 'Từ chối',
@@ -634,6 +636,9 @@ const viText: Record<string, string> = {
   'Are you sure you want to edit this record?': 'Bạn có chắc muốn sửa dữ liệu này không?',
 'Are you sure you want to hide this record?': 'Bạn có chắc muốn ẩn dữ liệu này không?',
 'Are you sure you want to save these changes?': 'Bạn có chắc muốn lưu các thay đổi này không?',
+'Are you sure you want to restore this record?': 'Bạn có chắc muốn mở lại dữ liệu này không?',
+'Không restore được dữ liệu.': 'Không mở lại được dữ liệu.',
+
 
   'Bản đồ': 'Bản đồ',
   QR: 'QR',
@@ -715,6 +720,8 @@ const enText: Record<string, string> = {
 'Are you sure you want to edit this record?': 'Are you sure you want to edit this record?',
 'Are you sure you want to hide this record?': 'Are you sure you want to hide this record?',
 'Are you sure you want to save these changes?': 'Are you sure you want to save these changes?',
+'Are you sure you want to restore this record?': 'Are you sure you want to restore this record?',
+'Không restore được dữ liệu.': 'Unable to restore this record.',
 
   'Place Types': 'Place Types',
   'Loại địa điểm': 'Place Types',
@@ -738,6 +745,7 @@ const enText: Record<string, string> = {
   'Hủy': 'Cancel',
   'Sửa': 'Edit',
   'Ẩn': 'Hide',
+  'Mở': 'Restore',
   'Thao tác': 'Actions',
 
   'Add data': 'Add data',
@@ -747,6 +755,7 @@ const enText: Record<string, string> = {
   Cancel: 'Cancel',
   Edit: 'Edit',
   Hide: 'Hide',
+  Restore: 'Restore',
   Actions: 'Actions',
   Approve: 'Approve',
   Reject: 'Reject',

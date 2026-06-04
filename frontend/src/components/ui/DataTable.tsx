@@ -3,10 +3,12 @@ import { useI18n } from '../../i18n/useI18n';
 
 export function DataTable({
   headers,
-  rows
+  rows,
+  rowClassNames = []
 }: {
   headers: string[];
   rows: ReactNode[][];
+  rowClassNames?: string[];
 }) {
   const { tx } = useI18n();
 
@@ -34,7 +36,10 @@ export function DataTable({
 
           <tbody className="divide-y divide-slate-100">
             {rows.map((row, index) => (
-              <tr key={index} className="text-slate-700">
+              <tr
+                key={index}
+                className={`text-slate-700 transition ${rowClassNames[index] ?? ''}`}
+              >
                 {row.map((cell, cellIndex) => (
                   <td key={cellIndex} className="px-4 py-3 align-top">
                     {renderCell(cell)}
