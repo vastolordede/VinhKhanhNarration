@@ -6,3 +6,12 @@ fixbug/
 repowise-export/
 repowise-export-json/
 repowise-light.zip
+
+# Local AI / RepoWise files
+.repowise/
+.claude/
+.mcp.json
+.mcp
+repowise-export/
+repowise-export-json/
+repowise-light.zip
