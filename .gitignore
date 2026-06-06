@@ -1,1 +1,8 @@
 fixbug/
+
+# RepoWise generated/cache files
+.repowise/wiki.db
+.repowise/export/
+repowise-export/
+repowise-export-json/
+repowise-light.zip

@@ -1,0 +1,6320 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "VinhKhanhNarration",
+    "is_monorepo": false,
+    "total_files": 140,
+    "entry_points": [
+      "backend/Program.cs",
+      "frontend/src/App.tsx",
+      "frontend/src/main.tsx",
+      "frontend/src/types/index.ts"
+    ],
+    "tech_stack": [
+      {
+        "name": ".NET",
+        "version": "net8.0",
+        "category": "framework"
+      },
+      {
+        "name": "ASP.NET Core",
+        "version": null,
+        "category": "framework"
+      },
+      {
+        "name": "C#",
+        "version": "net8.0",
+        "category": "language"
+      }
+    ]
+  },
+  "nodes": [
+    {
+      "id": "file:README.md",
+      "type": "document",
+      "filePath": "README.md",
+      "language": "markdown",
+      "symbolCount": 0,
+      "lineCount": 161,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 8,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/README.md",
+      "type": "document",
+      "filePath": "backend/README.md",
+      "language": "markdown",
+      "symbolCount": 0,
+      "lineCount": 148,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 9,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/appsettings.json",
+      "type": "config",
+      "filePath": "backend/appsettings.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 5,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 10,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/appsettings.Development.json",
+      "type": "config",
+      "filePath": "backend/appsettings.Development.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 2,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 11,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/Program.cs",
+      "type": "file",
+      "filePath": "backend/Program.cs",
+      "language": "csharp",
+      "symbolCount": 1,
+      "lineCount": 105,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [
+        "entry_point"
+      ],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "language": "csharp",
+      "symbolCount": 18,
+      "lineCount": 81,
+      "complexity": "complex",
+      "pagerank": 0.009446,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/BUS/AdminUserBUS.cs:AdminUserBUS",
+      "type": "class",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "AdminUserBUS",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:AdminUserBUS",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "AdminUserBUS",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:Create",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "Create",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:Update",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "Update",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:Deactivate",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "Deactivate",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:Restore",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "Restore",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:GetById",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "GetById",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:GetAll",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "GetAll",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:GetActive",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "GetActive",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:Login",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "Login",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:ChangePassword",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "ChangePassword",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:ValidateRole",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "ValidateRole",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:ValidateBeforeCreate",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "ValidateBeforeCreate",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/AdminUserBUS.cs:ValidateBeforeUpdate",
+      "type": "function",
+      "filePath": "backend/BUS/AdminUserBUS.cs",
+      "name": "ValidateBeforeUpdate",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/BUS/FoodBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/FoodBUS.cs",
+      "language": "csharp",
+      "symbolCount": 58,
+      "lineCount": 168,
+      "complexity": "complex",
+      "pagerank": 0.004412,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/BUS/GeocodingBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/GeocodingBUS.cs",
+      "language": "csharp",
+      "symbolCount": 15,
+      "lineCount": 160,
+      "complexity": "moderate",
+      "pagerank": 0.004909,
+      "communityId": 4,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/BUS/LookupBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/LookupBUS.cs",
+      "language": "csharp",
+      "symbolCount": 20,
+      "lineCount": 52,
+      "complexity": "complex",
+      "pagerank": 0.005164,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/BUS/NarrationBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/NarrationBUS.cs",
+      "language": "csharp",
+      "symbolCount": 46,
+      "lineCount": 151,
+      "complexity": "complex",
+      "pagerank": 0.004412,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "language": "csharp",
+      "symbolCount": 9,
+      "lineCount": 7,
+      "complexity": "moderate",
+      "pagerank": 0.008951,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:Create",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "Create",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:Update",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "Update",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:Deactivate",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "Deactivate",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:Restore",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "Restore",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetById",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "GetById",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetAll",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "GetAll",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetActive",
+      "type": "function",
+      "filePath": "backend/BUS/Interfaces/ICrudBUS.cs",
+      "name": "GetActive",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/BUS/RuntimeBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/RuntimeBUS.cs",
+      "language": "csharp",
+      "symbolCount": 89,
+      "lineCount": 398,
+      "complexity": "complex",
+      "pagerank": 0.004262,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/BaseApiController.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/BaseApiController.cs",
+      "language": "csharp",
+      "symbolCount": 6,
+      "lineCount": 18,
+      "complexity": "moderate",
+      "pagerank": 0.003661,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/AdminUsersController.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/AdminUsersController.cs",
+      "language": "csharp",
+      "symbolCount": 9,
+      "lineCount": 28,
+      "complexity": "moderate",
+      "pagerank": 0.003661,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/BUS/LanguageBUS.cs",
+      "type": "file",
+      "filePath": "backend/BUS/LanguageBUS.cs",
+      "language": "csharp",
+      "symbolCount": 15,
+      "lineCount": 46,
+      "complexity": "moderate",
+      "pagerank": 0.004439,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/FoodControllers.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/FoodControllers.cs",
+      "language": "csharp",
+      "symbolCount": 28,
+      "lineCount": 67,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/LanguagesController.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/LanguagesController.cs",
+      "language": "csharp",
+      "symbolCount": 7,
+      "lineCount": 22,
+      "complexity": "moderate",
+      "pagerank": 0.003661,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/GeocodingController.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/GeocodingController.cs",
+      "language": "csharp",
+      "symbolCount": 5,
+      "lineCount": 25,
+      "complexity": "moderate",
+      "pagerank": 0.003661,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/LookupControllers.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/LookupControllers.cs",
+      "language": "csharp",
+      "symbolCount": 15,
+      "lineCount": 37,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/BaseDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/BaseDAO.cs",
+      "language": "csharp",
+      "symbolCount": 6,
+      "lineCount": 10,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/NarrationControllers.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/NarrationControllers.cs",
+      "language": "csharp",
+      "symbolCount": 19,
+      "lineCount": 57,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/RuntimeControllers.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/RuntimeControllers.cs",
+      "language": "csharp",
+      "symbolCount": 75,
+      "lineCount": 199,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/GenericCrudDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/GenericCrudDAO.cs",
+      "language": "csharp",
+      "symbolCount": 19,
+      "lineCount": 150,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/LookupControllerBase.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/LookupControllerBase.cs",
+      "language": "csharp",
+      "symbolCount": 12,
+      "lineCount": 39,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/AdminUserDAO.cs",
+      "language": "csharp",
+      "symbolCount": 6,
+      "lineCount": 26,
+      "complexity": "moderate",
+      "pagerank": 0.009037,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/DAO/AdminUserDAO.cs:AdminUserDAO",
+      "type": "class",
+      "filePath": "backend/DAO/AdminUserDAO.cs",
+      "name": "AdminUserDAO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/DAO/AdminUserDAO.cs:AdminUserDAO",
+      "type": "function",
+      "filePath": "backend/DAO/AdminUserDAO.cs",
+      "name": "AdminUserDAO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/DAO/AdminUserDAO.cs:GetByEmail",
+      "type": "function",
+      "filePath": "backend/DAO/AdminUserDAO.cs",
+      "name": "GetByEmail",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/DAO/AdminUserDAO.cs:IsEmailExists",
+      "type": "function",
+      "filePath": "backend/DAO/AdminUserDAO.cs",
+      "name": "IsEmailExists",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/DAO/AdminUserDAO.cs:UpdatePassword",
+      "type": "function",
+      "filePath": "backend/DAO/AdminUserDAO.cs",
+      "name": "UpdatePassword",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/DAO/FoodDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/FoodDAO.cs",
+      "language": "csharp",
+      "symbolCount": 22,
+      "lineCount": 105,
+      "complexity": "complex",
+      "pagerank": 0.004588,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/LanguageDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/LanguageDAO.cs",
+      "language": "csharp",
+      "symbolCount": 7,
+      "lineCount": 34,
+      "complexity": "moderate",
+      "pagerank": 0.004416,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Controllers/CrudControllerBase.cs",
+      "type": "file",
+      "filePath": "backend/Controllers/CrudControllerBase.cs",
+      "language": "csharp",
+      "symbolCount": 11,
+      "lineCount": 39,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/Interfaces/ICrudDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/Interfaces/ICrudDAO.cs",
+      "language": "csharp",
+      "symbolCount": 9,
+      "lineCount": 7,
+      "complexity": "moderate",
+      "pagerank": 0.004137,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "file",
+      "filePath": "backend/DAO/Mapping/DbColumnAttribute.cs",
+      "language": "csharp",
+      "symbolCount": 8,
+      "lineCount": 10,
+      "complexity": "moderate",
+      "pagerank": 0.036448,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/DAO/Mapping/DbColumnAttribute.cs:DbColumnAttribute",
+      "type": "class",
+      "filePath": "backend/DAO/Mapping/DbColumnAttribute.cs",
+      "name": "DbColumnAttribute",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/DAO/Mapping/DbColumnAttribute.cs:DbColumnAttribute",
+      "type": "function",
+      "filePath": "backend/DAO/Mapping/DbColumnAttribute.cs",
+      "name": "DbColumnAttribute",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/DAO/Mapping/DbTableAttribute.cs",
+      "type": "file",
+      "filePath": "backend/DAO/Mapping/DbTableAttribute.cs",
+      "language": "csharp",
+      "symbolCount": 4,
+      "lineCount": 5,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 12,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/LookupDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/LookupDAO.cs",
+      "language": "csharp",
+      "symbolCount": 46,
+      "lineCount": 156,
+      "complexity": "complex",
+      "pagerank": 0.006051,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/AuthDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/AuthDTO.cs",
+      "language": "csharp",
+      "symbolCount": 12,
+      "lineCount": 14,
+      "complexity": "moderate",
+      "pagerank": 0.004314,
+      "communityId": 13,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/FoodDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/FoodDTO.cs",
+      "language": "csharp",
+      "symbolCount": 48,
+      "lineCount": 95,
+      "complexity": "complex",
+      "pagerank": 0.004463,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/LanguageDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/LanguageDTO.cs",
+      "language": "csharp",
+      "symbolCount": 9,
+      "lineCount": 19,
+      "complexity": "moderate",
+      "pagerank": 0.004291,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/NarrationDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/NarrationDTO.cs",
+      "language": "csharp",
+      "symbolCount": 35,
+      "lineCount": 72,
+      "complexity": "complex",
+      "pagerank": 0.004161,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/RuntimeDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/RuntimeDAO.cs",
+      "language": "csharp",
+      "symbolCount": 65,
+      "lineCount": 588,
+      "complexity": "complex",
+      "pagerank": 0.003963,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/GeocodingDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/GeocodingDTO.cs",
+      "language": "csharp",
+      "symbolCount": 10,
+      "lineCount": 12,
+      "complexity": "moderate",
+      "pagerank": 0.004158,
+      "communityId": 14,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Properties/launchSettings.json",
+      "type": "config",
+      "filePath": "backend/Properties/launchSettings.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 9,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 15,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/AdminUserDTO.cs",
+      "language": "csharp",
+      "symbolCount": 10,
+      "lineCount": 21,
+      "complexity": "moderate",
+      "pagerank": 0.019984,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/DTO/AdminUserDTO.cs:AdminUserDTO",
+      "type": "class",
+      "filePath": "backend/DTO/AdminUserDTO.cs",
+      "name": "AdminUserDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/DTO/RuntimeDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/RuntimeDTO.cs",
+      "language": "csharp",
+      "symbolCount": 101,
+      "lineCount": 148,
+      "complexity": "complex",
+      "pagerank": 0.005113,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/Common/ApiResponseDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/Common/ApiResponseDTO.cs",
+      "language": "csharp",
+      "symbolCount": 7,
+      "lineCount": 13,
+      "complexity": "moderate",
+      "pagerank": 0.005092,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DAO/NarrationDAO.cs",
+      "type": "file",
+      "filePath": "backend/DAO/NarrationDAO.cs",
+      "language": "csharp",
+      "symbolCount": 20,
+      "lineCount": 101,
+      "complexity": "complex",
+      "pagerank": 0.004588,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "type": "file",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "language": "csharp",
+      "symbolCount": 16,
+      "lineCount": 18,
+      "complexity": "complex",
+      "pagerank": 0.008216,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:LookupDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "LookupDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:PlaceTypeDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "PlaceTypeDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:ContentTypeDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "ContentTypeDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:TargetTypeDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "TargetTypeDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:TranslationSourceDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "TranslationSourceDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:TriggerModeDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "TriggerModeDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:GeofenceEventTypeDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "GeofenceEventTypeDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "class:backend/DTO/Lookup/LookupDTO.cs:GeofenceEventStatusDTO",
+      "type": "class",
+      "filePath": "backend/DTO/Lookup/LookupDTO.cs",
+      "name": "GeofenceEventStatusDTO",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/data/fix_listening_histories_nullable_audio.sql",
+      "type": "file",
+      "filePath": "backend/data/fix_listening_histories_nullable_audio.sql",
+      "language": "sql",
+      "symbolCount": 0,
+      "lineCount": 2,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 16,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/data/schema.sql",
+      "type": "file",
+      "filePath": "backend/data/schema.sql",
+      "language": "sql",
+      "symbolCount": 0,
+      "lineCount": 958,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 17,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/data/seed_demo_vinhkhanh_full_deploy.sql",
+      "type": "file",
+      "filePath": "backend/data/seed_demo_vinhkhanh_full_deploy.sql",
+      "language": "sql",
+      "symbolCount": 0,
+      "lineCount": 1932,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 18,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/data/seed_minimal.sql",
+      "type": "file",
+      "filePath": "backend/data/seed_minimal.sql",
+      "language": "sql",
+      "symbolCount": 0,
+      "lineCount": 262,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 19,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/data/seed_supported_languages_fixed.sql",
+      "type": "file",
+      "filePath": "backend/data/seed_supported_languages_fixed.sql",
+      "language": "sql",
+      "symbolCount": 0,
+      "lineCount": 40,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 20,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "file",
+      "filePath": "backend/Database/DbConnectionFactory.cs",
+      "language": "csharp",
+      "symbolCount": 5,
+      "lineCount": 25,
+      "complexity": "moderate",
+      "pagerank": 0.014565,
+      "communityId": 3,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/Database/DbConnectionFactory.cs:DbConnectionFactory",
+      "type": "class",
+      "filePath": "backend/Database/DbConnectionFactory.cs",
+      "name": "DbConnectionFactory",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/Database/DbConnectionFactory.cs:DbConnectionFactory",
+      "type": "function",
+      "filePath": "backend/Database/DbConnectionFactory.cs",
+      "name": "DbConnectionFactory",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/Database/DbConnectionFactory.cs:CreateConnection",
+      "type": "function",
+      "filePath": "backend/Database/DbConnectionFactory.cs",
+      "name": "CreateConnection",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/README.md",
+      "type": "document",
+      "filePath": "frontend/README.md",
+      "language": "markdown",
+      "symbolCount": 0,
+      "lineCount": 168,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 21,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/Swagger/SwaggerConfiguration.cs",
+      "type": "file",
+      "filePath": "backend/Swagger/SwaggerConfiguration.cs",
+      "language": "csharp",
+      "symbolCount": 3,
+      "lineCount": 22,
+      "complexity": "simple",
+      "pagerank": 0.003661,
+      "communityId": 3,
+      "tags": [
+        "api_contract"
+      ],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/package.json",
+      "type": "config",
+      "filePath": "frontend/package.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 28,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 22,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/Utils/EnvLoader.cs",
+      "type": "file",
+      "filePath": "backend/Utils/EnvLoader.cs",
+      "language": "csharp",
+      "symbolCount": 3,
+      "lineCount": 24,
+      "complexity": "simple",
+      "pagerank": 0.008574,
+      "communityId": 1,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "class:backend/Utils/EnvLoader.cs:EnvLoader",
+      "type": "class",
+      "filePath": "backend/Utils/EnvLoader.cs",
+      "name": "EnvLoader",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:backend/Utils/EnvLoader.cs:Load",
+      "type": "function",
+      "filePath": "backend/Utils/EnvLoader.cs",
+      "name": "Load",
+      "language": "csharp",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/Utils/PasswordHasher.cs",
+      "type": "file",
+      "filePath": "backend/Utils/PasswordHasher.cs",
+      "language": "csharp",
+      "symbolCount": 4,
+      "lineCount": 10,
+      "complexity": "moderate",
+      "pagerank": 0.006269,
+      "communityId": 23,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/tsconfig.app.json",
+      "type": "config",
+      "filePath": "frontend/tsconfig.app.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 14,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 24,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/tsconfig.json",
+      "type": "config",
+      "filePath": "frontend/tsconfig.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 1,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 25,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:backend/Utils/SessionGenerator.cs",
+      "type": "file",
+      "filePath": "backend/Utils/SessionGenerator.cs",
+      "language": "csharp",
+      "symbolCount": 3,
+      "lineCount": 5,
+      "complexity": "simple",
+      "pagerank": 0.004965,
+      "communityId": 26,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Utils/ValidationHelper.cs",
+      "type": "file",
+      "filePath": "backend/Utils/ValidationHelper.cs",
+      "language": "csharp",
+      "symbolCount": 4,
+      "lineCount": 9,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 4,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/vite.config.ts",
+      "type": "file",
+      "filePath": "frontend/vite.config.ts",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 4,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 5,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/tailwind.config.js",
+      "type": "file",
+      "filePath": "frontend/tailwind.config.js",
+      "language": "javascript",
+      "symbolCount": 0,
+      "lineCount": 6,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 27,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/vitest.config.ts",
+      "type": "file",
+      "filePath": "frontend/vitest.config.ts",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 6,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 5,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/App.tsx",
+      "type": "file",
+      "filePath": "frontend/src/App.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 82,
+      "complexity": "simple",
+      "pagerank": 0.004137,
+      "communityId": 2,
+      "tags": [
+        "entry_point"
+      ],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/postcss.config.js",
+      "type": "file",
+      "filePath": "frontend/postcss.config.js",
+      "language": "javascript",
+      "symbolCount": 0,
+      "lineCount": 1,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 28,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/main.tsx",
+      "type": "file",
+      "filePath": "frontend/src/main.tsx",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 9,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 6,
+      "tags": [
+        "entry_point"
+      ],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/vite-env.d.ts",
+      "type": "file",
+      "filePath": "frontend/src/vite-env.d.ts",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 0,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 29,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/api/endpoints.ts",
+      "type": "file",
+      "filePath": "frontend/src/api/endpoints.ts",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 29,
+      "complexity": "simple",
+      "pagerank": 0.020254,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/api/http.ts",
+      "type": "file",
+      "filePath": "frontend/src/api/http.ts",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 37,
+      "complexity": "simple",
+      "pagerank": 0.009203,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/api/http.ts:getApiError",
+      "type": "function",
+      "filePath": "frontend/src/api/http.ts",
+      "name": "getApiError",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/http.ts:unwrap",
+      "type": "function",
+      "filePath": "frontend/src/api/http.ts",
+      "name": "unwrap",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/components/common/LanguageSwitcher.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/common/LanguageSwitcher.tsx",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 38,
+      "complexity": "simple",
+      "pagerank": 0.004321,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:backend/Utils/GeoDistanceCalculator.cs",
+      "type": "file",
+      "filePath": "backend/Utils/GeoDistanceCalculator.cs",
+      "language": "csharp",
+      "symbolCount": 4,
+      "lineCount": 18,
+      "complexity": "moderate",
+      "pagerank": 0.004965,
+      "communityId": 30,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/layout/PageHeader.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/layout/PageHeader.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 16,
+      "complexity": "simple",
+      "pagerank": 0.006459,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/components/layout/PageHeader.tsx:PageHeader",
+      "type": "function",
+      "filePath": "frontend/src/components/layout/PageHeader.tsx",
+      "name": "PageHeader",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/api/crud.ts",
+      "type": "file",
+      "filePath": "frontend/src/api/crud.ts",
+      "language": "typescript",
+      "symbolCount": 8,
+      "lineCount": 35,
+      "complexity": "moderate",
+      "pagerank": 0.007768,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:getList",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "getList",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:getOne",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "getOne",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:createItem",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "createItem",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:updateItem",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "updateItem",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:patchItem",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "patchItem",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:deleteItem",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "deleteItem",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/crud.ts:resolveAddress",
+      "type": "function",
+      "filePath": "frontend/src/api/crud.ts",
+      "name": "resolveAddress",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/components/layout/AdminShell.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/layout/AdminShell.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 67,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/DataTable.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/DataTable.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 36,
+      "complexity": "simple",
+      "pagerank": 0.005936,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/api/publicApi.ts",
+      "type": "file",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "language": "typescript",
+      "symbolCount": 16,
+      "lineCount": 147,
+      "complexity": "complex",
+      "pagerank": 0.006766,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:createGuestSession",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "createGuestSession",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getActiveLanguages",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getActiveLanguages",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:updateGuestLanguage",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "updateGuestLanguage",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getActivePlaces",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getActivePlaces",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getPlace",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getPlace",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getPlaceDishes",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getPlaceDishes",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getNarrationsByPlace",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getNarrationsByPlace",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getNarrationsByDish",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getNarrationsByDish",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getTranslation",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getTranslation",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:getPlayableAudio",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "getPlayableAudio",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:resolvePlaceNarration",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "resolvePlaceNarration",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:resolveDishNarration",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "resolveDishNarration",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:resolveQr",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "resolveQr",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:checkGeofence",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "checkGeofence",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:submitListeningHistory",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "submitListeningHistory",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/api/publicApi.ts:submitFeedback",
+      "type": "function",
+      "filePath": "frontend/src/api/publicApi.ts",
+      "name": "submitFeedback",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/components/ui/BottomSheet.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/BottomSheet.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 18,
+      "complexity": "simple",
+      "pagerank": 0.003745,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/Button.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/Button.tsx",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 27,
+      "complexity": "simple",
+      "pagerank": 0.010653,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/components/ui/Button.tsx:Button",
+      "type": "function",
+      "filePath": "frontend/src/components/ui/Button.tsx",
+      "name": "Button",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/components/ui/StatusBadge.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/StatusBadge.tsx",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 17,
+      "complexity": "simple",
+      "pagerank": 0.005487,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/Input.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/Input.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 11,
+      "complexity": "simple",
+      "pagerank": 0.005369,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/layout/PublicShell.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/layout/PublicShell.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 41,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/EmptyState.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/EmptyState.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 9,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 31,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/Modal.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/Modal.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 18,
+      "complexity": "simple",
+      "pagerank": 0.004107,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/Card.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/Card.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 6,
+      "complexity": "simple",
+      "pagerank": 0.007932,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/components/ui/Card.tsx:Card",
+      "type": "function",
+      "filePath": "frontend/src/components/ui/Card.tsx",
+      "name": "Card",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/components/ui/LoadingState.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/LoadingState.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 5,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 32,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/components/ui/Textarea.tsx",
+      "type": "file",
+      "filePath": "frontend/src/components/ui/Textarea.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 12,
+      "complexity": "simple",
+      "pagerank": 0.005142,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 55,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 32,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "file",
+      "filePath": "frontend/src/contexts/AppContext.tsx",
+      "language": "typescript",
+      "symbolCount": 4,
+      "lineCount": 98,
+      "complexity": "moderate",
+      "pagerank": 0.021521,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/contexts/AppContext.tsx:readJson",
+      "type": "function",
+      "filePath": "frontend/src/contexts/AppContext.tsx",
+      "name": "readJson",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/contexts/AppContext.tsx:AppProvider",
+      "type": "function",
+      "filePath": "frontend/src/contexts/AppContext.tsx",
+      "name": "AppProvider",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/contexts/AppContext.tsx:useAppContext",
+      "type": "function",
+      "filePath": "frontend/src/contexts/AppContext.tsx",
+      "name": "useAppContext",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/DishesManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 70,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 41,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 197,
+      "complexity": "moderate",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/SimpleResourcePage.tsx",
+      "language": "typescript",
+      "symbolCount": 3,
+      "lineCount": 223,
+      "complexity": "moderate",
+      "pagerank": 0.012174,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/features/admin/SimpleResourcePage.tsx:SimpleResourcePage",
+      "type": "function",
+      "filePath": "frontend/src/features/admin/SimpleResourcePage.tsx",
+      "name": "SimpleResourcePage",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/features/admin/NarrationManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/NarrationManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 27,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 24,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/LookupManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 43,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/QRCodeManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/QRCodeManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 27,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/TranslationManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/TranslationManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 29,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/AudioManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/AudioManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 27,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 96,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/FeedbackModal.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 41,
+      "complexity": "simple",
+      "pagerank": 0.004031,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 62,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/MapExploreScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 289,
+      "complexity": "moderate",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 135,
+      "complexity": "moderate",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/QRScannerScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 183,
+      "complexity": "moderate",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/SplashScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/SplashScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 41,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/i18n/translations.ts",
+      "type": "file",
+      "filePath": "frontend/src/i18n/translations.ts",
+      "language": "typescript",
+      "symbolCount": 4,
+      "lineCount": 1103,
+      "complexity": "complex",
+      "pagerank": 0.027072,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/i18n/translations.ts:normalizeUiLanguage",
+      "type": "function",
+      "filePath": "frontend/src/i18n/translations.ts",
+      "name": "normalizeUiLanguage",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/i18n/translations.ts:translateKey",
+      "type": "function",
+      "filePath": "frontend/src/i18n/translations.ts",
+      "name": "translateKey",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "function:frontend/src/i18n/translations.ts:translateText",
+      "type": "function",
+      "filePath": "frontend/src/i18n/translations.ts",
+      "name": "translateText",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "type": "file",
+      "filePath": "frontend/src/hooks/useGeofenceWatcher.ts",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 44,
+      "complexity": "simple",
+      "pagerank": 0.003745,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/admin/AdminLoginScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 47,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "type": "file",
+      "filePath": "frontend/src/features/public/SettingsScreen.tsx",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 59,
+      "complexity": "simple",
+      "pagerank": 0.003696,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/test/setup.ts",
+      "type": "file",
+      "filePath": "frontend/src/test/setup.ts",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 10,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 35,
+      "tags": [
+        "test"
+      ],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/hooks/useGeolocation.test.ts",
+      "type": "file",
+      "filePath": "frontend/src/hooks/useGeolocation.test.ts",
+      "language": "typescript",
+      "symbolCount": 0,
+      "lineCount": 63,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 37,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/types/index.ts",
+      "type": "file",
+      "filePath": "frontend/src/types/index.ts",
+      "language": "typescript",
+      "symbolCount": 19,
+      "lineCount": 124,
+      "complexity": "complex",
+      "pagerank": 0.014963,
+      "communityId": 0,
+      "tags": [
+        "entry_point"
+      ],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/hooks/useSpeechSynthesis.ts",
+      "type": "file",
+      "filePath": "frontend/src/hooks/useSpeechSynthesis.ts",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 46,
+      "complexity": "simple",
+      "pagerank": 0.003821,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/hooks/useGeolocation.ts",
+      "type": "file",
+      "filePath": "frontend/src/hooks/useGeolocation.ts",
+      "language": "typescript",
+      "symbolCount": 2,
+      "lineCount": 47,
+      "complexity": "simple",
+      "pagerank": 0.005384,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/Integration/AdminAndLogReadSmokeTests.cs",
+      "type": "file",
+      "filePath": "tests/Integration/AdminAndLogReadSmokeTests.cs",
+      "language": "csharp",
+      "symbolCount": 6,
+      "lineCount": 58,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 38,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/Integration/ApiReadSmokeTests.cs",
+      "type": "file",
+      "filePath": "tests/Integration/ApiReadSmokeTests.cs",
+      "language": "csharp",
+      "symbolCount": 7,
+      "lineCount": 52,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 38,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:frontend/src/i18n/useI18n.ts",
+      "type": "file",
+      "filePath": "frontend/src/i18n/useI18n.ts",
+      "language": "typescript",
+      "symbolCount": 1,
+      "lineCount": 8,
+      "complexity": "simple",
+      "pagerank": 0.028943,
+      "communityId": 0,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "function:frontend/src/i18n/useI18n.ts:useI18n",
+      "type": "function",
+      "filePath": "frontend/src/i18n/useI18n.ts",
+      "name": "useI18n",
+      "language": "typescript",
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:frontend/src/hooks/useSpeechSynthesis.test.ts",
+      "type": "file",
+      "filePath": "frontend/src/hooks/useSpeechSynthesis.test.ts",
+      "language": "typescript",
+      "symbolCount": 7,
+      "lineCount": 165,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 2,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/Integration/CustomWebApplicationFactory.cs",
+      "type": "file",
+      "filePath": "tests/Integration/CustomWebApplicationFactory.cs",
+      "language": "csharp",
+      "symbolCount": 5,
+      "lineCount": 33,
+      "complexity": "moderate",
+      "pagerank": 0.00604,
+      "communityId": 39,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/TestHelpers/HttpTestHelper.cs",
+      "type": "file",
+      "filePath": "tests/TestHelpers/HttpTestHelper.cs",
+      "language": "csharp",
+      "symbolCount": 4,
+      "lineCount": 18,
+      "complexity": "moderate",
+      "pagerank": 0.00604,
+      "communityId": 40,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/Utils/GeoDistanceCalculatorTests.cs",
+      "type": "file",
+      "filePath": "tests/Utils/GeoDistanceCalculatorTests.cs",
+      "language": "csharp",
+      "symbolCount": 5,
+      "lineCount": 33,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 38,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/Utils/SessionGeneratorTests.cs",
+      "type": "file",
+      "filePath": "tests/Utils/SessionGeneratorTests.cs",
+      "language": "csharp",
+      "symbolCount": 5,
+      "lineCount": 23,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 38,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/MvcTestingAppManifest.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/MvcTestingAppManifest.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 3,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.Tests.deps.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/VinhKhanhNarration.Api.Tests.deps.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 4254,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.Tests.runtimeconfig.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/VinhKhanhNarration.Api.Tests.runtimeconfig.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 9,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.deps.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/VinhKhanhNarration.Api.deps.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 160,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.runtimeconfig.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/VinhKhanhNarration.Api.runtimeconfig.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 10,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/Utils/PasswordHasherTests.cs",
+      "type": "file",
+      "filePath": "tests/Utils/PasswordHasherTests.cs",
+      "language": "csharp",
+      "symbolCount": 5,
+      "lineCount": 30,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 38,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.staticwebassets.endpoints.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/VinhKhanhNarration.Api.staticwebassets.endpoints.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 1,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/appsettings.Development.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/appsettings.Development.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 2,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/bin/Debug/net8.0/appsettings.json",
+      "type": "config",
+      "filePath": "tests/bin/Debug/net8.0/appsettings.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 5,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/TestHelpers/JsonTestHelper.cs",
+      "type": "file",
+      "filePath": "tests/TestHelpers/JsonTestHelper.cs",
+      "language": "csharp",
+      "symbolCount": 6,
+      "lineCount": 104,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 4,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "type": "file",
+      "filePath": "tests/Integration/PublicFlowSmokeTests.cs",
+      "language": "csharp",
+      "symbolCount": 13,
+      "lineCount": 146,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 40,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    },
+    {
+      "id": "file:tests/obj/VinhKhanhNarration.Api.Tests.csproj.nuget.dgspec.json",
+      "type": "config",
+      "filePath": "tests/obj/VinhKhanhNarration.Api.Tests.csproj.nuget.dgspec.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 158,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/obj/Debug/net8.0/MvcTestingAppManifest.json",
+      "type": "config",
+      "filePath": "tests/obj/Debug/net8.0/MvcTestingAppManifest.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 3,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/obj/project.assets.json",
+      "type": "config",
+      "filePath": "tests/obj/project.assets.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 4061,
+      "complexity": "complex",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tests/obj/Debug/net8.0/VinhKhanhNarration.Api.Tests.sourcelink.json",
+      "type": "config",
+      "filePath": "tests/obj/Debug/net8.0/VinhKhanhNarration.Api.Tests.sourcelink.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 4,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 42,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tools/geocode_results.json",
+      "type": "config",
+      "filePath": "tools/geocode_results.json",
+      "language": "json",
+      "symbolCount": 0,
+      "lineCount": 133,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 33,
+      "tags": [
+        "config"
+      ],
+      "summary": ""
+    },
+    {
+      "id": "file:tools/seed_demo_vinhkhanh_google_coordinates.sql",
+      "type": "file",
+      "filePath": "tools/seed_demo_vinhkhanh_google_coordinates.sql",
+      "language": "sql",
+      "symbolCount": 0,
+      "lineCount": 2,
+      "complexity": "simple",
+      "pagerank": 0.003536,
+      "communityId": 34,
+      "tags": [],
+      "summary": ""
+    },
+    {
+      "id": "file:tools/geocode_places_google.js",
+      "type": "file",
+      "filePath": "tools/geocode_places_google.js",
+      "language": "javascript",
+      "symbolCount": 3,
+      "lineCount": 164,
+      "complexity": "moderate",
+      "pagerank": 0.003536,
+      "communityId": 7,
+      "tags": [],
+      "summary": "",
+      "primaryOwner": "vastolordede"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:backend/Program.cs",
+      "target": "file:backend/Swagger/SwaggerConfiguration.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Program.cs",
+      "target": "file:backend/Utils/EnvLoader.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Program.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "class:backend/BUS/AdminUserBUS.cs:AdminUserBUS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:AdminUserBUS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Deactivate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Restore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:GetById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:GetAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:GetActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Login",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ChangePassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ValidateRole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ValidateBeforeCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ValidateBeforeUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "file:backend/Utils/EnvLoader.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs",
+      "target": "file:backend/Utils/PasswordHasher.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:AdminUserBUS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Deactivate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Restore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:GetById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:GetAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:GetActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:Login",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ChangePassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ValidateRole",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ValidateBeforeCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/AdminUserBUS.cs::AdminUserBUS",
+      "target": "function:backend/BUS/AdminUserBUS.cs:ValidateBeforeUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/FoodBUS.cs",
+      "target": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/FoodBUS.cs",
+      "target": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/FoodBUS.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/FoodBUS.cs",
+      "target": "file:backend/DAO/FoodDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/FoodBUS.cs",
+      "target": "file:backend/BUS/GeocodingBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/FoodBUS.cs",
+      "target": "file:backend/DTO/FoodDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/GeocodingBUS.cs",
+      "target": "file:external:System.Globalization",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/GeocodingBUS.cs",
+      "target": "file:external:System.Text.Json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/GeocodingBUS.cs",
+      "target": "file:external:System.Text.RegularExpressions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/GeocodingBUS.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/LookupBUS.cs",
+      "target": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/LookupBUS.cs",
+      "target": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/LookupBUS.cs",
+      "target": "file:backend/DAO/LookupDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/NarrationBUS.cs",
+      "target": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/NarrationBUS.cs",
+      "target": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/NarrationBUS.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/NarrationBUS.cs",
+      "target": "file:backend/DAO/NarrationDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/NarrationBUS.cs",
+      "target": "file:backend/DAO/LookupDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/NarrationBUS.cs",
+      "target": "file:backend/DTO/NarrationDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Deactivate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Restore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Deactivate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:Restore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetAll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/Interfaces/ICrudBUS.cs::ICrudBUS",
+      "target": "function:backend/BUS/Interfaces/ICrudBUS.cs:GetActive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/Utils/EnvLoader.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DAO/RuntimeDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DAO/LookupDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DAO/NarrationDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DTO/RuntimeDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/Utils/SessionGenerator.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DAO/FoodDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/Utils/GeoDistanceCalculator.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/RuntimeBUS.cs",
+      "target": "file:backend/DTO/FoodDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/BaseApiController.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/BaseApiController.cs",
+      "target": "file:backend/DTO/Common/ApiResponseDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/AdminUsersController.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/AdminUsersController.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/AdminUsersController.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/AdminUsersController.cs",
+      "target": "file:backend/DTO/AuthDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/LanguageBUS.cs",
+      "target": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/LanguageBUS.cs",
+      "target": "file:backend/DAO/AdminUserDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/LanguageBUS.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/BUS/LanguageBUS.cs",
+      "target": "file:backend/DAO/LanguageDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/BUS/LanguageBUS.cs",
+      "target": "file:backend/DTO/LanguageDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/FoodControllers.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/FoodControllers.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/FoodControllers.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/FoodControllers.cs",
+      "target": "file:backend/BUS/FoodBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/LanguagesController.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LanguagesController.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LanguagesController.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LanguagesController.cs",
+      "target": "file:backend/BUS/LanguageBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/GeocodingController.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/GeocodingController.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/GeocodingController.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/GeocodingController.cs",
+      "target": "file:backend/BUS/GeocodingBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/GeocodingController.cs",
+      "target": "file:backend/DTO/GeocodingDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllers.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllers.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllers.cs",
+      "target": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllers.cs",
+      "target": "file:backend/BUS/LookupBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/DAO/BaseDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/BaseDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/NarrationControllers.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/NarrationControllers.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/NarrationControllers.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/NarrationControllers.cs",
+      "target": "file:backend/BUS/NarrationBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/RuntimeControllers.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/RuntimeControllers.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/RuntimeControllers.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/RuntimeControllers.cs",
+      "target": "file:backend/BUS/RuntimeBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/Controllers/RuntimeControllers.cs",
+      "target": "file:backend/DTO/RuntimeDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/DAO/GenericCrudDAO.cs",
+      "target": "file:external:System.Reflection",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/GenericCrudDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/GenericCrudDAO.cs",
+      "target": "file:backend/DAO/Interfaces/ICrudDAO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/GenericCrudDAO.cs",
+      "target": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/GenericCrudDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllerBase.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllerBase.cs",
+      "target": "file:backend/BUS/AdminUserBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllerBase.cs",
+      "target": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/LookupControllerBase.cs",
+      "target": "file:backend/BUS/LookupBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "class:backend/DAO/AdminUserDAO.cs:AdminUserDAO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "function:backend/DAO/AdminUserDAO.cs:AdminUserDAO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "function:backend/DAO/AdminUserDAO.cs:GetByEmail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "function:backend/DAO/AdminUserDAO.cs:IsEmailExists",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "function:backend/DAO/AdminUserDAO.cs:UpdatePassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs::AdminUserDAO",
+      "target": "function:backend/DAO/AdminUserDAO.cs:AdminUserDAO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs::AdminUserDAO",
+      "target": "function:backend/DAO/AdminUserDAO.cs:GetByEmail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs::AdminUserDAO",
+      "target": "function:backend/DAO/AdminUserDAO.cs:IsEmailExists",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/AdminUserDAO.cs::AdminUserDAO",
+      "target": "function:backend/DAO/AdminUserDAO.cs:UpdatePassword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/FoodDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/FoodDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/FoodDAO.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/LanguageDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/LanguageDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/LanguageDAO.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/CrudControllerBase.cs",
+      "target": "file:external:Microsoft.AspNetCore.Mvc",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Controllers/CrudControllerBase.cs",
+      "target": "file:backend/BUS/Interfaces/ICrudBUS.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "target": "class:backend/DAO/Mapping/DbColumnAttribute.cs:DbColumnAttribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "target": "function:backend/DAO/Mapping/DbColumnAttribute.cs:DbColumnAttribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/Mapping/DbColumnAttribute.cs::DbColumnAttribute",
+      "target": "function:backend/DAO/Mapping/DbColumnAttribute.cs:DbColumnAttribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/LookupDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/LookupDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/LookupDAO.cs",
+      "target": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/FoodDTO.cs",
+      "target": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/LanguageDTO.cs",
+      "target": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/NarrationDTO.cs",
+      "target": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/RuntimeDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/RuntimeDAO.cs",
+      "target": "file:external:NpgsqlTypes",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/RuntimeDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/RuntimeDAO.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/RuntimeDAO.cs",
+      "target": "file:backend/DTO/RuntimeDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:backend/DTO/AdminUserDTO.cs",
+      "target": "class:backend/DTO/AdminUserDTO.cs:AdminUserDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/AdminUserDTO.cs",
+      "target": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/RuntimeDTO.cs",
+      "target": "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/NarrationDAO.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/NarrationDAO.cs",
+      "target": "file:backend/Database/DbConnectionFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DAO/NarrationDAO.cs",
+      "target": "file:backend/DTO/AdminUserDTO.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:LookupDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:PlaceTypeDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:ContentTypeDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:TargetTypeDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:TranslationSourceDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:TriggerModeDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:GeofenceEventTypeDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/DTO/Lookup/LookupDTO.cs",
+      "target": "class:backend/DTO/Lookup/LookupDTO.cs:GeofenceEventStatusDTO",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Database/DbConnectionFactory.cs",
+      "target": "class:backend/Database/DbConnectionFactory.cs:DbConnectionFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Database/DbConnectionFactory.cs",
+      "target": "function:backend/Database/DbConnectionFactory.cs:DbConnectionFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Database/DbConnectionFactory.cs",
+      "target": "function:backend/Database/DbConnectionFactory.cs:CreateConnection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Database/DbConnectionFactory.cs",
+      "target": "file:external:nuget:Npgsql",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Database/DbConnectionFactory.cs::DbConnectionFactory",
+      "target": "function:backend/Database/DbConnectionFactory.cs:DbConnectionFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Database/DbConnectionFactory.cs::DbConnectionFactory",
+      "target": "function:backend/Database/DbConnectionFactory.cs:CreateConnection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Swagger/SwaggerConfiguration.cs",
+      "target": "file:external:System.Reflection",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Swagger/SwaggerConfiguration.cs",
+      "target": "file:external:Microsoft.OpenApi.Models",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Utils/EnvLoader.cs",
+      "target": "class:backend/Utils/EnvLoader.cs:EnvLoader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Utils/EnvLoader.cs",
+      "target": "function:backend/Utils/EnvLoader.cs:Load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Utils/EnvLoader.cs::EnvLoader",
+      "target": "function:backend/Utils/EnvLoader.cs:Load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:backend/Utils/ValidationHelper.cs",
+      "target": "file:external:System.Text.RegularExpressions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/vite.config.ts",
+      "target": "file:external:vite",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/vite.config.ts",
+      "target": "file:external:@vitejs/plugin-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/vitest.config.ts",
+      "target": "file:external:vitest/config",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/vitest.config.ts",
+      "target": "file:external:@vitejs/plugin-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/components/layout/PublicShell.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/components/layout/AdminShell.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/public/SplashScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/NarrationManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/TranslationManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/AudioManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/QRCodeManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/App.tsx",
+      "target": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/main.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/main.tsx",
+      "target": "file:external:react-dom/client",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/main.tsx",
+      "target": "file:external:leaflet/dist/leaflet.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/main.tsx",
+      "target": "file:frontend/src/App.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/main.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/http.ts",
+      "target": "function:frontend/src/api/http.ts:getApiError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/http.ts",
+      "target": "function:frontend/src/api/http.ts:unwrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/http.ts",
+      "target": "file:external:axios",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/http.ts",
+      "target": "file:frontend/src/i18n/translations.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/common/LanguageSwitcher.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/common/LanguageSwitcher.tsx",
+      "target": "file:frontend/src/i18n/translations.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/common/LanguageSwitcher.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/PageHeader.tsx",
+      "target": "function:frontend/src/components/layout/PageHeader.tsx:PageHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/PageHeader.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/PageHeader.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:getList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:getOne",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:createItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:updateItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:patchItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:deleteItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "function:frontend/src/api/crud.ts:resolveAddress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "file:frontend/src/api/http.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/crud.ts",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/AdminShell.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/AdminShell.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/AdminShell.tsx",
+      "target": "file:frontend/src/components/common/LanguageSwitcher.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/AdminShell.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/DataTable.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/DataTable.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:createGuestSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getActiveLanguages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:updateGuestLanguage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getActivePlaces",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getPlace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getPlaceDishes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getNarrationsByPlace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getNarrationsByDish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getTranslation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:getPlayableAudio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:resolvePlaceNarration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:resolveDishNarration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:resolveQr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:checkGeofence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:submitListeningHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "function:frontend/src/api/publicApi.ts:submitFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "file:frontend/src/api/http.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/api/publicApi.ts",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/BottomSheet.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/BottomSheet.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Button.tsx",
+      "target": "function:frontend/src/components/ui/Button.tsx:Button",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Button.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Button.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/StatusBadge.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Input.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Input.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/PublicShell.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/PublicShell.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/layout/PublicShell.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Modal.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Modal.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Card.tsx",
+      "target": "function:frontend/src/components/ui/Card.tsx:Card",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Card.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Textarea.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/components/ui/Textarea.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "target": "file:frontend/src/components/layout/PageHeader.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:frontend/src/components/ui/DataTable.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:frontend/src/components/layout/PageHeader.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/contexts/AppContext.tsx",
+      "target": "function:frontend/src/contexts/AppContext.tsx:readJson",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/contexts/AppContext.tsx",
+      "target": "function:frontend/src/contexts/AppContext.tsx:AppProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/contexts/AppContext.tsx",
+      "target": "function:frontend/src/contexts/AppContext.tsx:useAppContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/contexts/AppContext.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/contexts/AppContext.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/contexts/AppContext.tsx",
+      "target": "file:frontend/src/i18n/translations.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/DataTable.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/components/layout/PageHeader.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/StatusBadge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/StatusBadge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "function:frontend/src/features/admin/SimpleResourcePage.tsx:SimpleResourcePage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/ui/DataTable.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/ui/Input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/ui/Textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/layout/PageHeader.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "target": "file:frontend/src/components/ui/StatusBadge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/NarrationManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/NarrationManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "target": "file:frontend/src/components/ui/DataTable.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "target": "file:frontend/src/components/layout/PageHeader.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/QRCodeManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/QRCodeManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/TranslationManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/TranslationManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AudioManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AudioManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "target": "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "target": "file:frontend/src/api/crud.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "target": "file:frontend/src/components/ui/Modal.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "target": "file:frontend/src/components/ui/Textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:external:leaflet",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:external:react-leaflet",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/components/ui/BottomSheet.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/hooks/useGeolocation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/MapExploreScreen.tsx",
+      "target": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/hooks/useSpeechSynthesis.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/features/public/FeedbackModal.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:external:lucide-react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:frontend/src/components/ui/Input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/QRScannerScreen.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SplashScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SplashScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SplashScreen.tsx",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SplashScreen.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/i18n/translations.ts",
+      "target": "function:frontend/src/i18n/translations.ts:normalizeUiLanguage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/i18n/translations.ts",
+      "target": "function:frontend/src/i18n/translations.ts:translateKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/i18n/translations.ts",
+      "target": "function:frontend/src/i18n/translations.ts:translateText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "target": "file:frontend/src/api/publicApi.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "target": "file:frontend/src/hooks/useGeolocation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeofenceWatcher.ts",
+      "target": "file:frontend/src/types/index.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:frontend/src/api/http.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:frontend/src/api/endpoints.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+      "target": "file:frontend/src/components/ui/Input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "target": "file:external:react-router-dom",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "target": "file:frontend/src/components/ui/Button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "target": "file:frontend/src/components/ui/Card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/features/public/SettingsScreen.tsx",
+      "target": "file:frontend/src/i18n/useI18n.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/test/setup.ts",
+      "target": "file:external:@testing-library/jest-dom",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/test/setup.ts",
+      "target": "file:external:vitest",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeolocation.test.ts",
+      "target": "file:external:@testing-library/react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeolocation.test.ts",
+      "target": "file:external:vitest",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeolocation.test.ts",
+      "target": "file:frontend/src/hooks/useGeolocation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useSpeechSynthesis.ts",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useGeolocation.ts",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/AdminAndLogReadSmokeTests.cs",
+      "target": "file:tests/TestHelpers/HttpTestHelper.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/AdminAndLogReadSmokeTests.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/AdminAndLogReadSmokeTests.cs",
+      "target": "file:tests/Integration/CustomWebApplicationFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:tests/Integration/ApiReadSmokeTests.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/ApiReadSmokeTests.cs",
+      "target": "file:tests/TestHelpers/HttpTestHelper.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/ApiReadSmokeTests.cs",
+      "target": "file:tests/Integration/CustomWebApplicationFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:frontend/src/i18n/useI18n.ts",
+      "target": "function:frontend/src/i18n/useI18n.ts:useI18n",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/i18n/useI18n.ts",
+      "target": "file:frontend/src/contexts/AppContext.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/i18n/useI18n.ts",
+      "target": "file:frontend/src/i18n/translations.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:frontend/src/hooks/useSpeechSynthesis.test.ts",
+      "target": "file:external:react",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/CustomWebApplicationFactory.cs",
+      "target": "file:external:nuget:Microsoft.AspNetCore.Mvc.Testing",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/TestHelpers/HttpTestHelper.cs",
+      "target": "file:external:System.Net",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/TestHelpers/HttpTestHelper.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Utils/GeoDistanceCalculatorTests.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Utils/GeoDistanceCalculatorTests.cs",
+      "target": "file:backend/Utils/EnvLoader.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Utils/SessionGeneratorTests.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Utils/SessionGeneratorTests.cs",
+      "target": "file:backend/Utils/EnvLoader.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Utils/PasswordHasherTests.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Utils/PasswordHasherTests.cs",
+      "target": "file:backend/Utils/EnvLoader.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/TestHelpers/JsonTestHelper.cs",
+      "target": "file:external:System.Text.Json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "target": "file:external:System.Net",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "target": "file:external:System.Net.Http.Json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "target": "file:external:System.Text.Json",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "target": "file:external:nuget:FluentAssertions",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "target": "file:tests/TestHelpers/HttpTestHelper.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:tests/Integration/PublicFlowSmokeTests.cs",
+      "target": "file:tests/Integration/CustomWebApplicationFactory.cs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:tools/geocode_places_google.js",
+      "target": "file:external:fs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:frontend",
+      "name": "frontend",
+      "description": "",
+      "nodeIds": [
+        "file:external:axios",
+        "file:external:leaflet",
+        "file:external:lucide-react",
+        "file:external:react-leaflet",
+        "file:external:react-router-dom",
+        "file:frontend/src/api/http.ts",
+        "file:frontend/src/api/publicApi.ts",
+        "file:frontend/src/components/common/LanguageSwitcher.tsx",
+        "file:frontend/src/components/layout/AdminShell.tsx",
+        "file:frontend/src/components/layout/PublicShell.tsx",
+        "file:frontend/src/components/ui/BottomSheet.tsx",
+        "file:frontend/src/components/ui/Input.tsx",
+        "file:frontend/src/components/ui/Modal.tsx",
+        "file:frontend/src/contexts/AppContext.tsx",
+        "file:frontend/src/features/public/FeedbackModal.tsx",
+        "file:frontend/src/features/public/LanguageSelectionScreen.tsx",
+        "file:frontend/src/features/public/MapExploreScreen.tsx",
+        "file:frontend/src/features/public/NarrationPlayerScreen.tsx",
+        "file:frontend/src/features/public/QRScannerScreen.tsx",
+        "file:frontend/src/features/public/SettingsScreen.tsx",
+        "file:frontend/src/features/public/SplashScreen.tsx",
+        "file:frontend/src/hooks/useGeofenceWatcher.ts",
+        "file:frontend/src/hooks/useGeolocation.ts",
+        "file:frontend/src/hooks/useSpeechSynthesis.ts",
+        "file:frontend/src/i18n/translations.ts",
+        "file:frontend/src/i18n/useI18n.ts",
+        "file:frontend/src/types/index.ts"
+      ],
+      "display_order": 0
+    },
+    {
+      "id": "layer:backend-controllers",
+      "name": "backend/controllers",
+      "description": "",
+      "nodeIds": [
+        "file:backend/BUS/AdminUserBUS.cs",
+        "file:backend/BUS/FoodBUS.cs",
+        "file:backend/BUS/Interfaces/ICrudBUS.cs",
+        "file:backend/BUS/LanguageBUS.cs",
+        "file:backend/BUS/LookupBUS.cs",
+        "file:backend/BUS/NarrationBUS.cs",
+        "file:backend/BUS/RuntimeBUS.cs",
+        "file:backend/Controllers/AdminUsersController.cs",
+        "file:backend/Controllers/BaseApiController.cs",
+        "file:backend/Controllers/CrudControllerBase.cs",
+        "file:backend/Controllers/FoodControllers.cs",
+        "file:backend/Controllers/GeocodingController.cs",
+        "file:backend/Controllers/LanguagesController.cs",
+        "file:backend/Controllers/LookupControllerBase.cs",
+        "file:backend/Controllers/LookupControllers.cs",
+        "file:backend/Controllers/NarrationControllers.cs",
+        "file:backend/Controllers/RuntimeControllers.cs",
+        "file:backend/DAO/AdminUserDAO.cs",
+        "file:backend/DTO/AdminUserDTO.cs",
+        "file:backend/DTO/Common/ApiResponseDTO.cs",
+        "file:backend/DTO/Lookup/LookupDTO.cs",
+        "file:backend/Program.cs",
+        "file:backend/Utils/EnvLoader.cs",
+        "file:external:Microsoft.AspNetCore.Mvc"
+      ],
+      "display_order": 1
+    },
+    {
+      "id": "layer:frontend-features",
+      "name": "frontend/features",
+      "description": "",
+      "nodeIds": [
+        "file:external:react",
+        "file:frontend/src/App.tsx",
+        "file:frontend/src/api/crud.ts",
+        "file:frontend/src/api/endpoints.ts",
+        "file:frontend/src/components/layout/PageHeader.tsx",
+        "file:frontend/src/components/ui/Button.tsx",
+        "file:frontend/src/components/ui/Card.tsx",
+        "file:frontend/src/components/ui/DataTable.tsx",
+        "file:frontend/src/components/ui/StatusBadge.tsx",
+        "file:frontend/src/components/ui/Textarea.tsx",
+        "file:frontend/src/features/admin/AdminDashboardScreen.tsx",
+        "file:frontend/src/features/admin/AdminLoginScreen.tsx",
+        "file:frontend/src/features/admin/AudioManagementScreen.tsx",
+        "file:frontend/src/features/admin/DishesManagementScreen.tsx",
+        "file:frontend/src/features/admin/FeedbackManagementScreen.tsx",
+        "file:frontend/src/features/admin/GeofenceEventsScreen.tsx",
+        "file:frontend/src/features/admin/LanguageManagementScreen.tsx",
+        "file:frontend/src/features/admin/ListeningHistoriesScreen.tsx",
+        "file:frontend/src/features/admin/LookupManagementScreen.tsx",
+        "file:frontend/src/features/admin/NarrationManagementScreen.tsx",
+        "file:frontend/src/features/admin/PlacesManagementScreen.tsx",
+        "file:frontend/src/features/admin/QRCodeManagementScreen.tsx",
+        "file:frontend/src/features/admin/SimpleResourcePage.tsx",
+        "file:frontend/src/features/admin/TranslationManagementScreen.tsx",
+        "file:frontend/src/hooks/useSpeechSynthesis.test.ts"
+      ],
+      "display_order": 2
+    },
+    {
+      "id": "layer:backend-dao",
+      "name": "backend/dao",
+      "description": "",
+      "nodeIds": [
+        "file:backend/DAO/BaseDAO.cs",
+        "file:backend/DAO/FoodDAO.cs",
+        "file:backend/DAO/GenericCrudDAO.cs",
+        "file:backend/DAO/Interfaces/ICrudDAO.cs",
+        "file:backend/DAO/LanguageDAO.cs",
+        "file:backend/DAO/LookupDAO.cs",
+        "file:backend/DAO/Mapping/DbColumnAttribute.cs",
+        "file:backend/DAO/NarrationDAO.cs",
+        "file:backend/DAO/RuntimeDAO.cs",
+        "file:backend/DTO/FoodDTO.cs",
+        "file:backend/DTO/LanguageDTO.cs",
+        "file:backend/DTO/NarrationDTO.cs",
+        "file:backend/DTO/RuntimeDTO.cs",
+        "file:backend/Database/DbConnectionFactory.cs",
+        "file:backend/Swagger/SwaggerConfiguration.cs",
+        "file:external:Microsoft.OpenApi.Models",
+        "file:external:NpgsqlTypes",
+        "file:external:System.Reflection",
+        "file:external:nuget:Npgsql"
+      ],
+      "display_order": 3
+    },
+    {
+      "id": "layer:external-system-text",
+      "name": "external:system.text",
+      "description": "",
+      "nodeIds": [
+        "file:backend/BUS/GeocodingBUS.cs",
+        "file:backend/Utils/ValidationHelper.cs",
+        "file:external:System.Globalization",
+        "file:external:System.Text.Json",
+        "file:external:System.Text.RegularExpressions",
+        "file:tests/TestHelpers/JsonTestHelper.cs"
+      ],
+      "display_order": 4
+    },
+    {
+      "id": "layer:frontend-5",
+      "name": "frontend (5)",
+      "description": "",
+      "nodeIds": [
+        "file:external:@vitejs/plugin-react",
+        "file:external:vite",
+        "file:external:vitest/config",
+        "file:frontend/vite.config.ts",
+        "file:frontend/vitest.config.ts"
+      ],
+      "display_order": 5
+    },
+    {
+      "id": "layer:leaflet",
+      "name": "leaflet",
+      "description": "",
+      "nodeIds": [
+        "file:external:leaflet/dist/leaflet.css",
+        "file:external:react-dom/client",
+        "file:frontend/src/main.tsx"
+      ],
+      "display_order": 6
+    },
+    {
+      "id": "layer:tools",
+      "name": "tools",
+      "description": "",
+      "nodeIds": [
+        "file:external:fs",
+        "file:tools/geocode_places_google.js"
+      ],
+      "display_order": 7
+    },
+    {
+      "id": "layer:readme",
+      "name": "readme",
+      "description": "",
+      "nodeIds": [
+        "file:README.md"
+      ],
+      "display_order": 8
+    },
+    {
+      "id": "layer:backend",
+      "name": "backend",
+      "description": "",
+      "nodeIds": [
+        "file:backend/README.md"
+      ],
+      "display_order": 9
+    },
+    {
+      "id": "layer:backend-1",
+      "name": "backend (1)",
+      "description": "",
+      "nodeIds": [
+        "file:backend/appsettings.json",
+        "file:backend/appsettings.Development.json",
+        "file:backend/Utils/PasswordHasher.cs",
+        "file:backend/Utils/SessionGenerator.cs",
+        "file:backend/Utils/GeoDistanceCalculator.cs"
+      ],
+      "display_order": 10
+    },
+    {
+      "id": "layer:backend-dao-1",
+      "name": "backend/dao (1)",
+      "description": "",
+      "nodeIds": [
+        "file:backend/DAO/Mapping/DbTableAttribute.cs"
+      ],
+      "display_order": 11
+    },
+    {
+      "id": "layer:backend-dto",
+      "name": "backend/dto",
+      "description": "",
+      "nodeIds": [
+        "file:backend/DTO/AuthDTO.cs"
+      ],
+      "display_order": 12
+    },
+    {
+      "id": "layer:backend-dto-1",
+      "name": "backend/dto (1)",
+      "description": "",
+      "nodeIds": [
+        "file:backend/DTO/GeocodingDTO.cs"
+      ],
+      "display_order": 13
+    },
+    {
+      "id": "layer:backend-properties",
+      "name": "backend/properties",
+      "description": "",
+      "nodeIds": [
+        "file:backend/Properties/launchSettings.json"
+      ],
+      "display_order": 14
+    },
+    {
+      "id": "layer:backend-data",
+      "name": "backend/data",
+      "description": "",
+      "nodeIds": [
+        "file:backend/data/fix_listening_histories_nullable_audio.sql"
+      ],
+      "display_order": 15
+    },
+    {
+      "id": "layer:backend-data-1",
+      "name": "backend/data (1)",
+      "description": "",
+      "nodeIds": [
+        "file:backend/data/schema.sql",
+        "file:backend/data/seed_demo_vinhkhanh_full_deploy.sql",
+        "file:backend/data/seed_minimal.sql",
+        "file:backend/data/seed_supported_languages_fixed.sql"
+      ],
+      "display_order": 16
+    },
+    {
+      "id": "layer:frontend-1",
+      "name": "frontend (1)",
+      "description": "",
+      "nodeIds": [
+        "file:frontend/README.md",
+        "file:frontend/package.json",
+        "file:frontend/tsconfig.app.json",
+        "file:frontend/tsconfig.json",
+        "file:frontend/tailwind.config.js",
+        "file:frontend/postcss.config.js",
+        "file:frontend/src/vite-env.d.ts"
+      ],
+      "display_order": 17
+    },
+    {
+      "id": "layer:frontend-components",
+      "name": "frontend/components",
+      "description": "",
+      "nodeIds": [
+        "file:frontend/src/components/ui/EmptyState.tsx"
+      ],
+      "display_order": 18
+    },
+    {
+      "id": "layer:frontend-components-1",
+      "name": "frontend/components (1)",
+      "description": "",
+      "nodeIds": [
+        "file:frontend/src/components/ui/LoadingState.tsx"
+      ],
+      "display_order": 19
+    },
+    {
+      "id": "layer:tools-1",
+      "name": "tools (1)",
+      "description": "",
+      "nodeIds": [
+        "file:tools/geocode_results.json",
+        "file:tools/seed_demo_vinhkhanh_google_coordinates.sql"
+      ],
+      "display_order": 20
+    },
+    {
+      "id": "layer:external-testing-library",
+      "name": "external:@testing-library",
+      "description": "",
+      "nodeIds": [
+        "file:external:@testing-library/jest-dom",
+        "file:frontend/src/test/setup.ts"
+      ],
+      "display_order": 21
+    },
+    {
+      "id": "layer:test",
+      "name": "test",
+      "description": "",
+      "nodeIds": [
+        "file:external:vitest"
+      ],
+      "display_order": 22
+    },
+    {
+      "id": "layer:external-testing-library-2",
+      "name": "external:@testing-library (2)",
+      "description": "",
+      "nodeIds": [
+        "file:external:@testing-library/react",
+        "file:frontend/src/hooks/useGeolocation.test.ts"
+      ],
+      "display_order": 23
+    },
+    {
+      "id": "layer:tests-integration",
+      "name": "tests/integration",
+      "description": "",
+      "nodeIds": [
+        "file:external:nuget:FluentAssertions",
+        "file:tests/Integration/AdminAndLogReadSmokeTests.cs",
+        "file:tests/Integration/ApiReadSmokeTests.cs",
+        "file:tests/Utils/GeoDistanceCalculatorTests.cs",
+        "file:tests/Utils/PasswordHasherTests.cs",
+        "file:tests/Utils/SessionGeneratorTests.cs"
+      ],
+      "display_order": 24
+    },
+    {
+      "id": "layer:tests-integration-2",
+      "name": "tests/integration (2)",
+      "description": "",
+      "nodeIds": [
+        "file:external:nuget:Microsoft.AspNetCore.Mvc.Testing",
+        "file:tests/Integration/CustomWebApplicationFactory.cs"
+      ],
+      "display_order": 25
+    },
+    {
+      "id": "layer:tests-integration-3",
+      "name": "tests/integration (3)",
+      "description": "",
+      "nodeIds": [
+        "file:external:System.Net",
+        "file:tests/Integration/PublicFlowSmokeTests.cs",
+        "file:tests/TestHelpers/HttpTestHelper.cs"
+      ],
+      "display_order": 26
+    },
+    {
+      "id": "layer:external-system-net-http",
+      "name": "external:system.net.http",
+      "description": "",
+      "nodeIds": [
+        "file:external:System.Net.Http.Json"
+      ],
+      "display_order": 27
+    },
+    {
+      "id": "layer:tests-debug",
+      "name": "tests/debug",
+      "description": "",
+      "nodeIds": [
+        "file:tests/bin/Debug/net8.0/MvcTestingAppManifest.json",
+        "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.Tests.deps.json",
+        "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.Tests.runtimeconfig.json",
+        "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.deps.json",
+        "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.runtimeconfig.json",
+        "file:tests/bin/Debug/net8.0/VinhKhanhNarration.Api.staticwebassets.endpoints.json",
+        "file:tests/bin/Debug/net8.0/appsettings.Development.json",
+        "file:tests/bin/Debug/net8.0/appsettings.json",
+        "file:tests/obj/Debug/net8.0/MvcTestingAppManifest.json",
+        "file:tests/obj/Debug/net8.0/VinhKhanhNarration.Api.Tests.sourcelink.json",
+        "file:tests/obj/VinhKhanhNarration.Api.Tests.csproj.nuget.dgspec.json",
+        "file:tests/obj/project.assets.json"
+      ],
+      "display_order": 28
+    }
+  ],
+  "tour": []
+}
