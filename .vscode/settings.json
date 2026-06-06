@@ -4,5 +4,8 @@
   "less.lint.unknownAtRules": "ignore",
   "files.associations": {
     "*.css": "tailwindcss"
+  },
+    "terminal.integrated.env.windows": {
+    "PATH": "C:\\Users\\ADMIN\\AppData\\Roaming\\Python\\Python311\\Scripts;${env:PATH}"
   }
 }
