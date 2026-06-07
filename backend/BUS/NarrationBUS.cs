@@ -7,15 +7,269 @@ namespace VinhKhanhNarration.Api.BUS;
 public class NarrationContentBUS : ICrudBUS<NarrationContentDTO, long>
 {
     private readonly NarrationContentDAO _dao;
-    private readonly ContentTypeDAO _contentTypeDAO;
+private readonly ContentTypeDAO _contentTypeDAO;
+private readonly LanguageDAO _languageDAO;
+private readonly NarrationTranslationDAO _translationDAO;
+private readonly TranslationSourceDAO _translationSourceDAO;
+private readonly AutoTranslationBUS _autoTranslationBUS;
 
-    public NarrationContentBUS(NarrationContentDAO dao, ContentTypeDAO contentTypeDAO)
-    {
-        _dao = dao;
-        _contentTypeDAO = contentTypeDAO;
-    }
+public NarrationContentBUS(
+    NarrationContentDAO dao,
+    ContentTypeDAO contentTypeDAO,
+    LanguageDAO languageDAO,
+    NarrationTranslationDAO translationDAO,
+    TranslationSourceDAO translationSourceDAO,
+    AutoTranslationBUS autoTranslationBUS)
+{
+    _dao = dao;
+    _contentTypeDAO = contentTypeDAO;
+    _languageDAO = languageDAO;
+    _translationDAO = translationDAO;
+    _translationSourceDAO = translationSourceDAO;
+    _autoTranslationBUS = autoTranslationBUS;
+}
 
     public long Create(NarrationContentDTO dto) { ValidateNarrationTarget(dto); return _dao.Insert(dto); }
+    public async Task<CreateNarrationAutoTranslateResultDTO> CreateWithAutoTranslationsAsync(
+    CreateNarrationAutoTranslateRequestDTO request)
+{
+    var sourceCode = AutoTranslationBUS.NormalizeCode(request.SourceLanguageCode);
+
+    if (sourceCode != "vi" && sourceCode != "en")
+    {
+        throw new ArgumentException("SourceLanguageCode chỉ được nhập 'vi' hoặc 'en'.");
+    }
+
+    var content = new NarrationContentDTO
+    {
+        Title = request.Title,
+        OriginalText = request.OriginalText,
+        ContentTypeId = request.ContentTypeId,
+        PlaceId = request.PlaceId,
+        DishId = request.DishId,
+        CreatedBy = request.CreatedBy,
+        IsActive = request.IsActive
+    };
+
+    ValidateNarrationTarget(content);
+
+    var supportedOrder = new[] { "vi", "en", "ja", "ko", "zh" };
+
+    var activeLanguages = _languageDAO
+        .GetActive()
+        .Where(x => supportedOrder.Contains(AutoTranslationBUS.NormalizeCode(x.LanguageCode)))
+        .OrderBy(x => Array.IndexOf(
+            supportedOrder,
+            AutoTranslationBUS.NormalizeCode(x.LanguageCode)
+        ))
+        .ToList();
+
+    if (activeLanguages.Count == 0)
+    {
+        throw new InvalidOperationException("Không tìm thấy ngôn ngữ active trong bảng languages.");
+    }
+
+    var manualSource = _translationSourceDAO.GetByCode("Manual")
+        ?? throw new InvalidOperationException("Missing translation source: Manual.");
+
+    var aiSource =
+        _translationSourceDAO.GetByCode("AI")
+        ?? _translationSourceDAO.GetByCode("GoogleTranslate")
+        ?? manualSource;
+
+    var preparedTranslations = new List<NarrationTranslationDTO>();
+
+    foreach (var language in activeLanguages)
+    {
+        var targetCode = AutoTranslationBUS.NormalizeCode(language.LanguageCode);
+        var isSource = targetCode == sourceCode;
+
+        var translatedTitle = isSource
+            ? request.Title.Trim()
+            : await _autoTranslationBUS.TranslateAsync(request.Title, sourceCode, targetCode);
+
+        var translatedText = isSource
+            ? request.OriginalText.Trim()
+            : await _autoTranslationBUS.TranslateAsync(request.OriginalText, sourceCode, targetCode);
+
+        preparedTranslations.Add(new NarrationTranslationDTO
+        {
+            LanguageId = language.LanguageId,
+            TranslatedTitle = translatedTitle,
+            TranslatedText = translatedText,
+            TranslationSourceId = isSource ? manualSource.Id : aiSource.Id,
+            IsReviewed = isSource,
+            ReviewedBy = null
+        });
+    }
+
+    var narrationId = _dao.Insert(content);
+
+    foreach (var translation in preparedTranslations)
+    {
+        translation.NarrationId = narrationId;
+        translation.TranslationId = _translationDAO.Insert(translation);
+    }
+
+    return new CreateNarrationAutoTranslateResultDTO
+    {
+        NarrationId = narrationId,
+        Translations = preparedTranslations
+    };
+}
+   public async Task<BackfillNarrationTranslationsResultDTO> BackfillMissingTranslationsAsync(
+    BackfillNarrationTranslationsRequestDTO request)
+{
+    var result = new BackfillNarrationTranslationsResultDTO();
+
+    var fallbackSourceCode = AutoTranslationBUS.NormalizeCode(request.FallbackSourceLanguageCode);
+
+    if (fallbackSourceCode != "vi" && fallbackSourceCode != "en")
+    {
+        throw new ArgumentException("FallbackSourceLanguageCode chỉ được nhập 'vi' hoặc 'en'.");
+    }
+
+    var maxItems = request.MaxItems <= 0 ? 5 : Math.Min(request.MaxItems, 10);
+    var supportedOrder = new[] { "vi", "en", "ja", "ko", "zh" };
+
+    var activeLanguages = _languageDAO
+        .GetActive()
+        .Where(x => supportedOrder.Contains(AutoTranslationBUS.NormalizeCode(x.LanguageCode)))
+        .OrderBy(x => Array.IndexOf(
+            supportedOrder,
+            AutoTranslationBUS.NormalizeCode(x.LanguageCode)
+        ))
+        .ToList();
+
+    if (activeLanguages.Count == 0)
+    {
+        throw new InvalidOperationException("Không tìm thấy ngôn ngữ active trong bảng languages.");
+    }
+
+    var manualSource = _translationSourceDAO.GetByCode("Manual")
+        ?? throw new InvalidOperationException("Missing translation source: Manual.");
+
+    var aiSource =
+        _translationSourceDAO.GetByCode("AI")
+        ?? _translationSourceDAO.GetByCode("GoogleTranslate")
+        ?? manualSource;
+
+    var narrations = request.IncludeInactive
+        ? _dao.GetAll()
+        : _dao.GetActive();
+
+    foreach (var narration in narrations.OrderBy(x => x.NarrationId))
+    {
+        result.NarrationsScanned++;
+
+        if (result.NarrationsProcessed >= maxItems)
+        {
+            break;
+        }
+
+        try
+        {
+            var existingTranslations = _translationDAO.GetByNarrationId(narration.NarrationId);
+
+            var missingLanguages = activeLanguages
+                .Where(language => !existingTranslations.Any(t => t.LanguageId == language.LanguageId))
+                .ToList();
+
+            if (missingLanguages.Count == 0)
+            {
+                result.TranslationsSkipped++;
+                continue;
+            }
+
+            NarrationTranslationDTO? FindExistingTranslationByCode(string code)
+            {
+                var language = activeLanguages.FirstOrDefault(x =>
+                    AutoTranslationBUS.NormalizeCode(x.LanguageCode) == code
+                );
+
+                if (language == null) return null;
+
+                return existingTranslations.FirstOrDefault(x => x.LanguageId == language.LanguageId);
+            }
+
+            var sourceTranslation =
+                FindExistingTranslationByCode(fallbackSourceCode)
+                ?? FindExistingTranslationByCode("vi")
+                ?? FindExistingTranslationByCode("en");
+
+            var sourceLanguageCode = fallbackSourceCode;
+
+            if (sourceTranslation != null)
+            {
+                var sourceLanguage = activeLanguages.FirstOrDefault(x =>
+                    x.LanguageId == sourceTranslation.LanguageId
+                );
+
+                if (sourceLanguage != null)
+                {
+                    sourceLanguageCode = AutoTranslationBUS.NormalizeCode(sourceLanguage.LanguageCode);
+                }
+            }
+
+            var sourceTitle = !string.IsNullOrWhiteSpace(sourceTranslation?.TranslatedTitle)
+                ? sourceTranslation.TranslatedTitle
+                : narration.Title;
+
+            var sourceText = !string.IsNullOrWhiteSpace(sourceTranslation?.TranslatedText)
+                ? sourceTranslation.TranslatedText
+                : narration.OriginalText;
+
+            if (string.IsNullOrWhiteSpace(sourceTitle) || string.IsNullOrWhiteSpace(sourceText))
+            {
+                result.Errors.Add($"NarrationId {narration.NarrationId}: thiếu title hoặc originalText.");
+                continue;
+            }
+
+            var preparedTranslations = new List<NarrationTranslationDTO>();
+
+            foreach (var language in missingLanguages)
+            {
+                var targetCode = AutoTranslationBUS.NormalizeCode(language.LanguageCode);
+                var isSourceLanguage = targetCode == sourceLanguageCode;
+
+                var translatedTitle = isSourceLanguage
+                    ? sourceTitle.Trim()
+                    : await _autoTranslationBUS.TranslateAsync(sourceTitle, sourceLanguageCode, targetCode);
+
+                var translatedText = isSourceLanguage
+                    ? sourceText.Trim()
+                    : await _autoTranslationBUS.TranslateAsync(sourceText, sourceLanguageCode, targetCode);
+
+                preparedTranslations.Add(new NarrationTranslationDTO
+                {
+                    NarrationId = narration.NarrationId,
+                    LanguageId = language.LanguageId,
+                    TranslatedTitle = translatedTitle,
+                    TranslatedText = translatedText,
+                    TranslationSourceId = isSourceLanguage ? manualSource.Id : aiSource.Id,
+                    ReviewedBy = null,
+                    IsReviewed = isSourceLanguage
+                });
+
+                await Task.Delay(300);
+            }
+
+            foreach (var translation in preparedTranslations)
+            {
+                _translationDAO.Insert(translation);
+                result.TranslationsCreated++;
+            }
+
+            result.NarrationsProcessed++;
+        }
+        catch (Exception ex)
+        {
+            result.Errors.Add($"NarrationId {narration.NarrationId}: {ex.Message}");
+        }
+    }
+
+    return result;
+}
     public bool Update(NarrationContentDTO dto) { ValidateNarrationTarget(dto); return _dao.Update(dto); }
     public bool Deactivate(long id) => _dao.SoftDelete(id);
     public bool Restore(long id) => _dao.Restore(id);

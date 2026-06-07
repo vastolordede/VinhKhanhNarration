@@ -47,3 +47,35 @@ public class AudioFileDTO
     [DbColumn("created_at", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public DateTime CreatedAt { get; set; }
     [DbColumn("updated_at", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public DateTime UpdatedAt { get; set; }
 }
+public class CreateNarrationAutoTranslateRequestDTO
+{
+    public string SourceLanguageCode { get; set; } = "vi";
+    public string Title { get; set; } = string.Empty;
+    public string OriginalText { get; set; } = string.Empty;
+    public long ContentTypeId { get; set; }
+    public long? PlaceId { get; set; }
+    public long? DishId { get; set; }
+    public long CreatedBy { get; set; }
+    public bool IsActive { get; set; } = true;
+}
+
+public class CreateNarrationAutoTranslateResultDTO
+{
+    public long NarrationId { get; set; }
+    public List<NarrationTranslationDTO> Translations { get; set; } = new();
+}
+public class BackfillNarrationTranslationsRequestDTO
+{
+    public string FallbackSourceLanguageCode { get; set; } = "vi";
+    public int MaxItems { get; set; } = 5;
+    public bool IncludeInactive { get; set; } = false;
+}
+
+public class BackfillNarrationTranslationsResultDTO
+{
+    public int NarrationsScanned { get; set; }
+    public int NarrationsProcessed { get; set; }
+    public int TranslationsCreated { get; set; }
+    public int TranslationsSkipped { get; set; }
+    public List<string> Errors { get; set; } = new();
+}

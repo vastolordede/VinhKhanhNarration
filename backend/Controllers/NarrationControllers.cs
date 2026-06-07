@@ -9,7 +9,34 @@ public class NarrationContentsController : CrudControllerBase<NarrationContentDT
 {
     private readonly NarrationContentBUS _bus;
     public NarrationContentsController(NarrationContentBUS bus) : base(bus) => _bus = bus;
-
+[HttpPost("auto-translate")]
+public async Task<IActionResult> CreateWithAutoTranslations(
+    [FromBody] CreateNarrationAutoTranslateRequestDTO request)
+{
+    try
+    {
+        var result = await _bus.CreateWithAutoTranslationsAsync(request);
+        return CreatedData(result, "Created with auto translations.");
+    }
+    catch (Exception ex)
+    {
+        return BadRequestMessage(ex.Message);
+    }
+}
+[HttpPost("backfill-translations")]
+public async Task<IActionResult> BackfillTranslations(
+    [FromBody] BackfillNarrationTranslationsRequestDTO request)
+{
+    try
+    {
+        var result = await _bus.BackfillMissingTranslationsAsync(request);
+        return OkData(result, "Backfill translations completed.");
+    }
+    catch (Exception ex)
+    {
+        return BadRequestMessage(ex.Message);
+    }
+}
     [HttpGet("place/{placeId:long}")] public IActionResult GetByPlace(long placeId) => OkData(_bus.GetByPlaceId(placeId));
     [HttpGet("dish/{dishId:long}")] public IActionResult GetByDish(long dishId) => OkData(_bus.GetByDishId(dishId));
     [HttpGet("place/{placeId:long}/main")] public IActionResult MainByPlace(long placeId) => OkData(_bus.FindNarrationForPlace(placeId));

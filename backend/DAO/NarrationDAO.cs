@@ -85,7 +85,16 @@ public class AudioFileDAO : GenericCrudDAO<AudioFileDTO>
     }
 
     public AudioFileDTO? GetActiveAudioByTranslationId(long translationId)
-    {
-        return QuerySingle("SELECT * FROM audio_files WHERE translation_id = @id AND is_active = TRUE ORDER BY audio_id DESC LIMIT 1;", cmd => cmd.Parameters.AddWithValue("@id", translationId));
-    }
+{
+    return QuerySingle(@"
+        SELECT *
+        FROM audio_files
+        WHERE translation_id = @id
+          AND is_active = TRUE
+          AND audio_url IS NOT NULL
+          AND btrim(audio_url) <> ''
+        ORDER BY audio_id DESC
+        LIMIT 1;",
+        cmd => cmd.Parameters.AddWithValue("@id", translationId));
+}
 }
