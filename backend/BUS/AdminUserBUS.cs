@@ -9,13 +9,21 @@ public class AdminUserBUS : ICrudBUS<AdminUserDTO, long>
 {
     private readonly AdminUserDAO _dao;
     private readonly PasswordHasher _hasher;
+    private readonly AdminRefreshTokenDAO _refreshTokenDAO;
+private readonly JwtTokenGenerator _jwtTokenGenerator;
     private static readonly HashSet<string> AllowedRoles = new() { "Admin", "ContentManager", "Translator", "Reviewer" };
 
-    public AdminUserBUS(AdminUserDAO dao, PasswordHasher hasher)
-    {
-        _dao = dao;
-        _hasher = hasher;
-    }
+    public AdminUserBUS(
+    AdminUserDAO dao,
+    AdminRefreshTokenDAO refreshTokenDAO,
+    PasswordHasher hasher,
+    JwtTokenGenerator jwtTokenGenerator)
+{
+    _dao = dao;
+    _refreshTokenDAO = refreshTokenDAO;
+    _hasher = hasher;
+    _jwtTokenGenerator = jwtTokenGenerator;
+}
 
     public long Create(AdminUserDTO dto)
     {
@@ -38,14 +46,113 @@ public class AdminUserBUS : ICrudBUS<AdminUserDTO, long>
     public AdminUserDTO? GetById(long id) => _dao.GetById(id);
     public List<AdminUserDTO> GetAll() => _dao.GetAll();
     public List<AdminUserDTO> GetActive() => _dao.GetActive();
+public LoginResponseDTO? Login(string email, string password, string? ipAddress)
+{
+    var user = _dao.GetByEmail(email);
+    if (user == null || !user.IsActive) return null;
+    if (!_hasher.VerifyPassword(password, user.PasswordHash)) return null;
 
-    public LoginResponseDTO? Login(string email, string password)
+    return CreateAuthResponse(user, ipAddress);
+}
+    public LoginResponseDTO RefreshAccessToken(string refreshToken, string? ipAddress)
+{
+    if (string.IsNullOrWhiteSpace(refreshToken))
     {
-        var user = _dao.GetByEmail(email);
-        if (user == null || !user.IsActive) return null;
-        if (!_hasher.VerifyPassword(password, user.PasswordHash)) return null;
-        return new LoginResponseDTO { AdminId = user.AdminId, FullName = user.FullName, Email = user.Email, Role = user.Role };
+        throw new ArgumentException("Refresh token is required.");
     }
+
+    var tokenHash = _jwtTokenGenerator.HashRefreshToken(refreshToken);
+    var storedToken = _refreshTokenDAO.GetByTokenHash(tokenHash);
+
+    if (storedToken == null || !storedToken.IsActive)
+    {
+        throw new UnauthorizedAccessException("Invalid or expired refresh token.");
+    }
+
+    var user = _dao.GetById(storedToken.AdminId);
+
+    if (user == null || !user.IsActive)
+    {
+        throw new UnauthorizedAccessException("Admin user is inactive or not found.");
+    }
+
+    var newRawRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+    var newRefreshTokenHash = _jwtTokenGenerator.HashRefreshToken(newRawRefreshToken);
+    var refreshExpiresAt = _jwtTokenGenerator.RefreshTokenExpiresAtUtc;
+
+    _refreshTokenDAO.Insert(new AdminRefreshTokenDTO
+    {
+        AdminId = user.AdminId,
+        TokenHash = newRefreshTokenHash,
+        ExpiresAt = refreshExpiresAt,
+        CreatedByIp = ipAddress
+    });
+
+    _refreshTokenDAO.RevokeToken(tokenHash, ipAddress, newRefreshTokenHash);
+
+    var accessExpiresAt = _jwtTokenGenerator.AccessTokenExpiresAtUtc;
+    var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, accessExpiresAt);
+
+    return new LoginResponseDTO
+    {
+        AccessToken = accessToken,
+        RefreshToken = newRawRefreshToken,
+        AccessTokenExpiresAt = accessExpiresAt,
+        RefreshTokenExpiresAt = refreshExpiresAt,
+        Admin = ToAuthUser(user)
+    };
+}
+
+public void Logout(string refreshToken, string? ipAddress)
+{
+    if (string.IsNullOrWhiteSpace(refreshToken)) return;
+
+    var tokenHash = _jwtTokenGenerator.HashRefreshToken(refreshToken);
+    _refreshTokenDAO.RevokeToken(tokenHash, ipAddress);
+}
+
+public void LogoutAll(long adminId, string? ipAddress)
+{
+    _refreshTokenDAO.RevokeAllActiveTokensByAdminId(adminId, ipAddress);
+}
+
+private LoginResponseDTO CreateAuthResponse(AdminUserDTO user, string? ipAddress)
+{
+    var accessExpiresAt = _jwtTokenGenerator.AccessTokenExpiresAtUtc;
+    var refreshExpiresAt = _jwtTokenGenerator.RefreshTokenExpiresAtUtc;
+
+    var accessToken = _jwtTokenGenerator.GenerateAccessToken(user, accessExpiresAt);
+    var rawRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+    var refreshTokenHash = _jwtTokenGenerator.HashRefreshToken(rawRefreshToken);
+
+    _refreshTokenDAO.Insert(new AdminRefreshTokenDTO
+    {
+        AdminId = user.AdminId,
+        TokenHash = refreshTokenHash,
+        ExpiresAt = refreshExpiresAt,
+        CreatedByIp = ipAddress
+    });
+
+    return new LoginResponseDTO
+    {
+        AccessToken = accessToken,
+        RefreshToken = rawRefreshToken,
+        AccessTokenExpiresAt = accessExpiresAt,
+        RefreshTokenExpiresAt = refreshExpiresAt,
+        Admin = ToAuthUser(user)
+    };
+}
+
+private static AdminAuthUserDTO ToAuthUser(AdminUserDTO user)
+{
+    return new AdminAuthUserDTO
+    {
+        AdminId = user.AdminId,
+        FullName = user.FullName,
+        Email = user.Email,
+        Role = user.Role
+    };
+}
 
     public bool ChangePassword(long adminId, string oldPassword, string newPassword)
     {

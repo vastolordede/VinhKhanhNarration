@@ -1,5 +1,8 @@
 export const endpoints = {
   authLogin: '/api/auth/login',
+  authRefresh: '/api/auth/refresh',
+authLogout: '/api/auth/logout',
+authLogoutAll: '/api/auth/logout-all',
   adminUsers: '/api/admin-users',
   languages: '/api/languages',
   placeTypes: '/api/place-types',
