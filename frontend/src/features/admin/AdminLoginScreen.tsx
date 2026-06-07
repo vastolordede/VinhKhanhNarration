@@ -17,10 +17,26 @@ export default function AdminLoginScreen() {
     setError(null);
     try {
       const response = await http.post(endpoints.authLogin, { email, password });
-      const data = unwrap<{ token?: string; accessToken?: string }>(response);
-      const token = data.token || data.accessToken || '';
-      if (token) localStorage.setItem('adminToken', token);
-      navigate('/admin');
+      const data = unwrap<{
+  accessToken: string;
+  refreshToken: string;
+  accessTokenExpiresAt: string;
+  refreshTokenExpiresAt: string;
+  admin: {
+    adminId: number;
+    fullName: string;
+    email: string;
+    role: string;
+  };
+}>(response);
+
+localStorage.setItem('adminToken', data.accessToken);
+localStorage.setItem('adminRefreshToken', data.refreshToken);
+localStorage.setItem('adminUser', JSON.stringify(data.admin));
+localStorage.setItem('adminTokenExpiresAt', data.accessTokenExpiresAt);
+localStorage.setItem('adminRefreshTokenExpiresAt', data.refreshTokenExpiresAt);
+
+navigate('/admin');
     } catch {
       setError('Đăng nhập thất bại. Kiểm tra email/password hoặc backend API.');
     }

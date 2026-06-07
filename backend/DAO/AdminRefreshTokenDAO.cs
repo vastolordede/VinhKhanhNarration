@@ -1,0 +1,60 @@
+using Npgsql;
+using VinhKhanhNarration.Api.Database;
+using VinhKhanhNarration.Api.DTO;
+
+namespace VinhKhanhNarration.Api.DAO;
+
+public class AdminRefreshTokenDAO : GenericCrudDAO<AdminRefreshTokenDTO>
+{
+    public AdminRefreshTokenDAO(DbConnectionFactory factory) : base(factory) { }
+
+    public AdminRefreshTokenDTO? GetByTokenHash(string tokenHash)
+    {
+        return QuerySingle(
+            "SELECT * FROM admin_refresh_tokens WHERE token_hash = @hash;",
+            cmd => cmd.Parameters.AddWithValue("@hash", tokenHash)
+        );
+    }
+
+    public void RevokeToken(
+        string tokenHash,
+        string? revokedByIp,
+        string? replacedByTokenHash = null)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE admin_refresh_tokens
+            SET revoked_at = CURRENT_TIMESTAMP,
+                revoked_by_ip = @ip,
+                replaced_by_token_hash = @replaced
+            WHERE token_hash = @hash
+              AND revoked_at IS NULL;", conn);
+
+        cmd.Parameters.AddWithValue("@hash", tokenHash);
+        cmd.Parameters.AddWithValue("@ip", (object?)revokedByIp ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("@replaced", (object?)replacedByTokenHash ?? DBNull.Value);
+
+        cmd.ExecuteNonQuery();
+    }
+
+    public void RevokeAllActiveTokensByAdminId(long adminId, string? revokedByIp)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE admin_refresh_tokens
+            SET revoked_at = CURRENT_TIMESTAMP,
+                revoked_by_ip = @ip
+            WHERE admin_id = @adminId
+              AND revoked_at IS NULL
+              AND expires_at > CURRENT_TIMESTAMP;", conn);
+
+        cmd.Parameters.AddWithValue("@adminId", adminId);
+        cmd.Parameters.AddWithValue("@ip", (object?)revokedByIp ?? DBNull.Value);
+
+        cmd.ExecuteNonQuery();
+    }
+}

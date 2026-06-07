@@ -4,6 +4,9 @@ using VinhKhanhNarration.Api.Database;
 using VinhKhanhNarration.Api.Swagger;
 using VinhKhanhNarration.Api.Utils;
 using VinhKhanhNarration.Api.DTO;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 EnvLoader.Load();
 
@@ -13,6 +16,38 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddVinhKhanhSwagger();
+
+var jwtSecretKey = builder.Configuration["Jwt:SecretKey"];
+
+if (string.IsNullOrWhiteSpace(jwtSecretKey) || jwtSecretKey.Length < 32)
+{
+    throw new InvalidOperationException("Jwt:SecretKey must be configured and at least 32 characters.");
+}
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtSecretKey)
+            ),
+
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromSeconds(30)
+        };
+    });
 
 // CORS phải đặt TRƯỚC builder.Build()
 builder.Services.AddCors(options =>
@@ -31,6 +66,7 @@ builder.Services.AddSingleton<DbConnectionFactory>();
 builder.Services.AddSingleton<PasswordHasher>();
 builder.Services.AddSingleton<SessionGenerator>();
 builder.Services.AddSingleton<GeoDistanceCalculator>();
+builder.Services.AddSingleton<JwtTokenGenerator>();
 
 // DAO
 builder.Services.AddScoped<AdminUserDAO>();
@@ -55,6 +91,7 @@ builder.Services.AddScoped<GuestPoiStateDAO>();
 builder.Services.AddScoped<GeofenceEventDAO>();
 builder.Services.AddScoped<ListeningHistoryDAO>();
 builder.Services.AddScoped<FeedbackDAO>();
+builder.Services.AddScoped<AdminRefreshTokenDAO>();
 
 // BUS
 builder.Services.AddScoped<AdminUserBUS>();
@@ -97,6 +134,7 @@ if (app.Environment.IsDevelopment())
 // CORS phải đặt trước Authorization và MapControllers
 app.UseCors("FrontendDev");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

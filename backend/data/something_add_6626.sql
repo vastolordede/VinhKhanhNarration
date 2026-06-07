@@ -33,3 +33,18 @@ WHERE nc.is_active = TRUE
   AND nt.translation_id IS NULL
 GROUP BY nc.narration_id, nc.title
 ORDER BY nc.narration_id;
+
+SELECT
+    nc.narration_id,
+    nc.title AS original_title,
+    l.language_code,
+    nt.translated_title,
+    nt.translated_text
+FROM public.narration_contents nc
+JOIN public.narration_translations nt
+    ON nt.narration_id = nc.narration_id
+JOIN public.languages l
+    ON l.language_id = nt.language_id
+WHERE nc.is_active = TRUE
+ORDER BY nc.narration_id, l.language_code
+LIMIT 20;

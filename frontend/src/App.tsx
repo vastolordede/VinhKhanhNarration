@@ -20,6 +20,7 @@ import QRCodeManagementScreen from './features/admin/QRCodeManagementScreen';
 import FeedbackManagementScreen from './features/admin/FeedbackManagementScreen';
 import ListeningHistoriesScreen from './features/admin/ListeningHistoriesScreen';
 import GeofenceEventsScreen from './features/admin/GeofenceEventsScreen';
+import RequireAdmin from './components/layout/RequireAdmin';
 
 export default function App() {
   return (
@@ -36,20 +37,22 @@ export default function App() {
         </Route>
 
         <Route path="/admin/login" element={<AdminLoginScreen />} />
-        <Route path="/admin" element={<AdminShell />}>
-          <Route index element={<AdminDashboardScreen />} />
-          <Route path="lookups" element={<LookupManagementScreen />} />
-          <Route path="languages" element={<LanguageManagementScreen />} />
-          <Route path="places" element={<PlacesManagementScreen />} />
-          <Route path="dishes" element={<DishesManagementScreen />} />
-          <Route path="narrations" element={<NarrationManagementScreen />} />
-          <Route path="translations" element={<TranslationManagementScreen />} />
-          <Route path="audio" element={<AudioManagementScreen />} />
-          <Route path="qr-codes" element={<QRCodeManagementScreen />} />
-          <Route path="feedbacks" element={<FeedbackManagementScreen />} />
-          <Route path="listening-histories" element={<ListeningHistoriesScreen />} />
-          <Route path="geofence-events" element={<GeofenceEventsScreen />} />
-        </Route>
+        <Route element={<RequireAdmin />}>
+  <Route path="/admin" element={<AdminShell />}>
+    <Route index element={<AdminDashboardScreen />} />
+    <Route path="lookups" element={<LookupManagementScreen />} />
+    <Route path="languages" element={<LanguageManagementScreen />} />
+    <Route path="places" element={<PlacesManagementScreen />} />
+    <Route path="dishes" element={<DishesManagementScreen />} />
+    <Route path="narrations" element={<NarrationManagementScreen />} />
+    <Route path="translations" element={<TranslationManagementScreen />} />
+    <Route path="audio" element={<AudioManagementScreen />} />
+    <Route path="qr-codes" element={<QRCodeManagementScreen />} />
+    <Route path="feedbacks" element={<FeedbackManagementScreen />} />
+    <Route path="listening-histories" element={<ListeningHistoriesScreen />} />
+    <Route path="geofence-events" element={<GeofenceEventsScreen />} />
+  </Route>
+</Route>
       </Routes>
     </BrowserRouter>
   );
