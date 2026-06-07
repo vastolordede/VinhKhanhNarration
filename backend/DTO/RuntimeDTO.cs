@@ -104,6 +104,8 @@ public class GeofenceCheckResultDTO
     public long? NarrationId { get; set; }
     public long? TranslationId { get; set; }
     public long? AudioId { get; set; }
+    public string? Title { get; set; }
+    public string? Text { get; set; }
     public string? AudioUrl { get; set; }
     public decimal? DistanceMeters { get; set; }
 }

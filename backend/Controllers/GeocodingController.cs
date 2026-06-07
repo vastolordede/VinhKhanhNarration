@@ -18,6 +18,15 @@ public class GeocodingController : ControllerBase
     [HttpPost("resolve")]
     public async Task<IActionResult> Resolve([FromBody] GeocodingRequestDTO request)
     {
+        if (request == null || string.IsNullOrWhiteSpace(request.Address))
+        {
+            return BadRequest(new
+            {
+                success = false,
+                message = "Address is required."
+            });
+        }
+
         var result = await _geocodingBUS.ResolveAddressAsync(request.Address);
 
         if (result == null)
