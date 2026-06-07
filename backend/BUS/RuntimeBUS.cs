@@ -44,21 +44,30 @@ public class QRCodeBUS : ICrudBUS<QRCodeDTO, long>
 
         if (narration == null) throw new InvalidOperationException("Narration not found for QR target.");
         var translation = _translationDAO.GetByNarrationAndLanguage(narration.NarrationId, languageId) ?? throw new InvalidOperationException("Translation not found for selected language.");
-        var audio = _audioDAO.GetActiveAudioByTranslationId(translation.TranslationId) ?? throw new InvalidOperationException("Playable audio not found.");
-
+var audio = _audioDAO.GetActiveAudioByTranslationId(translation.TranslationId);
+var audioUrl = string.IsNullOrWhiteSpace(audio?.AudioUrl) ? null : audio.AudioUrl;
         _historyDAO.Insert(new ListeningHistoryDTO
         {
             GuestSessionId = guestSessionId,
             NarrationId = narration.NarrationId,
             LanguageId = languageId,
-            AudioId = audio.AudioId,
+            AudioId = audio?.AudioId,
             QRCodeId = qr.QRCodeId,
             TriggerSource = "QR",
             PlaybackStatus = "Played"
         });
 
-        return new QRScanResultDTO { PlaceId = qr.PlaceId, DishId = qr.DishId, NarrationId = narration.NarrationId, TranslationId = translation.TranslationId, AudioId = audio.AudioId, Title = translation.TranslatedTitle, Text = translation.TranslatedText, AudioUrl = audio.AudioUrl };
-    }
+return new QRScanResultDTO
+{
+    PlaceId = qr.PlaceId,
+    DishId = qr.DishId,
+    NarrationId = narration.NarrationId,
+    TranslationId = translation.TranslationId,
+    AudioId = audio?.AudioId,
+    Title = translation.TranslatedTitle,
+    Text = translation.TranslatedText,
+    AudioUrl = audioUrl
+};    }
 
     public string GenerateQRCodeValue(string targetPrefix, long targetId) => $"{targetPrefix}-{targetId}-{Guid.NewGuid():N}";
 
@@ -145,9 +154,8 @@ public class GeofenceBUS
         if (narration == null) return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "Narration not found.", PlaceId = place.PlaceId, DistanceMeters = distance };
         var translation = _translationDAO.GetByNarrationAndLanguage(narration.NarrationId, languageId);
         if (translation == null) return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "Translation not found.", PlaceId = place.PlaceId, NarrationId = narration.NarrationId, DistanceMeters = distance };
-        var audio = _audioDAO.GetActiveAudioByTranslationId(translation.TranslationId);
-        if (audio == null) return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "Audio not found.", PlaceId = place.PlaceId, NarrationId = narration.NarrationId, TranslationId = translation.TranslationId, DistanceMeters = distance };
-
+       var audio = _audioDAO.GetActiveAudioByTranslationId(translation.TranslationId);
+var audioUrl = string.IsNullOrWhiteSpace(audio?.AudioUrl) ? null : audio.AudioUrl;
         var geofenceEvent = CreateEvent(guestSessionId, place.PlaceId, narration.NarrationId, "Near", "Played", latitude, longitude, distance, "Auto played by geofence.");
         UpdatePoiStateAfterTrigger(guestSessionId, place, distance);
 
@@ -156,14 +164,25 @@ public class GeofenceBUS
             GuestSessionId = guestSessionId,
             NarrationId = narration.NarrationId,
             LanguageId = languageId,
-            AudioId = audio.AudioId,
+            AudioId = audio?.AudioId,
             GeofenceEventId = geofenceEvent.EventId,
             TriggerSource = "Geofence",
             PlaybackStatus = "Played"
         });
 
-        return new GeofenceCheckResultDTO { ShouldPlay = true, Reason = "Played", PlaceId = place.PlaceId, NarrationId = narration.NarrationId, TranslationId = translation.TranslationId, AudioId = audio.AudioId, AudioUrl = audio.AudioUrl, DistanceMeters = distance };
-    }
+return new GeofenceCheckResultDTO
+{
+    ShouldPlay = true,
+    Reason = "Played",
+    PlaceId = place.PlaceId,
+    NarrationId = narration.NarrationId,
+    TranslationId = translation.TranslationId,
+    AudioId = audio?.AudioId,
+    Title = translation.TranslatedTitle,
+    Text = translation.TranslatedText,
+    AudioUrl = audioUrl,
+    DistanceMeters = distance
+};    }
 
     public GeofenceEventDTO CreateEvent(string guestSessionId, long placeId, long? narrationId, string eventTypeCode, string eventStatusCode, decimal latitude, decimal longitude, decimal distance, string? note)
     {
