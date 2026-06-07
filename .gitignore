@@ -6,3 +6,6 @@ fixbug/
 repowise-export/
 repowise-export-json/
 repowise-light.zip
+
+.repowise/
+.claude/
