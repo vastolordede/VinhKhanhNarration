@@ -1,19 +1,24 @@
 import { useAppContext } from '../../contexts/AppContext';
 import { UiLanguage } from '../../i18n/translations';
 import { useI18n } from '../../i18n/useI18n';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
   compact?: boolean;
 };
 
-const options: { code: UiLanguage; labelKey: string }[] = [
+const options: { code: Extract<UiLanguage, 'vi' | 'en'>; labelKey: string }[] = [
   { code: 'vi', labelKey: 'language.vi' },
   { code: 'en', labelKey: 'language.en' }
 ];
 
 export function LanguageSwitcher({ compact = false }: Props) {
-  const { uiLanguage, setUiLanguage } = useAppContext();
+  const { uiLanguage, setUiLanguage, adminUiLanguage, setAdminUiLanguage } = useAppContext();
   const { t } = useI18n();
+
+  const location = useLocation();
+const isAdminRoute = location.pathname.startsWith('/admin');
+const activeLanguage = isAdminRoute ? adminUiLanguage : uiLanguage;
 
   return (
     <div
@@ -31,13 +36,16 @@ export function LanguageSwitcher({ compact = false }: Props) {
 
       <div className="flex gap-1">
         {options.map((option) => {
-          const active = uiLanguage === option.code;
+          const active = activeLanguage === option.code;
 
           return (
             <button
               key={option.code}
               type="button"
-              onClick={() => setUiLanguage(option.code)}
+              onClick={() => {
+  if (isAdminRoute) setAdminUiLanguage(option.code);
+  else setUiLanguage(option.code);
+}}
               className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${
                 active ? 'bg-teal-700 text-white' : 'bg-white text-slate-600 hover:bg-slate-100'
               }`}

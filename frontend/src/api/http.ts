@@ -17,20 +17,29 @@ http.interceptors.request.use((config) => {
     config.headers.Authorization = `Bearer ${token}`;
   }
 
-  const savedUiLanguage = localStorage.getItem('uiLanguage');
-  const savedLanguage = localStorage.getItem('language');
+  const isAdminRoute = window.location.pathname.startsWith('/admin');
 
-  let languageCode = savedUiLanguage;
+const savedUiLanguage = isAdminRoute
+  ? localStorage.getItem('adminUiLanguage')
+  : localStorage.getItem('uiLanguage');
 
-  if (!languageCode && savedLanguage) {
-    try {
-      languageCode = JSON.parse(savedLanguage)?.languageCode;
-    } catch {
-      languageCode = null;
-    }
+const savedLanguage = localStorage.getItem('language');
+
+let languageCode = savedUiLanguage;
+
+if (!isAdminRoute && !languageCode && savedLanguage) {
+  try {
+    languageCode = JSON.parse(savedLanguage)?.languageCode;
+  } catch {
+    languageCode = null;
   }
+}
 
-  config.headers['Accept-Language'] = normalizeUiLanguage(languageCode);
+config.headers['Accept-Language'] = isAdminRoute
+  ? languageCode === 'en'
+    ? 'en'
+    : 'vi'
+  : normalizeUiLanguage(languageCode);
 
   return config;
 });
