@@ -80,7 +80,7 @@ ${result.matchQuality}`
         },
 
         fields: [
-          { name: 'placeName', label: 'Place Name' },
+          { name: 'placeName', label: 'Place Name', required: true },
         {
   name: 'placeTypeId',
   label: 'Place Type',
@@ -88,6 +88,7 @@ ${result.matchQuality}`
   optionEndpoint: endpoints.placeTypes,
   optionValueKey: 'id',
   optionLabelKey: 'name'
+  , required: true
 },
           { name: 'address', label: 'Address' },
           { name: 'description', label: 'Description', type: 'textarea' },
@@ -107,8 +108,8 @@ ${result.matchQuality}`
           { name: 'imageUrl', label: 'Image URL' },
           { name: 'isPoi', label: 'Is POI', type: 'checkbox' },
           { name: 'isGeofenceEnabled', label: 'Geofence Enabled', type: 'checkbox' },
-          { name: 'triggerRadiusMeters', label: 'Radius Meters', type: 'number' },
-          { name: 'priority', label: 'Priority', type: 'number' },
+          { name: 'triggerRadiusMeters', label: 'Radius Meters', type: 'number', required: true },
+          { name: 'priority', label: 'Priority', type: 'number', required: true },
           {
   name: 'triggerModeId',
   label: 'Trigger Mode',
@@ -116,12 +117,38 @@ ${result.matchQuality}`
   optionEndpoint: endpoints.triggerModes,
   optionValueKey: 'id',
   optionLabelKey: 'name'
+  , required: true
 },
-          { name: 'debounceSeconds', label: 'Debounce Seconds', type: 'number' },
-          { name: 'cooldownSeconds', label: 'Cooldown Seconds', type: 'number' },
+          { name: 'debounceSeconds', label: 'Debounce Seconds', type: 'number', required: true },
+          { name: 'cooldownSeconds', label: 'Cooldown Seconds', type: 'number', required: true },
           { name: 'isActive', label: 'Active', type: 'checkbox' }
         ],
+validate: (form) => {
+  const errors: Record<string, string> = {};
 
+  if ((form.isPoi || form.isGeofenceEnabled) && (!form.latitude || !form.longitude)) {
+    errors.latitude = 'Latitude is required for POI/geofence places.';
+    errors.longitude = 'Longitude is required for POI/geofence places.';
+  }
+
+  if (Number(form.triggerRadiusMeters) <= 0) {
+    errors.triggerRadiusMeters = 'Radius Meters must be greater than 0.';
+  }
+
+  if (Number(form.priority) < 0) {
+    errors.priority = 'Priority must be greater than or equal to 0.';
+  }
+
+  if (Number(form.debounceSeconds) < 0) {
+    errors.debounceSeconds = 'Debounce Seconds must be greater than or equal to 0.';
+  }
+
+  if (Number(form.cooldownSeconds) < 0) {
+    errors.cooldownSeconds = 'Cooldown Seconds must be greater than or equal to 0.';
+  }
+
+  return errors;
+},
         columns: [
           { key: 'placeId', label: 'Id' },
           { key: 'placeName', label: 'Name' },

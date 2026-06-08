@@ -15,6 +15,24 @@ public abstract class BaseApiController : ControllerBase
     protected IActionResult BadRequestMessage(string message)
         => BadRequest(ApiResponseDTO<object>.Fail(message));
 
+    protected IActionResult BadRequestValidation(ApiValidationException ex)
+        => BadRequest(new
+        {
+            success = false,
+            message = ex.Message,
+            fieldErrors = ex.FieldErrors
+        });
+
+    protected IActionResult BadRequestException(Exception ex)
+    {
+        if (ex is ApiValidationException validationException)
+        {
+            return BadRequestValidation(validationException);
+        }
+
+        return BadRequestMessage(ex.Message);
+    }
+
     protected IActionResult NotFoundMessage(string message = "Not found")
         => NotFound(ApiResponseDTO<object>.Fail(message));
 }

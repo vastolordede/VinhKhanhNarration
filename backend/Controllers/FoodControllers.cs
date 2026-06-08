@@ -54,7 +54,7 @@ public class PlaceDishesController : CrudControllerBase<PlaceDishDTO>
     public IActionResult Assign([FromBody] AssignPlaceDishRequestDTO request)
     {
         try { return OkData(_bus.AssignDishToPlace(request.PlaceId, request.DishId, request.Price, request.IsRecommended, request.Note)); }
-        catch (Exception ex) { return BadRequestMessage(ex.Message); }
+        catch (Exception ex) { return BadRequestException(ex); }
     }
 
     [HttpDelete("place/{placeId:long}/dish/{dishId:long}")]

@@ -733,9 +733,57 @@ const viText: Record<string, string> = {
   'QR có thể trỏ tới Place, Dish hoặc Narration.': 'QR có thể trỏ tới Place, Dish hoặc Narration.',
   'Duyệt hoặc từ chối feedback của khách anonymous.': 'Duyệt hoặc từ chối feedback của khách anonymous.',
   'Log thời gian thực khi khách vào/gần/rời POI.': 'Log thời gian thực khi khách vào/gần/rời POI.',
-  'Theo dõi lượt nghe theo QR / Geofence / Manual.': 'Theo dõi lượt nghe theo QR / Geofence / Manual.'
+  'Theo dõi lượt nghe theo QR / Geofence / Manual.': 'Theo dõi lượt nghe theo QR / Geofence / Manual.',
 
-  
+  'Created successfully.': 'Tạo mới thành công.',
+'Updated successfully.': 'Cập nhật thành công.',
+'Hidden successfully.': 'Ẩn dữ liệu thành công.',
+'Restored successfully.': 'Mở lại dữ liệu thành công.',
+'Validation failed.': 'Dữ liệu chưa hợp lệ.',
+
+'Title is required.': 'Vui lòng nhập tiêu đề.',
+'Original Text is required.': 'Vui lòng nhập nội dung gốc.',
+'Content Type is required.': 'Vui lòng chọn loại nội dung.',
+'Place is required for Place Narration.': 'Vui lòng chọn địa điểm cho thuyết minh địa điểm.',
+'Dish is required for Dish Narration.': 'Vui lòng chọn món ăn cho thuyết minh món ăn.',
+'Place must be empty for Dish Narration.': 'Thuyết minh món ăn không được chọn địa điểm.',
+'Dish must be empty for Place Narration.': 'Thuyết minh địa điểm không được chọn món ăn.',
+'Place must be empty for General Narration.': 'Thuyết minh chung không được chọn địa điểm.',
+'Dish must be empty for General Narration.': 'Thuyết minh chung không được chọn món ăn.',
+
+'QR Code Value is required.': 'Vui lòng nhập giá trị mã QR.',
+'Target Type is required.': 'Vui lòng chọn loại đối tượng.',
+'Place is required for Place QR.': 'Vui lòng chọn địa điểm cho QR địa điểm.',
+'Dish is required for Dish QR.': 'Vui lòng chọn món ăn cho QR món ăn.',
+'Narration is required for Narration QR.': 'Vui lòng chọn thuyết minh cho QR thuyết minh.',
+'Dish must be empty for Place QR.': 'QR địa điểm không được chọn món ăn.',
+'Narration must be empty for Place QR.': 'QR địa điểm không được chọn thuyết minh.',
+'Place must be empty for Dish QR.': 'QR món ăn không được chọn địa điểm.',
+'Narration must be empty for Dish QR.': 'QR món ăn không được chọn thuyết minh.',
+'Place must be empty for Narration QR.': 'QR thuyết minh không được chọn địa điểm.',
+'Dish must be empty for Narration QR.': 'QR thuyết minh không được chọn món ăn.',
+
+'Translated Title is required.': 'Vui lòng nhập tiêu đề bản dịch.',
+'Translated Text is required.': 'Vui lòng nhập nội dung bản dịch.',
+'Translation Source is required.': 'Vui lòng chọn nguồn dịch.',
+'Translation is required.': 'Vui lòng chọn bản dịch.',
+'Audio URL is required.': 'Vui lòng nhập URL âm thanh.',
+
+'Place Name is required.': 'Vui lòng nhập tên địa điểm.',
+'Place Type is required.': 'Vui lòng chọn loại địa điểm.',
+'Trigger Mode is required.': 'Vui lòng chọn chế độ kích hoạt.',
+'Latitude is required for POI/geofence places.': 'Vui lòng nhập vĩ độ cho địa điểm POI/geofence.',
+'Longitude is required for POI/geofence places.': 'Vui lòng nhập kinh độ cho địa điểm POI/geofence.',
+'Radius Meters must be greater than 0.': 'Bán kính phải lớn hơn 0.',
+'Priority must be greater than or equal to 0.': 'Độ ưu tiên phải lớn hơn hoặc bằng 0.',
+'Debounce Seconds must be greater than or equal to 0.': 'Debounce phải lớn hơn hoặc bằng 0.',
+'Cooldown Seconds must be greater than or equal to 0.': 'Cooldown phải lớn hơn hoặc bằng 0.',
+
+'Category Name is required.': 'Vui lòng nhập tên danh mục.',
+'Dish Name is required.': 'Vui lòng nhập tên món ăn.',
+'Category is required.': 'Vui lòng chọn danh mục.',
+'Average Price must be greater than or equal to 0.': 'Giá trung bình phải lớn hơn hoặc bằng 0.',
+'Price must be greater than or equal to 0.': 'Giá phải lớn hơn hoặc bằng 0.',
 };
 
 const enText: Record<string, string> = {
@@ -1053,7 +1101,13 @@ const enText: Record<string, string> = {
   'QR có thể trỏ tới Place, Dish hoặc Narration.': 'QR codes can point to a place, dish, or narration.',
   'Duyệt hoặc từ chối feedback của khách anonymous.': 'Approve or reject anonymous guest feedback.',
   'Log thời gian thực khi khách vào/gần/rời POI.': 'Real-time logs when guests enter, approach, or leave a POI.',
-  'Theo dõi lượt nghe theo QR / Geofence / Manual.': 'Track listening sessions by QR, geofence, or manual playback.'
+  'Theo dõi lượt nghe theo QR / Geofence / Manual.': 'Track listening sessions by QR, geofence, or manual playback.',
+
+  'Created successfully.': 'Created successfully.',
+'Updated successfully.': 'Updated successfully.',
+'Hidden successfully.': 'Hidden successfully.',
+'Restored successfully.': 'Restored successfully.',
+'Validation failed.': 'Validation failed.',
 };
 
 export function normalizeUiLanguage(value?: string | null): UiLanguage {

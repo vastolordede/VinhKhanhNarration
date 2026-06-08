@@ -12,6 +12,8 @@ import { StatusBadge } from '../../components/ui/StatusBadge';
 
 type OptionValueType = 'number' | 'string';
 
+type FieldErrors = Record<string, string>;
+
 export type FieldConfig = {
   name: string;
   label: string;
@@ -19,6 +21,7 @@ export type FieldConfig = {
   placeholder?: string;
   disabled?: boolean;
   nullable?: boolean;
+  required?: boolean;
 
   optionEndpoint?: string;
   optionValueKey?: string;
@@ -39,6 +42,7 @@ export type ResourceConfig = {
   columns: { key: string; label: string; render?: (row: any) => ReactNode }[];
   softDelete?: boolean;
   preparePayload?: (payload: Record<string, any>, editing: any | null) => Record<string, any>;
+  validate?: (form: Record<string, any>, editing: any | null) => FieldErrors;
 
   extraFormActions?: (
     form: Record<string, any>,
@@ -57,10 +61,10 @@ export function getCurrentAdminId(): number | null {
 
       const adminId = Number(
         admin.adminId ??
-        admin.AdminId ??
-        admin.id ??
-        admin.Id ??
-        admin.admin_id
+          admin.AdminId ??
+          admin.id ??
+          admin.Id ??
+          admin.admin_id
       );
 
       if (Number.isFinite(adminId) && adminId > 0) {
@@ -78,9 +82,9 @@ export function getCurrentAdminId(): number | null {
 
         const adminId = Number(
           payload.adminId ??
-          payload.AdminId ??
-          payload.nameid ??
-          payload.sub
+            payload.AdminId ??
+            payload.nameid ??
+            payload.sub
         );
 
         if (Number.isFinite(adminId) && adminId > 0) {
@@ -101,6 +105,8 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   const [form, setForm] = useState<Record<string, any>>({});
   const [lookupOptions, setLookupOptions] = useState<Record<string, any[]>>({});
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   const { tx } = useI18n();
 
@@ -181,12 +187,17 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   function startEdit(row: any) {
     setEditing(row);
     setForm(row);
+    setError(null);
+    setSuccess(null);
+    setFieldErrors({});
   }
 
   function resetForm() {
     setEditing(null);
     setForm({});
     setError(null);
+    setSuccess(null);
+    setFieldErrors({});
   }
 
   function normalizePayload(payload: Record<string, any>) {
@@ -205,12 +216,86 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     return next;
   }
 
+  function isEmpty(value: any) {
+    return value === undefined || value === null || value === '';
+  }
+
+  function focusField(fieldName: string) {
+    setTimeout(() => {
+      const element = document.querySelector(`[name="${fieldName}"]`) as HTMLElement | null;
+      element?.focus();
+      element?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 0);
+  }
+
+  function validateForm() {
+    const errors: FieldErrors = {};
+
+    for (const field of config.fields) {
+      if (!field.required) continue;
+
+      if (field.type === 'checkbox') continue;
+
+      if (isEmpty(form[field.name])) {
+        errors[field.name] = `${field.label} is required.`;
+      }
+    }
+
+    const customErrors = config.validate?.(form, editing) ?? {};
+
+    return {
+      ...errors,
+      ...customErrors
+    };
+  }
+
+  function getBackendFieldErrors(err: any): FieldErrors | null {
+    const data = err?.response?.data;
+
+    const apiFieldErrors =
+      data?.fieldErrors ||
+      data?.data?.fieldErrors ||
+      data?.errors;
+
+    if (!apiFieldErrors || typeof apiFieldErrors !== 'object') {
+      return null;
+    }
+
+    return apiFieldErrors as FieldErrors;
+  }
+
+  function getBackendMessage(err: any) {
+    const data = err?.response?.data;
+
+    return (
+      data?.message ||
+      data?.title ||
+      data?.data?.message ||
+      err?.message ||
+      'Không lưu được dữ liệu. Kiểm tra dữ liệu nhập hoặc API.'
+    );
+  }
+
   async function submit(e: FormEvent) {
     e.preventDefault();
+
     setError(null);
+    setSuccess(null);
+    setFieldErrors({});
+
+    const frontendErrors = validateForm();
+
+    if (Object.keys(frontendErrors).length > 0) {
+      setFieldErrors(frontendErrors);
+      focusField(Object.keys(frontendErrors)[0]);
+      return;
+    }
 
     if (editing) {
-      const confirmed = window.confirm(tx('Are you sure you want to save these changes?'));
+      const confirmed = window.confirm(
+        tx('Are you sure you want to save these changes?')
+      );
+
       if (!confirmed) return;
     }
 
@@ -227,20 +312,25 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
         await createItem(config.createEndpoint ?? config.endpoint, payload);
       }
 
-      resetForm();
+      setEditing(null);
+      setForm({});
+      setFieldErrors({});
+      setError(null);
+      setSuccess(editing ? 'Updated successfully.' : 'Created successfully.');
+
       await load();
-   } catch (err: any) {
-  console.error('Save failed:', err);
+    } catch (err: any) {
+      console.error('Save failed:', err);
 
-  const message =
-    err?.response?.data?.message ||
-    err?.response?.data?.title ||
-    err?.response?.data ||
-    err?.message ||
-    'Không lưu được dữ liệu. Kiểm tra dữ liệu nhập hoặc API.';
+      const backendFieldErrors = getBackendFieldErrors(err);
 
-  setError(String(message));
-}
+      if (backendFieldErrors && Object.keys(backendFieldErrors).length > 0) {
+        setFieldErrors(backendFieldErrors);
+        focusField(Object.keys(backendFieldErrors)[0]);
+      }
+
+      setError(getBackendMessage(err));
+    }
   }
 
   async function deactivate(row: any) {
@@ -254,9 +344,10 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
         resetForm();
       }
 
+      setSuccess('Hidden successfully.');
       await load();
-    } catch {
-      setError('Không deactivate được dữ liệu.');
+    } catch (err: any) {
+      setError(getBackendMessage(err));
     }
   }
 
@@ -271,9 +362,10 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
         resetForm();
       }
 
+      setSuccess('Restored successfully.');
       await load();
-    } catch {
-      setError('Không restore được dữ liệu.');
+    } catch (err: any) {
+      setError(getBackendMessage(err));
     }
   }
 
@@ -359,6 +451,15 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   }
 
   function setFieldValue(field: FieldConfig, rawValue: string | boolean) {
+    setError(null);
+    setSuccess(null);
+
+    if (fieldErrors[field.name]) {
+      const nextErrors = { ...fieldErrors };
+      delete nextErrors[field.name];
+      setFieldErrors(nextErrors);
+    }
+
     if (field.type === 'checkbox') {
       setForm({ ...form, [field.name]: Boolean(rawValue) });
       return;
@@ -395,23 +496,35 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     setForm({ ...form, [field.name]: rawValue });
   }
 
+  function getFieldClassName(fieldName: string) {
+    return fieldErrors[fieldName]
+      ? 'border-rose-400 focus:border-rose-500 focus:ring-4 focus:ring-rose-50'
+      : '';
+  }
+
   function renderField(field: FieldConfig) {
+    const fieldError = fieldErrors[field.name];
+
     return (
       <label key={field.name} className="block">
         <span className="mb-1 block text-sm font-semibold text-slate-700">
           {tx(field.label)}
+          {field.required && <span className="ml-1 text-rose-500">*</span>}
         </span>
 
         {field.type === 'textarea' ? (
           <Textarea
+            name={field.name}
             value={form[field.name] ?? ''}
             onChange={(e) => setFieldValue(field, e.target.value)}
             placeholder={field.placeholder ? tx(field.placeholder) : undefined}
             rows={4}
             disabled={field.disabled}
+            className={getFieldClassName(field.name)}
           />
         ) : field.type === 'checkbox' ? (
           <input
+            name={field.name}
             type="checkbox"
             checked={Boolean(form[field.name])}
             onChange={(e) => setFieldValue(field, e.target.checked)}
@@ -420,10 +533,13 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
           />
         ) : field.type === 'select' ? (
           <select
+            name={field.name}
             value={form[field.name] ?? ''}
             onChange={(e) => setFieldValue(field, e.target.value)}
             disabled={field.disabled}
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
+            className={`w-full rounded-2xl border bg-white px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500 ${
+              fieldError ? 'border-rose-400 focus:border-rose-500 focus:ring-rose-50' : 'border-slate-200'
+            }`}
           >
             <option value="">{tx(field.emptyLabel ?? 'Chọn dữ liệu')}</option>
 
@@ -439,12 +555,20 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
           </select>
         ) : (
           <Input
+            name={field.name}
             type={field.type === 'number' ? 'number' : 'text'}
             value={form[field.name] ?? ''}
             onChange={(e) => setFieldValue(field, e.target.value)}
             placeholder={field.placeholder ? tx(field.placeholder) : undefined}
             disabled={field.disabled}
+            className={getFieldClassName(field.name)}
           />
+        )}
+
+        {fieldError && (
+          <p className="mt-1 text-xs font-medium text-rose-600">
+            {tx(fieldError)}
+          </p>
         )}
       </label>
     );
@@ -482,7 +606,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
               }
             }}
           >
-            {tx(hasActiveStatus && isInactive ? 'Edit' : 'Hide')}
+            {tx(hasActiveStatus && isInactive ? 'Restore' : 'Hide')}
           </Button>
         )}
       </div>
@@ -520,7 +644,17 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
 
             {!hasPlacedExtraActions && extraFormActions}
 
-            {error && <p className="text-sm text-rose-600">{tx(error)}</p>}
+            {success && (
+              <p className="rounded-2xl bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                {tx(success)}
+              </p>
+            )}
+
+            {error && (
+              <p className="rounded-2xl bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600">
+                {tx(error)}
+              </p>
+            )}
 
             <div className="flex gap-2">
               <Button type="submit">
@@ -537,7 +671,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
         </Card>
 
         <DataTable
-headers={[...config.columns.map((c) => tx(c.label)), tx('Actions')]}
+          headers={[...config.columns.map((c) => tx(c.label)), tx('Actions')]}
           rows={rows}
           rowClassNames={rowClassNames}
         />

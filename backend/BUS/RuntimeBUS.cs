@@ -2,6 +2,7 @@ using VinhKhanhNarration.Api.BUS.Interfaces;
 using VinhKhanhNarration.Api.DAO;
 using VinhKhanhNarration.Api.DTO;
 using VinhKhanhNarration.Api.Utils;
+using VinhKhanhNarration.Api.DTO.Common;
 
 namespace VinhKhanhNarration.Api.BUS;
 
@@ -72,13 +73,61 @@ return new QRScanResultDTO
     public string GenerateQRCodeValue(string targetPrefix, long targetId) => $"{targetPrefix}-{targetId}-{Guid.NewGuid():N}";
 
     private void ValidateQRCodeTarget(QRCodeDTO dto)
+{
+    var errors = new Dictionary<string, string>();
+
+    if (string.IsNullOrWhiteSpace(dto.QRCodeValue))
+        errors["qrCodeValue"] = "QR Code Value is required.";
+
+    if (dto.TargetTypeId <= 0)
+        errors["targetTypeId"] = "Target Type is required.";
+
+    if (errors.Count == 0)
     {
-        if (string.IsNullOrWhiteSpace(dto.QRCodeValue)) throw new ArgumentException("QRCodeValue is required.");
         var type = _targetTypeDAO.GetById(dto.TargetTypeId)?.Code;
-        if (type == "Place" && (dto.PlaceId == null || dto.DishId != null || dto.NarrationId != null)) throw new ArgumentException("Place QR requires PlaceId only.");
-        if (type == "Dish" && (dto.DishId == null || dto.PlaceId != null || dto.NarrationId != null)) throw new ArgumentException("Dish QR requires DishId only.");
-        if (type == "Narration" && (dto.NarrationId == null || dto.PlaceId != null || dto.DishId != null)) throw new ArgumentException("Narration QR requires NarrationId only.");
+
+        if (string.IsNullOrWhiteSpace(type))
+        {
+            errors["targetTypeId"] = "Target Type is invalid.";
+        }
+        else if (type == "Place")
+        {
+            if (dto.PlaceId == null)
+                errors["placeId"] = "Place is required for Place QR.";
+
+            if (dto.DishId != null)
+                errors["dishId"] = "Dish must be empty for Place QR.";
+
+            if (dto.NarrationId != null)
+                errors["narrationId"] = "Narration must be empty for Place QR.";
+        }
+        else if (type == "Dish")
+        {
+            if (dto.DishId == null)
+                errors["dishId"] = "Dish is required for Dish QR.";
+
+            if (dto.PlaceId != null)
+                errors["placeId"] = "Place must be empty for Dish QR.";
+
+            if (dto.NarrationId != null)
+                errors["narrationId"] = "Narration must be empty for Dish QR.";
+        }
+        else if (type == "Narration")
+        {
+            if (dto.NarrationId == null)
+                errors["narrationId"] = "Narration is required for Narration QR.";
+
+            if (dto.PlaceId != null)
+                errors["placeId"] = "Place must be empty for Narration QR.";
+
+            if (dto.DishId != null)
+                errors["dishId"] = "Dish must be empty for Narration QR.";
+        }
     }
+
+    if (errors.Count > 0)
+        throw new ApiValidationException(errors);
+}
 }
 
 public class GuestSessionBUS

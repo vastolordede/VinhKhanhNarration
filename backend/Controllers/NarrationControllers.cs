@@ -19,9 +19,9 @@ public async Task<IActionResult> CreateWithAutoTranslations(
         return CreatedData(result, "Created with auto translations.");
     }
     catch (Exception ex)
-    {
-        return BadRequestMessage(ex.Message);
-    }
+{
+    return BadRequestException(ex);
+}
 }
 [HttpPost("backfill-translations")]
 public async Task<IActionResult> BackfillTranslations(
@@ -34,7 +34,7 @@ public async Task<IActionResult> BackfillTranslations(
     }
     catch (Exception ex)
     {
-        return BadRequestMessage(ex.Message);
+        return BadRequestException(ex);
     }
 }
     [HttpGet("place/{placeId:long}")] public IActionResult GetByPlace(long placeId) => OkData(_bus.GetByPlaceId(placeId));
