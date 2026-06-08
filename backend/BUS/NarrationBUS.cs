@@ -1,6 +1,7 @@
 using VinhKhanhNarration.Api.BUS.Interfaces;
 using VinhKhanhNarration.Api.DAO;
 using VinhKhanhNarration.Api.DTO;
+using VinhKhanhNarration.Api.DTO.Common;
 
 namespace VinhKhanhNarration.Api.BUS;
 
@@ -282,18 +283,59 @@ public NarrationContentBUS(
     public NarrationContentDTO? FindNarrationForDish(long dishId) => _dao.GetMainNarrationByDishId(dishId);
 
     private void ValidateNarrationTarget(NarrationContentDTO dto)
-    {
-        if (string.IsNullOrWhiteSpace(dto.Title)) throw new ArgumentException("Title is required.");
-        if (string.IsNullOrWhiteSpace(dto.OriginalText)) throw new ArgumentException("OriginalText is required.");
-        if (dto.ContentTypeId <= 0) throw new ArgumentException("ContentTypeId is required.");
-        if (dto.CreatedBy <= 0) throw new ArgumentException("CreatedBy is required.");
+{
+    var errors = new Dictionary<string, string>();
 
+    if (string.IsNullOrWhiteSpace(dto.Title))
+        errors["title"] = "Title is required.";
+
+    if (string.IsNullOrWhiteSpace(dto.OriginalText))
+        errors["originalText"] = "Original Text is required.";
+
+    if (dto.ContentTypeId <= 0)
+        errors["contentTypeId"] = "Content Type is required.";
+
+    if (dto.CreatedBy <= 0)
+        errors["createdBy"] = "Created By Admin is required.";
+
+    if (errors.Count == 0)
+    {
         var contentType = _contentTypeDAO.GetById(dto.ContentTypeId);
         var code = contentType?.Code;
-        if (code == "Place" && (dto.PlaceId == null || dto.DishId != null)) throw new ArgumentException("Place content requires PlaceId only.");
-        if (code == "Dish" && (dto.DishId == null || dto.PlaceId != null)) throw new ArgumentException("Dish content requires DishId only.");
-        if (code == "General" && (dto.PlaceId != null || dto.DishId != null)) throw new ArgumentException("General content must not target Place or Dish.");
+
+        if (string.IsNullOrWhiteSpace(code))
+        {
+            errors["contentTypeId"] = "Content Type is invalid.";
+        }
+        else if (code == "Place")
+        {
+            if (dto.PlaceId == null)
+                errors["placeId"] = "Place is required for Place Narration.";
+
+            if (dto.DishId != null)
+                errors["dishId"] = "Dish must be empty for Place Narration.";
+        }
+        else if (code == "Dish")
+        {
+            if (dto.DishId == null)
+                errors["dishId"] = "Dish is required for Dish Narration.";
+
+            if (dto.PlaceId != null)
+                errors["placeId"] = "Place must be empty for Dish Narration.";
+        }
+        else if (code == "General")
+        {
+            if (dto.PlaceId != null)
+                errors["placeId"] = "Place must be empty for General Narration.";
+
+            if (dto.DishId != null)
+                errors["dishId"] = "Dish must be empty for General Narration.";
+        }
     }
+
+    if (errors.Count > 0)
+        throw new ApiValidationException(errors);
+}
 }
 
 public class NarrationTranslationBUS : ICrudBUS<NarrationTranslationDTO, long>
@@ -311,8 +353,31 @@ public class NarrationTranslationBUS : ICrudBUS<NarrationTranslationDTO, long>
     public NarrationTranslationDTO? GetByNarrationAndLanguage(long narrationId, long languageId) => _dao.GetByNarrationAndLanguage(narrationId, languageId);
     public bool ReviewTranslation(long translationId, long reviewerAdminId) => _dao.MarkAsReviewed(translationId, reviewerAdminId);
     public bool IsTranslationReady(long narrationId, long languageId) => _dao.GetByNarrationAndLanguage(narrationId, languageId)?.IsReviewed == true;
-    private static void ValidateTranslation(NarrationTranslationDTO dto) { if (dto.NarrationId <= 0) throw new ArgumentException("NarrationId is required."); if (dto.LanguageId <= 0) throw new ArgumentException("LanguageId is required."); if (dto.TranslationSourceId <= 0) throw new ArgumentException("TranslationSourceId is required."); if (string.IsNullOrWhiteSpace(dto.TranslatedTitle)) throw new ArgumentException("TranslatedTitle is required."); if (string.IsNullOrWhiteSpace(dto.TranslatedText)) throw new ArgumentException("TranslatedText is required."); }
-}
+private static void ValidateTranslation(NarrationTranslationDTO dto)
+{
+    var errors = new Dictionary<string, string>();
+
+    if (dto.NarrationId <= 0)
+        errors["narrationId"] = "Narration is required.";
+
+    if (dto.LanguageId <= 0)
+        errors["languageId"] = "Language is required.";
+
+    if (dto.TranslationSourceId <= 0)
+        errors["translationSourceId"] = "Translation Source is required.";
+
+    if (string.IsNullOrWhiteSpace(dto.TranslatedTitle))
+        errors["translatedTitle"] = "Translated Title is required.";
+
+    if (string.IsNullOrWhiteSpace(dto.TranslatedText))
+        errors["translatedText"] = "Translated Text is required.";
+
+    if (dto.IsReviewed && dto.ReviewedBy == null)
+        errors["isReviewed"] = "Reviewed translations require reviewer admin.";
+
+    if (errors.Count > 0)
+        throw new ApiValidationException(errors);
+}}
 
 public class AudioFileBUS : ICrudBUS<AudioFileDTO, long>
 {
@@ -332,5 +397,27 @@ public class AudioFileBUS : ICrudBUS<AudioFileDTO, long>
         var translation = _translationDAO.GetByNarrationAndLanguage(narrationId, languageId);
         return translation == null ? null : _dao.GetActiveAudioByTranslationId(translation.TranslationId);
     }
-    private static void ValidateAudioFile(AudioFileDTO dto) { if (dto.TranslationId <= 0) throw new ArgumentException("TranslationId is required."); if (string.IsNullOrWhiteSpace(dto.AudioUrl)) throw new ArgumentException("AudioUrl is required."); if (dto.DurationSeconds.HasValue && dto.DurationSeconds.Value < 0) throw new ArgumentException("DurationSeconds must be >= 0."); }
-}
+private static void ValidateAudioFile(AudioFileDTO dto)
+{
+    var errors = new Dictionary<string, string>();
+
+    if (dto.TranslationId <= 0)
+        errors["translationId"] = "Translation is required.";
+
+    if (string.IsNullOrWhiteSpace(dto.AudioUrl))
+        errors["audioUrl"] = "Audio URL is required.";
+
+    if (dto.DurationSeconds.HasValue && dto.DurationSeconds.Value < 0)
+        errors["durationSeconds"] = "Duration Seconds must be greater than or equal to 0.";
+
+    if (!string.IsNullOrWhiteSpace(dto.VoiceGender) &&
+        dto.VoiceGender != "Male" &&
+        dto.VoiceGender != "Female" &&
+        dto.VoiceGender != "Neutral")
+    {
+        errors["voiceGender"] = "Voice Gender must be Male, Female, or Neutral.";
+    }
+
+    if (errors.Count > 0)
+        throw new ApiValidationException(errors);
+}}

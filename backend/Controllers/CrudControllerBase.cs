@@ -16,7 +16,7 @@ public abstract class CrudControllerBase<TDto> : BaseApiController where TDto : 
     public virtual IActionResult Create([FromBody] TDto dto)
     {
         try { return CreatedData(_bus.Create(dto)); }
-        catch (Exception ex) { return BadRequestMessage(ex.Message); }
+        catch (Exception ex) { return BadRequestException(ex); }
     }
 
     [HttpGet]
@@ -41,7 +41,7 @@ public abstract class CrudControllerBase<TDto> : BaseApiController where TDto : 
             prop?.SetValue(dto, id);
             return OkData(_bus.Update(dto));
         }
-        catch (Exception ex) { return BadRequestMessage(ex.Message); }
+        catch (Exception ex) { return BadRequestException(ex); }
     }
 
     [HttpPatch("{id:long}/deactivate")]
