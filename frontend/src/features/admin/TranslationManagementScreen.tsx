@@ -15,35 +15,38 @@ preparePayload: (payload) => {
   return payload;
 },
 fields: [
-   {
-  name: 'narrationId',
-  label: 'Narration',
-  type: 'select',
-  optionEndpoint: endpoints.narrationContents,
-  optionValueKey: 'narrationId',
-  optionLabelKey: 'title'
-},
-    {
-  name: 'languageId',
-  label: 'Language',
-  type: 'select',
-  optionEndpoint: endpoints.languages,
-  optionValueKey: 'languageId',
-  optionLabel: (language) =>
-    `${language.languageId} - ${language.languageName} (${language.languageCode})`
-},
-    { name: 'translatedTitle', label: 'Translated Title' },
-    { name: 'translatedText', label: 'Translated Text', type: 'textarea' },
-   {
-  name: 'translationSourceId',
-  label: 'Translation Source',
-  type: 'select',
-  optionEndpoint: endpoints.translationSources,
-  optionValueKey: 'id',
-  optionLabelKey: 'name'
-},
-    { name: 'isReviewed', label: 'Reviewed', type: 'checkbox' }
-  ], columns: [
+  {
+    name: 'narrationId',
+    label: 'Narration',
+    type: 'select',
+    optionEndpoint: endpoints.narrationContents,
+    optionValueKey: 'narrationId',
+    optionLabelKey: 'title',
+    required: true
+  },
+  {
+    name: 'languageId',
+    label: 'Language',
+    type: 'select',
+    optionEndpoint: endpoints.languages,
+    optionValueKey: 'languageId',
+    optionLabel: (language) =>
+      `${language.languageId} - ${language.languageName} (${language.languageCode})`,
+    required: true
+  },
+  { name: 'translatedTitle', label: 'Translated Title', required: true },
+  { name: 'translatedText', label: 'Translated Text', type: 'textarea', required: true },
+  {
+    name: 'translationSourceId',
+    label: 'Translation Source',
+    type: 'select',
+    optionEndpoint: endpoints.translationSources,
+    optionValueKey: 'id',
+    optionLabelKey: 'name',
+    required: true
+  },
+  { name: 'isReviewed', label: 'Reviewed', type: 'checkbox' }
+], columns: [
     { key: 'translationId', label: 'Id' }, { key: 'narrationId', label: 'Narration' }, { key: 'languageId', label: 'Language' }, { key: 'translatedTitle', label: 'Title' }, { key: 'isReviewed', label: 'Reviewed', render: r => r.isReviewed ? 'Yes' : 'No' }
   ] }} />;
 }

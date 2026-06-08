@@ -13,18 +13,19 @@ export default function DishesManagementScreen() {
     </div>
     {tab === 'categories' && <SimpleResourcePage config={{
       title: 'Dish Categories', endpoint: endpoints.dishCategories, fields: [
-        { name: 'categoryName', label: 'Category Name' }, { name: 'description', label: 'Description', type: 'textarea' }, { name: 'isActive', label: 'Active', type: 'checkbox' }
+        { name: 'categoryName', label: 'Category Name', required: true }, { name: 'description', label: 'Description', type: 'textarea' }, { name: 'isActive', label: 'Active', type: 'checkbox' }
       ], columns: [{ key: 'categoryId', label: 'Id' }, { key: 'categoryName', label: 'Name' }, { key: 'description', label: 'Description' }, { key: 'isActive', label: 'Active', render: r => r.isActive ? 'Yes' : 'No' }]
     }} />}
     {tab === 'dishes' && <SimpleResourcePage config={{
       title: 'Dishes', endpoint: endpoints.dishes, fields: [
-        { name: 'dishName', label: 'Dish Name' }, {
-  name: 'categoryId',
+        { name: 'dishName', label: 'Dish Name', required: true }, {
+  name: 'categoryId', 
   label: 'Category',
   type: 'select',
   optionEndpoint: endpoints.dishCategories,
   optionValueKey: 'categoryId',
-  optionLabelKey: 'categoryName'
+  optionLabelKey: 'categoryName',
+  required: true
 }, { name: 'description', label: 'Description', type: 'textarea' }, { name: 'imageUrl', label: 'Image URL' }, { name: 'averagePrice', label: 'Average Price', type: 'number' }, { name: 'isSignatureDish', label: 'Signature Dish', type: 'checkbox' }, { name: 'isActive', label: 'Active', type: 'checkbox' }
       ], columns: [{ key: 'dishId', label: 'Id' }, { key: 'dishName', label: 'Name' }, { key: 'categoryId', label: 'Category' }, { key: 'averagePrice', label: 'Price' }, { key: 'isSignatureDish', label: 'Signature', render: r => r.isSignatureDish ? 'Yes' : 'No' }]
     }} />}
@@ -37,6 +38,7 @@ export default function DishesManagementScreen() {
   optionEndpoint: endpoints.places,
   optionValueKey: 'placeId',
   optionLabelKey: 'placeName'
+  , required: true
 }, {
   name: 'dishId',
   label: 'Dish',
@@ -44,6 +46,7 @@ export default function DishesManagementScreen() {
   optionEndpoint: endpoints.dishes,
   optionValueKey: 'dishId',
   optionLabelKey: 'dishName'
+  , required: true
 }, { name: 'price', label: 'Price', type: 'number' }, { name: 'isRecommended', label: 'Recommended', type: 'checkbox' }, { name: 'note', label: 'Note', type: 'textarea' }
       ], columns: [{ key: 'placeDishId', label: 'Id' }, { key: 'placeId', label: 'Place' }, { key: 'dishId', label: 'Dish' }, { key: 'price', label: 'Price' }, { key: 'isRecommended', label: 'Recommended', render: r => r.isRecommended ? 'Yes' : 'No' }]
     }} />}
