@@ -22,6 +22,7 @@ export type ResourceConfig = {
   title: string;
   description?: string;
   endpoint: string;
+  createEndpoint?: string;
   idKey?: string;
   fields: FieldConfig[];
   columns: { key: string; label: string; render?: (row: any) => ReactNode }[];
@@ -90,7 +91,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     if (editing) {
       await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
     } else {
-      await createItem(config.endpoint, form);
+      await createItem(config.createEndpoint ?? config.endpoint, form);
     }
 
     resetForm();

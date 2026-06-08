@@ -24,15 +24,15 @@ export function useGeofenceWatcher(onNarrationDetected: (narration: NarrationRes
         language.languageId
       );
 
-      if (result.shouldPlay && result.narrationId && result.translationId) {
-        onNarrationDetected({
+if (result.shouldPlay && result.narrationId && result.translationId && result.text?.trim()) {
+            onNarrationDetected({
           placeId: result.placeId ?? null,
           dishId: null,
           narrationId: result.narrationId,
           translationId: result.translationId,
           audioId: result.audioId ?? null,
           title: result.title || 'Thuyết minh tự động',
-          text: result.text || result.reason || '',
+          text: result.text,
           audioUrl: result.audioUrl ?? null,
           useTts: !result.audioUrl,
           source: 'geofence'

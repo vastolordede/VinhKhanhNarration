@@ -82,11 +82,12 @@ const [uiLanguage, setUiLanguageState] = useState<UiLanguage>(() => {
 const setLanguage = (lang: LanguageDTO | null) => {
   setLanguageState(lang);
 
+  setCurrentNarration(null);
+  sessionStorage.removeItem('currentNarration');
+
   if (lang) {
     localStorage.setItem('language', JSON.stringify(lang));
 
-    // Public app rule:
-    // selected narration language also controls public UI language.
     const nextUiLanguage = normalizeUiLanguage(lang.languageCode);
 
     setUiLanguageState(nextUiLanguage);

@@ -2,7 +2,7 @@ import SimpleResourcePage from './SimpleResourcePage';
 import { endpoints } from '../../api/endpoints';
 
 export default function NarrationManagementScreen() {
-  return <SimpleResourcePage config={{ title: 'Narration Management', description: 'Quản lý nội dung thuyết minh gốc cho Place / Dish / General.', endpoint: endpoints.narrationContents, fields: [
+  return <SimpleResourcePage config={{ title: 'Narration Management', description: 'Quản lý nội dung thuyết minh gốc cho Place / Dish / General.', endpoint: endpoints.narrationContents,createEndpoint: endpoints.narrationContentsAutoTranslate, fields: [
     { name: 'title', label: 'Title' },
     { name: 'originalText', label: 'Original Text', type: 'textarea' },
     { name: 'contentTypeId', label: 'Content Type Id', type: 'number' },
