@@ -2,6 +2,7 @@ import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
 import { GuestSessionDTO, LanguageDTO, NarrationResolveResultDTO } from '../types';
 import { normalizeUiLanguage, UiLanguage } from '../i18n/translations';
 
+export type AdminUiLanguage = Extract<UiLanguage, 'vi' | 'en'>;
 type AppContextValue = {
   guestSession: GuestSessionDTO | null;
   setGuestSession: (session: GuestSessionDTO | null) => void;
@@ -11,6 +12,9 @@ type AppContextValue = {
 
   uiLanguage: UiLanguage;
   setUiLanguage: (language: UiLanguage) => void;
+
+  adminUiLanguage: AdminUiLanguage;
+setAdminUiLanguage: (language: AdminUiLanguage) => void;
 
   currentNarration: NarrationResolveResultDTO | null;
   setCurrentNarration: (narration: NarrationResolveResultDTO | null) => void;
@@ -32,6 +36,9 @@ function readJson<T>(key: string): T | null {
     return null;
   }
 }
+function normalizeAdminUiLanguage(value: unknown): AdminUiLanguage {
+  return value === 'en' ? 'en' : 'vi';
+}
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [guestSession, setGuestSessionState] = useState<GuestSessionDTO | null>(() =>
@@ -52,7 +59,9 @@ const [uiLanguage, setUiLanguageState] = useState<UiLanguage>(() => {
   const savedUiLanguage = localStorage.getItem('uiLanguage');
   return normalizeUiLanguage(savedUiLanguage);
 });
-
+const [adminUiLanguage, setAdminUiLanguageState] = useState<AdminUiLanguage>(() =>
+  normalizeAdminUiLanguage(localStorage.getItem('adminUiLanguage'))
+);
   const [currentNarration, setCurrentNarration] = useState<NarrationResolveResultDTO | null>(() => {
     const raw = sessionStorage.getItem('currentNarration');
     if (!raw) return null;
@@ -96,7 +105,11 @@ const setLanguage = (lang: LanguageDTO | null) => {
     localStorage.removeItem('language');
   }
 };
-
+const setAdminUiLanguage = (lang: AdminUiLanguage) => {
+  const normalized = normalizeAdminUiLanguage(lang);
+  setAdminUiLanguageState(normalized);
+  localStorage.setItem('adminUiLanguage', normalized);
+};
   const setNarration = (narration: NarrationResolveResultDTO | null) => {
     setCurrentNarration(narration);
 
@@ -112,12 +125,14 @@ const setLanguage = (lang: LanguageDTO | null) => {
       setLanguage,
       uiLanguage,
       setUiLanguage,
+      adminUiLanguage,
+setAdminUiLanguage,
       currentNarration,
       setCurrentNarration: setNarration,
       trackingEnabled,
       setTrackingEnabled
     }),
-    [guestSession, language, uiLanguage, currentNarration, trackingEnabled]
+    [guestSession, language, uiLanguage, adminUiLanguage, currentNarration, trackingEnabled]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useEffect, useState } from 'react';
+import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react';
 import type { Dispatch, SetStateAction } from 'react';
 import { createItem, getList, patchItem, updateItem } from '../../api/crud';
 import { Button } from '../../components/ui/Button';
@@ -10,12 +10,23 @@ import { PageHeader } from '../../components/layout/PageHeader';
 import { useI18n } from '../../i18n/useI18n';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 
+type OptionValueType = 'number' | 'string';
+
 export type FieldConfig = {
   name: string;
   label: string;
-  type?: 'text' | 'number' | 'textarea' | 'checkbox';
+  type?: 'text' | 'number' | 'textarea' | 'checkbox' | 'select';
   placeholder?: string;
   disabled?: boolean;
+  nullable?: boolean;
+
+  optionEndpoint?: string;
+  optionValueKey?: string;
+  optionLabelKey?: string;
+  optionValueType?: OptionValueType;
+  optionLabel?: (option: any) => string;
+  emptyLabel?: string;
+  includeInactiveOptions?: boolean;
 };
 
 export type ResourceConfig = {
@@ -27,6 +38,7 @@ export type ResourceConfig = {
   fields: FieldConfig[];
   columns: { key: string; label: string; render?: (row: any) => ReactNode }[];
   softDelete?: boolean;
+  preparePayload?: (payload: Record<string, any>, editing: any | null) => Record<string, any>;
 
   extraFormActions?: (
     form: Record<string, any>,
@@ -36,10 +48,58 @@ export type ResourceConfig = {
   extraFormActionsAfterField?: string;
 };
 
+export function getCurrentAdminId(): number | null {
+  try {
+    const raw = localStorage.getItem('adminUser');
+
+    if (raw) {
+      const admin = JSON.parse(raw) as Record<string, any>;
+
+      const adminId = Number(
+        admin.adminId ??
+        admin.AdminId ??
+        admin.id ??
+        admin.Id ??
+        admin.admin_id
+      );
+
+      if (Number.isFinite(adminId) && adminId > 0) {
+        return adminId;
+      }
+    }
+
+    const token = localStorage.getItem('adminToken');
+
+    if (token) {
+      const payloadPart = token.split('.')[1];
+
+      if (payloadPart) {
+        const payload = JSON.parse(atob(payloadPart));
+
+        const adminId = Number(
+          payload.adminId ??
+          payload.AdminId ??
+          payload.nameid ??
+          payload.sub
+        );
+
+        if (Number.isFinite(adminId) && adminId > 0) {
+          return adminId;
+        }
+      }
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export default function SimpleResourcePage({ config }: { config: ResourceConfig }) {
   const [items, setItems] = useState<any[]>([]);
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState<Record<string, any>>({});
+  const [lookupOptions, setLookupOptions] = useState<Record<string, any[]>>({});
   const [error, setError] = useState<string | null>(null);
 
   const { tx } = useI18n();
@@ -57,17 +117,71 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     load();
   }, [config.endpoint]);
 
+  const optionSignature = useMemo(
+    () =>
+      config.fields
+        .filter((field) => field.type === 'select' && field.optionEndpoint)
+        .map((field) => `${field.name}:${field.optionEndpoint}`)
+        .join('|'),
+    [config.fields]
+  );
+
+  useEffect(() => {
+    const selectFields = config.fields.filter(
+      (field) => field.type === 'select' && field.optionEndpoint
+    );
+
+    if (!selectFields.length) {
+      setLookupOptions({});
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadOptions() {
+      try {
+        const entries = await Promise.all(
+          selectFields.map(async (field) => {
+            const data = await getList<any>(field.optionEndpoint!);
+
+            const activeData = field.includeInactiveOptions
+              ? data
+              : data.filter((item) => item.isActive !== false);
+
+            return [field.name, activeData] as const;
+          })
+        );
+
+        if (!cancelled) {
+          setLookupOptions(Object.fromEntries(entries));
+        }
+      } catch {
+        if (!cancelled) {
+          setError('Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.');
+        }
+      }
+    }
+
+    loadOptions();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [optionSignature, config.fields]);
+
   function getRowId(row: any) {
-    if (config.idKey && row[config.idKey] !== undefined) return row[config.idKey];
+    if (config.idKey && row[config.idKey] !== undefined) {
+      return row[config.idKey];
+    }
 
     const key = Object.keys(row).find((k) => k.toLowerCase().endsWith('id'));
     return key ? row[key] : undefined;
   }
 
- function startEdit(row: any) {
-  setEditing(row);
-  setForm(row);
-}
+  function startEdit(row: any) {
+    setEditing(row);
+    setForm(row);
+  }
 
   function resetForm() {
     setEditing(null);
@@ -75,104 +189,212 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     setError(null);
   }
 
-  async function submit(e: FormEvent) {
-  e.preventDefault();
-  setError(null);
+  function normalizePayload(payload: Record<string, any>) {
+    const next = { ...payload };
 
-  if (editing) {
-    const confirmed = window.confirm(
-      tx('Are you sure you want to save these changes?')
+    for (const field of config.fields) {
+      if (next[field.name] === '') {
+        if (field.nullable) {
+          next[field.name] = null;
+        } else {
+          delete next[field.name];
+        }
+      }
+    }
+
+    return next;
+  }
+
+  async function submit(e: FormEvent) {
+    e.preventDefault();
+    setError(null);
+
+    if (editing) {
+      const confirmed = window.confirm(tx('Are you sure you want to save these changes?'));
+      if (!confirmed) return;
+    }
+
+    try {
+      const normalizedPayload = normalizePayload(form);
+
+      const payload = config.preparePayload
+        ? config.preparePayload(normalizedPayload, editing)
+        : normalizedPayload;
+
+      if (editing) {
+        await updateItem(`${config.endpoint}/${getRowId(editing)}`, payload);
+      } else {
+        await createItem(config.createEndpoint ?? config.endpoint, payload);
+      }
+
+      resetForm();
+      await load();
+   } catch (err: any) {
+  console.error('Save failed:', err);
+
+  const message =
+    err?.response?.data?.message ||
+    err?.response?.data?.title ||
+    err?.response?.data ||
+    err?.message ||
+    'Không lưu được dữ liệu. Kiểm tra dữ liệu nhập hoặc API.';
+
+  setError(String(message));
+}
+  }
+
+  async function deactivate(row: any) {
+    const confirmed = window.confirm(tx('Are you sure you want to hide this record?'));
+    if (!confirmed) return;
+
+    try {
+      await patchItem(`${config.endpoint}/${getRowId(row)}/deactivate`);
+
+      if (editing && getRowId(editing) === getRowId(row)) {
+        resetForm();
+      }
+
+      await load();
+    } catch {
+      setError('Không deactivate được dữ liệu.');
+    }
+  }
+
+  async function restore(row: any) {
+    const confirmed = window.confirm(tx('Are you sure you want to restore this record?'));
+    if (!confirmed) return;
+
+    try {
+      await patchItem(`${config.endpoint}/${getRowId(row)}/restore`);
+
+      if (editing && getRowId(editing) === getRowId(row)) {
+        resetForm();
+      }
+
+      await load();
+    } catch {
+      setError('Không restore được dữ liệu.');
+    }
+  }
+
+  function renderCellValue(value: ReactNode): ReactNode {
+    if (value === null || value === undefined || value === '') {
+      return '';
+    }
+
+    if (typeof value === 'boolean') {
+      return <StatusBadge active={value} />;
+    }
+
+    if (typeof value === 'string') {
+      const normalized = value.trim().toLowerCase();
+
+      if (normalized === 'yes' || normalized === 'có' || normalized === 'true') {
+        return <StatusBadge active={true} trueText="Yes" falseText="No" />;
+      }
+
+      if (normalized === 'no' || normalized === 'không' || normalized === 'false') {
+        return <StatusBadge active={false} trueText="Yes" falseText="No" />;
+      }
+
+      if (normalized === 'on' || normalized === 'bật') {
+        return <StatusBadge active={true} trueText="On" falseText="Off" />;
+      }
+
+      if (normalized === 'off' || normalized === 'tắt') {
+        return <StatusBadge active={false} trueText="On" falseText="Off" />;
+      }
+
+      return tx(value);
+    }
+
+    return value;
+  }
+
+  function getOptionValue(field: FieldConfig, option: any) {
+    const valueKey = field.optionValueKey ?? 'id';
+    return option[valueKey];
+  }
+
+  function getOptionLabel(field: FieldConfig, option: any) {
+    if (field.optionLabel) {
+      return field.optionLabel(option);
+    }
+
+    const labelKey = field.optionLabelKey ?? 'name';
+
+    const label =
+      option[labelKey] ??
+      option.name ??
+      option.title ??
+      option.placeName ??
+      option.dishName ??
+      option.categoryName ??
+      option.languageName ??
+      option.translatedTitle;
+
+    const value = getOptionValue(field, option);
+
+    return value !== undefined && label !== undefined
+      ? `${value} - ${label}`
+      : String(label ?? value ?? '');
+  }
+
+  function findSelectField(name: string) {
+    return config.fields.find((field) => field.name === name && field.type === 'select');
+  }
+
+  function getLookupLabel(fieldName: string, value: any) {
+    const field = findSelectField(fieldName);
+
+    if (!field || value === null || value === undefined || value === '') {
+      return value;
+    }
+
+    const option = (lookupOptions[fieldName] ?? []).find(
+      (item) => String(getOptionValue(field, item)) === String(value)
     );
 
-    if (!confirmed) return;
+    return option ? getOptionLabel(field, option) : value;
   }
 
-  try {
-    if (editing) {
-      await updateItem(`${config.endpoint}/${getRowId(editing)}`, form);
-    } else {
-      await createItem(config.createEndpoint ?? config.endpoint, form);
+  function setFieldValue(field: FieldConfig, rawValue: string | boolean) {
+    if (field.type === 'checkbox') {
+      setForm({ ...form, [field.name]: Boolean(rawValue) });
+      return;
     }
 
-    resetForm();
-    await load();
-  } catch {
-    setError('Không lưu được dữ liệu. Kiểm tra dữ liệu nhập hoặc API.');
-  }
-}
+    if (typeof rawValue !== 'string') return;
 
-async function deactivate(row: any) {
-  const confirmed = window.confirm(
-    tx('Are you sure you want to hide this record?')
-  );
-
-  if (!confirmed) return;
-
-  try {
-    await patchItem(`${config.endpoint}/${getRowId(row)}/deactivate`);
-
-    if (editing && getRowId(editing) === getRowId(row)) {
-      resetForm();
+    if (field.type === 'number') {
+      setForm({
+        ...form,
+        [field.name]: rawValue === '' ? (field.nullable ? null : '') : Number(rawValue)
+      });
+      return;
     }
 
-    await load();
-  } catch {
-    setError('Không deactivate được dữ liệu.');
-  }
-}
+    if (field.type === 'select') {
+      const valueType = field.optionValueType ?? 'number';
 
-async function restore(row: any) {
-  const confirmed = window.confirm(
-    tx('Are you sure you want to restore this record?')
-  );
+      setForm({
+        ...form,
+        [field.name]:
+          rawValue === ''
+            ? field.nullable
+              ? null
+              : ''
+            : valueType === 'number'
+              ? Number(rawValue)
+              : rawValue
+      });
 
-  if (!confirmed) return;
-
-  try {
-    await patchItem(`${config.endpoint}/${getRowId(row)}/restore`);
-
-    if (editing && getRowId(editing) === getRowId(row)) {
-      resetForm();
+      return;
     }
 
-    await load();
-  } catch {
-    setError('Không restore được dữ liệu.');
-  }
-}
-function renderCellValue(value: ReactNode): ReactNode {
-  if (value === null || value === undefined || value === '') {
-    return '';
+    setForm({ ...form, [field.name]: rawValue });
   }
 
-  if (typeof value === 'boolean') {
-    return <StatusBadge active={value} />;
-  }
-
-  if (typeof value === 'string') {
-    const normalized = value.trim().toLowerCase();
-
-    if (normalized === 'yes' || normalized === 'có' || normalized === 'true') {
-      return <StatusBadge active={true} trueText="Yes" falseText="No" />;
-    }
-
-    if (normalized === 'no' || normalized === 'không' || normalized === 'false') {
-      return <StatusBadge active={false} trueText="Yes" falseText="No" />;
-    }
-
-    if (normalized === 'on' || normalized === 'bật') {
-      return <StatusBadge active={true} trueText="On" falseText="Off" />;
-    }
-
-    if (normalized === 'off' || normalized === 'tắt') {
-      return <StatusBadge active={false} trueText="On" falseText="Off" />;
-    }
-
-    return tx(value);
-  }
-
-  return value;
-}
   function renderField(field: FieldConfig) {
     return (
       <label key={field.name} className="block">
@@ -183,7 +405,7 @@ function renderCellValue(value: ReactNode): ReactNode {
         {field.type === 'textarea' ? (
           <Textarea
             value={form[field.name] ?? ''}
-            onChange={(e) => setForm({ ...form, [field.name]: e.target.value })}
+            onChange={(e) => setFieldValue(field, e.target.value)}
             placeholder={field.placeholder ? tx(field.placeholder) : undefined}
             rows={4}
             disabled={field.disabled}
@@ -192,20 +414,34 @@ function renderCellValue(value: ReactNode): ReactNode {
           <input
             type="checkbox"
             checked={Boolean(form[field.name])}
-            onChange={(e) => setForm({ ...form, [field.name]: e.target.checked })}
+            onChange={(e) => setFieldValue(field, e.target.checked)}
             className="h-5 w-5"
             disabled={field.disabled}
           />
+        ) : field.type === 'select' ? (
+          <select
+            value={form[field.name] ?? ''}
+            onChange={(e) => setFieldValue(field, e.target.value)}
+            disabled={field.disabled}
+            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-teal-500 focus:ring-4 focus:ring-teal-50 disabled:cursor-not-allowed disabled:bg-slate-100 disabled:text-slate-500"
+          >
+            <option value="">{tx(field.emptyLabel ?? 'Chọn dữ liệu')}</option>
+
+            {(lookupOptions[field.name] ?? []).map((option) => {
+              const value = getOptionValue(field, option);
+
+              return (
+                <option key={String(value)} value={String(value)}>
+                  {getOptionLabel(field, option)}
+                </option>
+              );
+            })}
+          </select>
         ) : (
           <Input
             type={field.type === 'number' ? 'number' : 'text'}
             value={form[field.name] ?? ''}
-            onChange={(e) =>
-              setForm({
-                ...form,
-                [field.name]: field.type === 'number' ? Number(e.target.value) : e.target.value
-              })
-            }
+            onChange={(e) => setFieldValue(field, e.target.value)}
             placeholder={field.placeholder ? tx(field.placeholder) : undefined}
             disabled={field.disabled}
           />
@@ -214,51 +450,51 @@ function renderCellValue(value: ReactNode): ReactNode {
     );
   }
 
-const rows = items.map((item) => {
-  const isInactive = item.isActive === false;
-  const hasActiveStatus = typeof item.isActive === 'boolean';
+  const rows = items.map((item) => {
+    const isInactive = item.isActive === false;
+    const hasActiveStatus = typeof item.isActive === 'boolean';
 
-  return [
-    ...config.columns.map((col) => {
-      const value = col.render ? col.render(item) : item[col.key];
+    return [
+      ...config.columns.map((col) => {
+        const value = col.render ? col.render(item) : getLookupLabel(col.key, item[col.key]);
 
-      return renderCellValue(value);
-    }),
+        return renderCellValue(value);
+      }),
 
-    <div className="flex gap-2" key="actions">
-      <Button
-        variant="secondary"
-        className="px-3 py-2"
-        onClick={() => startEdit(item)}
-      >
-        {tx('Sửa')}
-      </Button>
-
-      {config.softDelete !== false && (
+      <div className="flex gap-2" key="actions">
         <Button
-          variant={hasActiveStatus && isInactive ? 'primary' : 'danger'}
+          variant="secondary"
           className="px-3 py-2"
-          onClick={() => {
-            if (hasActiveStatus && isInactive) {
-              restore(item);
-            } else {
-              deactivate(item);
-            }
-          }}
+          onClick={() => startEdit(item)}
         >
-          {tx(hasActiveStatus && isInactive ? 'Mở' : 'Ẩn')}
+          {tx('Edit')}
         </Button>
-      )}
-    </div>
-  ];
-});
-const rowClassNames = items.map((item) =>
-  item.isActive === false
-    ? 'bg-slate-100 text-slate-400'
-    : ''
-);
+
+        {config.softDelete !== false && (
+          <Button
+            variant={hasActiveStatus && isInactive ? 'primary' : 'danger'}
+            className="px-3 py-2"
+            onClick={() => {
+              if (hasActiveStatus && isInactive) {
+                restore(item);
+              } else {
+                deactivate(item);
+              }
+            }}
+          >
+            {tx(hasActiveStatus && isInactive ? 'Edit' : 'Hide')}
+          </Button>
+        )}
+      </div>
+    ];
+  });
+
+  const rowClassNames = items.map((item) =>
+    item.isActive === false ? 'bg-slate-100 text-slate-400' : ''
+  );
 
   const extraFormActions = config.extraFormActions?.(form, setForm);
+
   const hasPlacedExtraActions =
     Boolean(config.extraFormActionsAfterField) &&
     config.fields.some((field) => field.name === config.extraFormActionsAfterField);
@@ -288,7 +524,7 @@ const rowClassNames = items.map((item) =>
 
             <div className="flex gap-2">
               <Button type="submit">
-                {tx(editing ? 'Lưu thay đổi' : 'Tạo mới')}
+                {tx(editing ? 'Save Changes' : 'Create')}
               </Button>
 
               {editing && (
@@ -300,11 +536,11 @@ const rowClassNames = items.map((item) =>
           </form>
         </Card>
 
-     <DataTable
-  headers={[...config.columns.map((c) => c.label), 'Thao tác']}
-  rows={rows}
-  rowClassNames={rowClassNames}
-/>
+        <DataTable
+headers={[...config.columns.map((c) => tx(c.label)), tx('Actions')]}
+          rows={rows}
+          rowClassNames={rowClassNames}
+        />
       </div>
     </div>
   );

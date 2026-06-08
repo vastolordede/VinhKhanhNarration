@@ -81,7 +81,14 @@ ${result.matchQuality}`
 
         fields: [
           { name: 'placeName', label: 'Place Name' },
-          { name: 'placeTypeId', label: 'Place Type Id', type: 'number' },
+        {
+  name: 'placeTypeId',
+  label: 'Place Type',
+  type: 'select',
+  optionEndpoint: endpoints.placeTypes,
+  optionValueKey: 'id',
+  optionLabelKey: 'name'
+},
           { name: 'address', label: 'Address' },
           { name: 'description', label: 'Description', type: 'textarea' },
          {
@@ -102,7 +109,14 @@ ${result.matchQuality}`
           { name: 'isGeofenceEnabled', label: 'Geofence Enabled', type: 'checkbox' },
           { name: 'triggerRadiusMeters', label: 'Radius Meters', type: 'number' },
           { name: 'priority', label: 'Priority', type: 'number' },
-          { name: 'triggerModeId', label: 'Trigger Mode Id', type: 'number' },
+          {
+  name: 'triggerModeId',
+  label: 'Trigger Mode',
+  type: 'select',
+  optionEndpoint: endpoints.triggerModes,
+  optionValueKey: 'id',
+  optionLabelKey: 'name'
+},
           { name: 'debounceSeconds', label: 'Debounce Seconds', type: 'number' },
           { name: 'cooldownSeconds', label: 'Cooldown Seconds', type: 'number' },
           { name: 'isActive', label: 'Active', type: 'checkbox' }

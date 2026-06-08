@@ -92,6 +92,39 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'public.player.source.manual': 'Thủ công',
 'public.player.audioFile': 'Audio file',
 'public.player.browserTts': 'TTS trình duyệt',
+
+'Chọn dữ liệu': 'Chọn dữ liệu',
+'Không chọn Place': 'Không chọn địa điểm',
+'Không chọn Dish': 'Không chọn món ăn',
+'Không chọn Narration': 'Không chọn thuyết minh',
+
+'Content Type': 'Loại nội dung',
+'Place Type': 'Loại địa điểm',
+'Target Type': 'Loại đối tượng',
+'Trigger Mode': 'Chế độ kích hoạt',
+'Translation Source': 'Nguồn dịch',
+
+'Category': 'Danh mục',
+'Place': 'Địa điểm',
+'Dish': 'Món ăn',
+'Narration': 'Thuyết minh',
+'Translation': 'Bản dịch',
+'Language': 'Ngôn ngữ',
+'Active': 'Hoạt động',
+'Actions': 'Thao tác',
+'Value': 'Giá trị',
+'Id': 'Mã',
+
+'Edit': 'Sửa',
+'Hide': 'Ẩn',
+'Create': 'Tạo mới',
+'Yes': 'Có',
+'No': 'Không',
+
+'Unable to load dropdown data. Please check lookup backend endpoints.': 'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.',
+'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.': 'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.',
+'Restore': 'Mở lại',
+'Save Changes': 'Lưu thay đổi',
   },
 
   en: {
@@ -183,6 +216,39 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'public.player.source.manual': 'Manual',
 'public.player.audioFile': 'Audio file',
 'public.player.browserTts': 'Browser TTS',
+
+'Chọn dữ liệu': 'Select data',
+'Không chọn Place': 'No Place',
+'Không chọn Dish': 'No Dish',
+'Không chọn Narration': 'No Narration',
+
+'Content Type': 'Content Type',
+'Place Type': 'Place Type',
+'Target Type': 'Target Type',
+'Trigger Mode': 'Trigger Mode',
+'Translation Source': 'Translation Source',
+
+'Category': 'Category',
+'Place': 'Place',
+'Dish': 'Dish',
+'Narration': 'Narration',
+'Translation': 'Translation',
+'Language': 'Language',
+'Active': 'Active',
+'Actions': 'Actions',
+'Value': 'Value',
+'Id': 'Id',
+
+'Edit': 'Edit',
+'Hide': 'Hide',
+'Create': 'Create',
+'Yes': 'Yes',
+'No': 'No',
+
+'Unable to load dropdown data. Please check lookup backend endpoints.': 'Unable to load dropdown data. Please check lookup backend endpoints.',
+'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.': 'Unable to load dropdown data. Please check lookup backend endpoints.',
+'Restore': 'Restore',
+'Save Changes': 'Save Changes',
   },
     ja: {
     'language.vi': 'ベトナム語',
@@ -486,6 +552,18 @@ const viText: Record<string, string> = {
 
   'Admin Dashboard': 'Bảng điều khiển quản trị',
   'Language Management': 'Quản lý ngôn ngữ',
+  'The narration languages are fixed for the system. Admin cannot create new languages on this screen.': 'Danh sách ngôn ngữ thuyết minh được cố định cho hệ thống. Admin không tạo mới ngôn ngữ tại màn hình này.',
+'Supported system languages': 'Ngôn ngữ hệ thống hỗ trợ',
+'These languages are used for narration translations and guest language selection.': 'Các ngôn ngữ này sẽ được dùng cho bản dịch thuyết minh và lựa chọn ngôn ngữ nghe của khách.',
+'Display Name': 'Tên hiển thị',
+'System Label': 'Nhãn hệ thống',
+'TTS lang': 'TTS lang',
+'DB Status': 'Trạng thái DB',
+'Active in DB': 'Đang hoạt động',
+'Exists in DB but disabled': 'Có trong DB nhưng đang tắt',
+'Missing in DB': 'Chưa có trong DB',
+'Languages outside fixed configuration': 'Ngôn ngữ không thuộc cấu hình cố định',
+'These rows should be disabled by seed_supported_languages_fixed.sql. They should not be used for the public app.': 'Các dòng này nên được tắt bằng file seed_supported_languages_fixed.sql. Không nên dùng cho app public.',
   'Lookup Management': 'Quản lý danh mục',
   'Places / POI Management': 'Quản lý địa điểm / POI',
   'Dish Categories': 'Danh mục món ăn',
@@ -656,6 +734,8 @@ const viText: Record<string, string> = {
   'Duyệt hoặc từ chối feedback của khách anonymous.': 'Duyệt hoặc từ chối feedback của khách anonymous.',
   'Log thời gian thực khi khách vào/gần/rời POI.': 'Log thời gian thực khi khách vào/gần/rời POI.',
   'Theo dõi lượt nghe theo QR / Geofence / Manual.': 'Theo dõi lượt nghe theo QR / Geofence / Manual.'
+
+  
 };
 
 const enText: Record<string, string> = {
@@ -694,6 +774,40 @@ const enText: Record<string, string> = {
   'Bảng điều khiển quản trị': 'Admin Dashboard',
   'Language Management': 'Language Management',
   'Quản lý ngôn ngữ': 'Language Management',
+  'The narration languages are fixed for the system. Admin cannot create new languages on this screen.': 'The narration languages are fixed for the system. Admin cannot create new languages on this screen.',
+'Danh sách ngôn ngữ thuyết minh được cố định cho hệ thống. Admin không tạo mới ngôn ngữ tại màn hình này.': 'The narration languages are fixed for the system. Admin cannot create new languages on this screen.',
+
+'Supported system languages': 'Supported system languages',
+'Ngôn ngữ hệ thống hỗ trợ': 'Supported system languages',
+
+'These languages are used for narration translations and guest language selection.': 'These languages are used for narration translations and guest language selection.',
+'Các ngôn ngữ này sẽ được dùng cho bản dịch thuyết minh và lựa chọn ngôn ngữ nghe của khách.': 'These languages are used for narration translations and guest language selection.',
+
+'Display Name': 'Display Name',
+'Tên hiển thị': 'Display Name',
+
+'System Label': 'System Label',
+'Nhãn hệ thống': 'System Label',
+
+'TTS lang': 'TTS lang',
+
+'DB Status': 'DB Status',
+'Trạng thái DB': 'DB Status',
+
+'Active in DB': 'Active in DB',
+'Đang hoạt động': 'Active in DB',
+
+'Exists in DB but disabled': 'Exists in DB but disabled',
+'Có trong DB nhưng đang tắt': 'Exists in DB but disabled',
+
+'Missing in DB': 'Missing in DB',
+'Chưa có trong DB': 'Missing in DB',
+
+'Languages outside fixed configuration': 'Languages outside fixed configuration',
+'Ngôn ngữ không thuộc cấu hình cố định': 'Languages outside fixed configuration',
+
+'These rows should be disabled by seed_supported_languages_fixed.sql. They should not be used for the public app.': 'These rows should be disabled by seed_supported_languages_fixed.sql. They should not be used for the public app.',
+'Các dòng này nên được tắt bằng file seed_supported_languages_fixed.sql. Không nên dùng cho app public.': 'These rows should be disabled by seed_supported_languages_fixed.sql. They should not be used for the public app.',
   'Lookup Management': 'Lookup Management',
   'Quản lý danh mục': 'Lookup Management',
   'Places / POI Management': 'Places / POI Management',
@@ -958,10 +1072,11 @@ export function translateKey(key: string, language: UiLanguage): string {
 }
 
 export function translateText(text: string, language: UiLanguage): string {
-  // Admin vẫn chỉ hỗ trợ VI / EN.
-  // Nếu public đang dùng ja/ko/zh mà có chỗ gọi translateText(),
-  // ta fallback về English để tránh crash.
-  const dictionary = language === 'vi' ? viText : enText;
+  // Admin text chỉ hỗ trợ VI / EN.
+  // Ưu tiên viText/enText, sau đó fallback sang keyTranslations
+  // để dùng lại các key đã khai báo sẵn như "Chọn dữ liệu", "Không chọn Place"...
+  const activeLanguage: Extract<UiLanguage, 'vi' | 'en'> = language === 'vi' ? 'vi' : 'en';
+  const dictionary = activeLanguage === 'vi' ? viText : enText;
 
-  return dictionary[text] ?? text;
+  return dictionary[text] ?? keyTranslations[activeLanguage]?.[text] ?? text;
 }

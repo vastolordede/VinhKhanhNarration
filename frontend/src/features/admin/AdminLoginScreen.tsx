@@ -32,7 +32,15 @@ export default function AdminLoginScreen() {
 
 localStorage.setItem('adminToken', data.accessToken);
 localStorage.setItem('adminRefreshToken', data.refreshToken);
-localStorage.setItem('adminUser', JSON.stringify(data.admin));
+localStorage.setItem(
+  'adminUser',
+  JSON.stringify({
+    adminId: data.admin.adminId ?? (data.admin as any).AdminId,
+    fullName: data.admin.fullName ?? (data.admin as any).FullName,
+    email: data.admin.email ?? (data.admin as any).Email,
+    role: data.admin.role ?? (data.admin as any).Role
+  })
+);
 localStorage.setItem('adminTokenExpiresAt', data.accessTokenExpiresAt);
 localStorage.setItem('adminRefreshTokenExpiresAt', data.refreshTokenExpiresAt);
 

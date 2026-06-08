@@ -3,7 +3,15 @@ import { endpoints } from '../../api/endpoints';
 
 export default function AudioManagementScreen() {
   return <SimpleResourcePage config={{ title: 'Audio Management', description: 'AudioUrl là tùy chọn. Nếu không có audio, mobile app dùng Web Speech API để đọc text.', endpoint: endpoints.audioFiles, fields: [
-    { name: 'translationId', label: 'Translation Id', type: 'number' },
+    {
+  name: 'translationId',
+  label: 'Translation',
+  type: 'select',
+  optionEndpoint: endpoints.narrationTranslations,
+  optionValueKey: 'translationId',
+  optionLabel: (translation) =>
+    `${translation.translationId} - ${translation.translatedTitle} / language ${translation.languageId}`
+},
     { name: 'audioUrl', label: 'Audio URL' },
     { name: 'voiceName', label: 'Voice Name' },
     { name: 'voiceGender', label: 'Voice Gender' },
