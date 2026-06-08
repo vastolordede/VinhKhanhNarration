@@ -95,6 +95,20 @@ export async function getPlayableAudio(
     return null;
   }
 }
+function requireTranslation(
+  translation: NarrationTranslationDTO | null,
+  message = 'Chưa có bản dịch cho ngôn ngữ đang chọn.'
+): NarrationTranslationDTO {
+  if (
+    !translation ||
+    !translation.translatedTitle?.trim() ||
+    !translation.translatedText?.trim()
+  ) {
+    throw new Error(message);
+  }
+
+  return translation;
+}
 
 export async function resolvePlaceNarration(
   placeId: number,
@@ -107,17 +121,19 @@ export async function resolvePlaceNarration(
     throw new Error('Không tìm thấy nội dung thuyết minh cho địa điểm này.');
   }
 
-  const translation = await getTranslation(narration.narrationId, languageId);
-  const audio = await getPlayableAudio(narration.narrationId, languageId);
+  const translation = requireTranslation(
+  await getTranslation(narration.narrationId, languageId)
+);
+const audio = await getPlayableAudio(narration.narrationId, languageId);
 
   return {
     placeId,
     dishId: null,
     narrationId: narration.narrationId,
-    translationId: translation?.translationId ?? null,
-    audioId: audio?.audioId ?? null,
-    title: translation?.translatedTitle || narration.title,
-    text: translation?.translatedText || narration.originalText,
+   translationId: translation.translationId,
+audioId: audio?.audioId ?? null,
+title: translation.translatedTitle,
+text: translation.translatedText,
     audioUrl: audio?.audioUrl ?? null,
     useTts: !audio?.audioUrl,
     source: 'place'
