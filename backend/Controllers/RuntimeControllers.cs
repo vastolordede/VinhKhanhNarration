@@ -85,7 +85,9 @@ public class GeofenceEventsController : BaseApiController
 {
     private readonly GeofenceBUS _bus;
     public GeofenceEventsController(GeofenceBUS bus) => _bus = bus;
-    [HttpGet] public IActionResult GetAll() => OkData(_bus.GetAll());
+    [HttpGet]
+public IActionResult GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    => OkData(_bus.GetPaged(page, pageSize));
     [HttpGet("{eventId:long}")] public IActionResult GetById(long eventId) => OkData(_bus.GetById(eventId));
     [HttpGet("session/{guestSessionId}")] public IActionResult GetBySession(string guestSessionId) => OkData(_bus.GetByGuestSessionId(guestSessionId));
     [HttpGet("place/{placeId:long}")] public IActionResult GetByPlace(long placeId) => OkData(_bus.GetByPlaceId(placeId));
@@ -111,7 +113,9 @@ public class ListeningHistoriesController : BaseApiController
 {
     private readonly ListeningHistoryBUS _bus;
     public ListeningHistoriesController(ListeningHistoryBUS bus) => _bus = bus;
-    [HttpGet] public IActionResult GetAll() => OkData(_bus.GetAll());
+    [HttpGet]
+public IActionResult GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    => OkData(_bus.GetPaged(page, pageSize));
     [HttpGet("{historyId:long}")] public IActionResult GetById(long historyId) => OkData(_bus.GetById(historyId));
     [HttpGet("session/{guestSessionId}")] public IActionResult GetBySession(string guestSessionId) => OkData(_bus.GetByGuestSessionId(guestSessionId));
     [HttpGet("narration/{narrationId:long}")] public IActionResult GetByNarration(long narrationId) => OkData(_bus.GetByNarrationId(narrationId));
@@ -135,7 +139,9 @@ public class FeedbacksController : BaseApiController
 {
     private readonly FeedbackBUS _bus;
     public FeedbacksController(FeedbackBUS bus) => _bus = bus;
-    [HttpGet] public IActionResult GetAll() => OkData(_bus.GetAll());
+    [HttpGet]
+public IActionResult GetAll([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    => OkData(_bus.GetPaged(page, pageSize));
     [HttpGet("approved")] public IActionResult GetApproved() => OkData(_bus.GetApproved());
     [HttpGet("pending")] public IActionResult GetPending() => OkData(_bus.GetPending());
     [HttpGet("{feedbackId:long}")] public IActionResult GetById(long feedbackId) => OkData(_bus.GetById(feedbackId));

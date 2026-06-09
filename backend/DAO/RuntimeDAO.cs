@@ -235,6 +235,30 @@ public class GuestPoiStateDAO : BaseDAO
 
 public class GeofenceEventDAO : BaseDAO
 {
+    public List<GeofenceEventDTO> GetPaged(int page, int pageSize)
+{
+    var offset = (page - 1) * pageSize;
+
+    return QueryList(@"
+        SELECT *
+        FROM geofence_events
+        ORDER BY event_id DESC
+        LIMIT @limit OFFSET @offset;
+    ", cmd =>
+    {
+        cmd.Parameters.AddWithValue("@limit", pageSize);
+        cmd.Parameters.AddWithValue("@offset", offset);
+    });
+}
+
+public long CountAll()
+{
+    using var conn = CreateConnection();
+    conn.Open();
+
+    using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM geofence_events;", conn);
+    return Convert.ToInt64(cmd.ExecuteScalar());
+}
     public GeofenceEventDAO(DbConnectionFactory factory) : base(factory) { }
 
     public long Insert(GeofenceEventDTO dto)
@@ -329,6 +353,30 @@ public class GeofenceEventDAO : BaseDAO
 
 public class ListeningHistoryDAO : GenericCrudDAO<ListeningHistoryDTO>
 {
+    public List<ListeningHistoryDTO> GetPaged(int page, int pageSize)
+{
+    var offset = (page - 1) * pageSize;
+
+    return QueryList(@"
+        SELECT *
+        FROM listening_histories
+        ORDER BY history_id DESC
+        LIMIT @limit OFFSET @offset;
+    ", cmd =>
+    {
+        cmd.Parameters.AddWithValue("@limit", pageSize);
+        cmd.Parameters.AddWithValue("@offset", offset);
+    });
+}
+
+public long CountAll()
+{
+    using var conn = CreateConnection();
+    conn.Open();
+
+    using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM listening_histories;", conn);
+    return Convert.ToInt64(cmd.ExecuteScalar());
+}
     public ListeningHistoryDAO(DbConnectionFactory factory) : base(factory) { }
     
    public new long Insert(ListeningHistoryDTO dto)
@@ -444,6 +492,30 @@ public class ListeningHistoryDAO : GenericCrudDAO<ListeningHistoryDTO>
 
 public class FeedbackDAO : GenericCrudDAO<FeedbackDTO>
 {
+    public List<FeedbackDTO> GetPaged(int page, int pageSize)
+{
+    var offset = (page - 1) * pageSize;
+
+    return QueryList(@"
+        SELECT *
+        FROM feedbacks
+        ORDER BY feedback_id DESC
+        LIMIT @limit OFFSET @offset;
+    ", cmd =>
+    {
+        cmd.Parameters.AddWithValue("@limit", pageSize);
+        cmd.Parameters.AddWithValue("@offset", offset);
+    });
+}
+
+public long CountAll()
+{
+    using var conn = CreateConnection();
+    conn.Open();
+
+    using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM feedbacks;", conn);
+    return Convert.ToInt64(cmd.ExecuteScalar());
+}
     public FeedbackDAO(DbConnectionFactory factory) : base(factory) { }
 
     public bool Approve(long feedbackId)

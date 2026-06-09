@@ -797,6 +797,10 @@ const viText: Record<string, string> = {
 'Download QR': 'Tải QR',
 'QR Code Value is empty.': 'Giá trị mã QR đang trống.',
 'Unable to generate QR image.': 'Không thể tạo ảnh QR.',
+'Showing': 'Hiển thị',
+'Previous': 'Trước',
+'Next': 'Sau',
+'Page': 'Trang',
 };
 
 const enText: Record<string, string> = {
@@ -1124,6 +1128,10 @@ const enText: Record<string, string> = {
 'Download QR': 'Download QR',
 'QR Code Value is empty.': 'QR Code Value is empty.',
 'Unable to generate QR image.': 'Unable to generate QR image.',
+'Showing': 'Showing',
+'Previous': 'Previous',
+'Next': 'Next',
+'Page': 'Page',
 };
 
 export function normalizeUiLanguage(value?: string | null): UiLanguage {

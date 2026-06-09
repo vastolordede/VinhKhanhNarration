@@ -9,6 +9,7 @@ import { Textarea } from '../../components/ui/Textarea';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { useI18n } from '../../i18n/useI18n';
 import { StatusBadge } from '../../components/ui/StatusBadge';
+import { PaginationBar } from '../../components/ui/PaginationBar';
 
 type OptionValueType = 'number' | 'string';
 
@@ -44,6 +45,8 @@ export type ResourceConfig = {
   preparePayload?: (payload: Record<string, any>, editing: any | null) => Record<string, any>;
   validate?: (form: Record<string, any>, editing: any | null) => FieldErrors;
   extraRowActions?: (row: any) => ReactNode;
+  pageSize?: number;
+disablePagination?: boolean;
 
   extraFormActions?: (
     form: Record<string, any>,
@@ -108,6 +111,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [tablePage, setTablePage] = useState(1);
 
   const { tx } = useI18n();
 
@@ -121,6 +125,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
   }
 
   useEffect(() => {
+    setTablePage(1);
     load();
   }, [config.endpoint]);
 
@@ -574,8 +579,20 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
       </label>
     );
   }
+const pageSize = config.pageSize ?? 10;
+const totalItems = items.length;
+const totalPages = Math.ceil(totalItems / pageSize);
+const shouldPaginate = !config.disablePagination && totalItems > pageSize;
 
-  const rows = items.map((item) => {
+const safeTablePage = Math.min(
+  Math.max(tablePage, 1),
+  Math.max(totalPages, 1)
+);
+
+const visibleItems = shouldPaginate
+  ? items.slice((safeTablePage - 1) * pageSize, safeTablePage * pageSize)
+  : items;
+  const rows = visibleItems.map((item) => {
     const isInactive = item.isActive === false;
     const hasActiveStatus = typeof item.isActive === 'boolean';
 
@@ -615,7 +632,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
     ];
   });
 
-  const rowClassNames = items.map((item) =>
+  const rowClassNames = visibleItems.map((item) =>
     item.isActive === false ? 'bg-slate-100 text-slate-400' : ''
   );
 
@@ -672,11 +689,23 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
           </form>
         </Card>
 
-        <DataTable
-          headers={[...config.columns.map((c) => tx(c.label)), tx('Actions')]}
-          rows={rows}
-          rowClassNames={rowClassNames}
-        />
+        <div>
+  <DataTable
+    headers={[...config.columns.map((c) => tx(c.label)), tx('Actions')]}
+    rows={rows}
+    rowClassNames={rowClassNames}
+  />
+
+  {shouldPaginate && (
+    <PaginationBar
+      page={safeTablePage}
+      pageSize={pageSize}
+      totalItems={totalItems}
+      totalPages={totalPages}
+      onPageChange={setTablePage}
+    />
+  )}
+</div>
       </div>
     </div>
   );
