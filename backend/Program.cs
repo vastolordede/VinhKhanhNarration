@@ -50,12 +50,20 @@ builder.Services
     });
 
 // CORS phải đặt TRƯỚC builder.Build()
+var corsAllowedOriginsRaw =
+    Environment.GetEnvironmentVariable("CORS_ALLOWED_ORIGINS")
+    ?? Environment.GetEnvironmentVariable("FRONTEND_URL")
+    ?? "http://localhost:5173";
+
+var corsAllowedOrigins = corsAllowedOriginsRaw
+    .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("FrontendDev", policy =>
+    options.AddPolicy("AppCors", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .WithOrigins(corsAllowedOrigins)
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -132,7 +140,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // CORS phải đặt trước Authorization và MapControllers
-app.UseCors("FrontendDev");
+app.UseCors("AppCors");
 
 app.UseAuthentication();
 app.UseAuthorization();

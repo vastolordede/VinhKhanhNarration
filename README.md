@@ -243,6 +243,79 @@ Frontend mặc định chạy tại:
 ```text
 http://localhost:5173
 ```
+### Thêm vào `README.md`, sau phần “Chạy nhanh toàn bộ project”
+
+## Deployment Overview
+
+Project có thể deploy theo mô hình:
+
+```text
+Database: Neon PostgreSQL
+Backend: Render Docker Web Service
+Frontend: Vercel Static Frontend
+```
+
+Backend sử dụng biến môi trường `DATABASE_URL` để kết nối PostgreSQL production. Frontend sử dụng `VITE_API_BASE_URL` để gọi backend production.
+
+```text
+Neon PostgreSQL
+        ↑
+Render Backend API
+        ↑
+Vercel Frontend
+```
+
+---
+
+### Thêm vào `backend/README.md`, sau phần cấu hình `.env`
+
+## Production environment variables
+
+Khi deploy backend lên Render, cần cấu hình các biến môi trường:
+
+```env
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+ASPNETCORE_ENVIRONMENT=Production
+ASPNETCORE_URLS=http://0.0.0.0:10000
+CORS_ALLOWED_ORIGINS=https://your-frontend.vercel.app
+```
+
+Trong đó:
+
+```text
+DATABASE_URL:
+- Connection string PostgreSQL từ Neon.
+- Không commit giá trị thật lên GitHub.
+
+CORS_ALLOWED_ORIGINS:
+- Domain frontend được phép gọi API.
+- Khi test local có thể dùng http://localhost:5173.
+- Khi deploy Vercel thì đổi thành domain Vercel production.
+```
+
+Backend Docker service trên Render chạy port `10000`.
+
+---
+
+### Thêm vào `frontend/README.md`, sau phần cấu hình `.env`
+
+## Production environment variables
+
+Khi deploy frontend lên Vercel, cần cấu hình:
+
+```env
+VITE_API_BASE_URL=https://your-render-backend.onrender.com
+VITE_APP_NAME=VinhKhanhNarration
+VITE_APP_ENV=production
+```
+
+Lưu ý:
+
+```text
+- Vite chỉ expose biến môi trường có prefix VITE_ ra frontend.
+- Không đưa DATABASE_URL hoặc secret backend vào frontend.
+- Sau khi đổi env trên Vercel, cần redeploy frontend.
+```
 
 ---
 
