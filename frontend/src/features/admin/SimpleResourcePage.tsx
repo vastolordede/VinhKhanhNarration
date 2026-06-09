@@ -43,6 +43,7 @@ export type ResourceConfig = {
   softDelete?: boolean;
   preparePayload?: (payload: Record<string, any>, editing: any | null) => Record<string, any>;
   validate?: (form: Record<string, any>, editing: any | null) => FieldErrors;
+  extraRowActions?: (row: any) => ReactNode;
 
   extraFormActions?: (
     form: Record<string, any>,
@@ -609,6 +610,7 @@ export default function SimpleResourcePage({ config }: { config: ResourceConfig 
             {tx(hasActiveStatus && isInactive ? 'Restore' : 'Hide')}
           </Button>
         )}
+        {config.extraRowActions?.(item)}
       </div>
     ];
   });

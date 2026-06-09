@@ -1,5 +1,41 @@
+import * as QRCode from 'qrcode';
 import SimpleResourcePage from './SimpleResourcePage';
 import { endpoints } from '../../api/endpoints';
+import { Button } from '../../components/ui/Button';
+
+function safeFileName(value: string) {
+  return value
+    .trim()
+    .replace(/[^a-zA-Z0-9-_]+/g, '_')
+    .replace(/^_+|_+$/g, '')
+    .slice(0, 80);
+}
+
+async function downloadQrImage(row: any) {
+  const qrValue = String(row.qrCodeValue ?? '').trim();
+
+  if (!qrValue) {
+    window.alert('QR Code Value is empty.');
+    return;
+  }
+
+  try {
+    const dataUrl = await QRCode.toDataURL(qrValue, {
+      width: 512,
+      margin: 2,
+      errorCorrectionLevel: 'M'
+    });
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = `${safeFileName(qrValue) || 'qr-code'}.png`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } catch {
+    window.alert('Unable to generate QR image.');
+  }
+}
 
 export default function QRCodeManagementScreen() {
   return (
@@ -87,7 +123,18 @@ export default function QRCodeManagementScreen() {
           { key: 'dishId', label: 'Dish' },
           { key: 'narrationId', label: 'Narration' },
           { key: 'isActive', label: 'Active', render: (r) => (r.isActive ? 'Yes' : 'No') }
-        ]
+        ],
+
+        extraRowActions: (row) => (
+          <Button
+            type="button"
+            variant="secondary"
+            className="px-3 py-2"
+            onClick={() => downloadQrImage(row)}
+          >
+            Download QR
+          </Button>
+        )
       }}
     />
   );

@@ -125,6 +125,8 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.': 'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.',
 'Restore': 'Mở lại',
 'Save Changes': 'Lưu thay đổi',
+'public.feedback.success': 'Cảm ơn bạn đã gửi đánh giá.',
+'public.feedback.error': 'Không gửi được đánh giá. Vui lòng thử lại.',
   },
 
   en: {
@@ -249,6 +251,8 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'Không tải được dữ liệu dropdown. Kiểm tra backend endpoint lookup.': 'Unable to load dropdown data. Please check lookup backend endpoints.',
 'Restore': 'Restore',
 'Save Changes': 'Save Changes',
+'public.feedback.success': 'Thank you for your feedback.',
+'public.feedback.error': 'Unable to send feedback. Please try again.',
   },
     ja: {
     'language.vi': 'ベトナム語',
@@ -341,6 +345,8 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'public.player.source.manual': '手動',
 'public.player.audioFile': '音声ファイル',
 'public.player.browserTts': 'ブラウザTTS',
+'public.feedback.success': '評価を送信していただきありがとうございます。',
+'public.feedback.error': '評価を送信できませんでした。もう一度お試しください。',
   },
 
   ko: {
@@ -434,6 +440,8 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'public.player.source.manual': '수동',
 'public.player.audioFile': '오디오 파일',
 'public.player.browserTts': '브라우저 TTS',
+'public.feedback.success': '평가를 보내주셔서 감사합니다.',
+'public.feedback.error': '평가를 보낼 수 없습니다. 다시 시도해 주세요.',
   },
 
   zh: {
@@ -527,6 +535,8 @@ const keyTranslations: Record<UiLanguage, Record<string, string>> = {
 'public.player.source.manual': '手动',
 'public.player.audioFile': '音频文件',
 'public.player.browserTts': '浏览器语音',
+'public.feedback.success': '感谢您提交评价。',
+'public.feedback.error': '无法发送评价，请重试。',
   }
 };
 
@@ -784,6 +794,9 @@ const viText: Record<string, string> = {
 'Category is required.': 'Vui lòng chọn danh mục.',
 'Average Price must be greater than or equal to 0.': 'Giá trung bình phải lớn hơn hoặc bằng 0.',
 'Price must be greater than or equal to 0.': 'Giá phải lớn hơn hoặc bằng 0.',
+'Download QR': 'Tải QR',
+'QR Code Value is empty.': 'Giá trị mã QR đang trống.',
+'Unable to generate QR image.': 'Không thể tạo ảnh QR.',
 };
 
 const enText: Record<string, string> = {
@@ -1108,6 +1121,9 @@ const enText: Record<string, string> = {
 'Hidden successfully.': 'Hidden successfully.',
 'Restored successfully.': 'Restored successfully.',
 'Validation failed.': 'Validation failed.',
+'Download QR': 'Download QR',
+'QR Code Value is empty.': 'QR Code Value is empty.',
+'Unable to generate QR image.': 'Unable to generate QR image.',
 };
 
 export function normalizeUiLanguage(value?: string | null): UiLanguage {
