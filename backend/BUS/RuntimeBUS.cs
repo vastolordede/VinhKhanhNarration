@@ -6,6 +6,21 @@ using VinhKhanhNarration.Api.DTO.Common;
 
 namespace VinhKhanhNarration.Api.BUS;
 
+static class PaginationHelper
+{
+    public static (int Page, int PageSize) Normalize(int page, int pageSize)
+    {
+        var normalizedPage = page < 1 ? 1 : page;
+        var normalizedPageSize = pageSize switch
+        {
+            < 1 => 20,
+            > 100 => 100,
+            _ => pageSize
+        };
+
+        return (normalizedPage, normalizedPageSize);
+    }
+}
 public class QRCodeBUS : ICrudBUS<QRCodeDTO, long>
 {
     private readonly QRCodeDAO _dao;
@@ -173,6 +188,19 @@ public class GeofenceBUS
     private readonly ListeningHistoryDAO _historyDAO;
     private readonly GeoDistanceCalculator _distanceCalculator;
 
+
+public PagedResultDTO<GeofenceEventDTO> GetPaged(int page, int pageSize)
+{
+    var normalized = PaginationHelper.Normalize(page, pageSize);
+
+    return new PagedResultDTO<GeofenceEventDTO>
+    {
+        Items = _eventDAO.GetPaged(normalized.Page, normalized.PageSize),
+        Page = normalized.Page,
+        PageSize = normalized.PageSize,
+        TotalItems = _eventDAO.CountAll()
+    };
+}
     public GeofenceBUS(PlaceDAO placeDAO, GuestPoiStateDAO stateDAO, GeofenceEventDAO eventDAO, GeofenceEventTypeDAO eventTypeDAO, GeofenceEventStatusDAO eventStatusDAO, NarrationContentDAO narrationDAO, NarrationTranslationDAO translationDAO, AudioFileDAO audioDAO, ListeningHistoryDAO historyDAO, GeoDistanceCalculator distanceCalculator)
     {
         _placeDAO = placeDAO; _stateDAO = stateDAO; _eventDAO = eventDAO; _eventTypeDAO = eventTypeDAO; _eventStatusDAO = eventStatusDAO; _narrationDAO = narrationDAO; _translationDAO = translationDAO; _audioDAO = audioDAO; _historyDAO = historyDAO; _distanceCalculator = distanceCalculator;
@@ -299,6 +327,19 @@ public class ListeningHistoryBUS
     public List<ListeningHistoryDTO> GetByDateRange(DateTime from, DateTime to) => _dao.GetByDateRange(from, to);
     public bool UpdatePlaybackStatus(long id, string status) => _dao.UpdatePlaybackStatus(id, status);
     public bool UpdateListenDuration(long id, int seconds) => _dao.UpdateListenDuration(id, seconds);
+
+    public PagedResultDTO<ListeningHistoryDTO> GetPaged(int page, int pageSize)
+{
+    var normalized = PaginationHelper.Normalize(page, pageSize);
+
+    return new PagedResultDTO<ListeningHistoryDTO>
+    {
+        Items = _dao.GetPaged(normalized.Page, normalized.PageSize),
+        Page = normalized.Page,
+        PageSize = normalized.PageSize,
+        TotalItems = _dao.CountAll()
+    };
+}
 }
 
 public class FeedbackBUS
@@ -321,4 +362,17 @@ public class FeedbackBUS
         var count = new[] { dto.PlaceId, dto.DishId, dto.NarrationId }.Count(x => x != null);
         if (count != 1) throw new ArgumentException("Feedback must target exactly one object: Place, Dish, or Narration.");
     }
+
+    public PagedResultDTO<FeedbackDTO> GetPaged(int page, int pageSize)
+{
+    var normalized = PaginationHelper.Normalize(page, pageSize);
+
+    return new PagedResultDTO<FeedbackDTO>
+    {
+        Items = _dao.GetPaged(normalized.Page, normalized.PageSize),
+        Page = normalized.Page,
+        PageSize = normalized.PageSize,
+        TotalItems = _dao.CountAll()
+    };
+}
 }

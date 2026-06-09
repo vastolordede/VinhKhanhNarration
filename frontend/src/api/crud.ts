@@ -1,9 +1,24 @@
 import { http, unwrap } from './http';
 import { endpoints } from './endpoints';
+import { PagedResult } from '../types';
 
 export async function getList<T>(url: string): Promise<T[]> {
   const response = await http.get(url);
   return unwrap<T[]>(response);
+}
+export async function getPagedList<T>(
+  url: string,
+  page: number,
+  pageSize: number
+): Promise<PagedResult<T>> {
+  const response = await http.get(url, {
+    params: {
+      page,
+      pageSize
+    }
+  });
+
+  return unwrap<PagedResult<T>>(response);
 }
 
 export async function getOne<T>(url: string): Promise<T> {

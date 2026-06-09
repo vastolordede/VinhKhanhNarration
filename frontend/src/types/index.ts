@@ -5,6 +5,13 @@ export interface ApiResponse<T = unknown> {
   message?: string;
   data?: T;
 }
+export interface PagedResult<T> {
+  items: T[];
+  page: number;
+  pageSize: number;
+  totalItems: number;
+  totalPages: number;
+}
 
 export interface LanguageDTO {
   languageId: ID;
