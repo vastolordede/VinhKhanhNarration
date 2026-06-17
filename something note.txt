@@ -1,0 +1,11 @@
+có bao nhiêu actor tham gia vào hệ thống? 3 actor. Admin, chủ sạp, khách nghe.
+Mỗi actor sử dụng bao nhiêu chức năng trong hệ thống?
+Admin: quản lý tài khoản admin, tài khoản chủ sạp, quản lý chung
+Chủ sạp: quản lý thông tin sạp( món ăn, vị trí, decription để nghe audio )
+Khách: nghe, chọn ngôn ngữ
+
+Admin: Audio do admin gen ra, kiểm tra an toàn thực phẩm và giấy phép kinh doanh
+( ở bước đăng kí đã kiểm tra giấy phép ( hộ kinh doanh chỉ kiểm tra lần đầu lúc
+ đăng kí và giấy phép an toàn thực phẩm kiểm tra lại mỗi lần gia hạn
+
+Sau khi xác định chức năng cận thiết cần cụ thể hóa chức năng ( bằng activity và sequence )
