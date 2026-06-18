@@ -6,8 +6,7 @@ import { LocateFixed, Volume2 } from 'lucide-react';
 import {
   getActivePlaces,
   getPlaceDishes,
-  getNarrationsByPlace,
-  getTranslation,
+  resolveDishNarration,
   resolvePlaceNarration
 } from '../../api/publicApi';
 import { BottomSheet } from '../../components/ui/BottomSheet';
@@ -16,7 +15,7 @@ import { Card } from '../../components/ui/Card';
 import { useAppContext } from '../../contexts/AppContext';
 import { useGeofenceWatcher } from '../../hooks/useGeofenceWatcher';
 import { useGeolocation } from '../../hooks/useGeolocation';
-import { PlaceDTO, PlaceDishDTO } from '../../types';
+import { NarrationResolveResultDTO, PlaceDTO, PlaceDishDTO } from '../../types';
 import { useI18n } from '../../i18n/useI18n';
 import FeedbackModal from './FeedbackModal';
 
@@ -93,16 +92,29 @@ function MapAutoFocus({
   return null;
 }
 
+function narrationErrorMessage(message: string, t: (key: string) => string) {
+  if (message.includes('CONTENT_LANGUAGE_NOT_AVAILABLE')) {
+    return t('public.map.contentLanguageUnavailable');
+  }
+  if (message.includes('AUDIO_NOT_READY')) {
+    return t('public.map.audioNotReady');
+  }
+  if (message.includes('NARRATION_NOT_AVAILABLE')) {
+    return t('public.map.narrationUnavailable');
+  }
+  return message || t('public.map.narrationUnavailable');
+}
+
 export default function MapExploreScreen() {
   const [places, setPlaces] = useState<PlaceDTO[]>([]);
   const [selectedPlace, setSelectedPlace] = useState<PlaceDTO | null>(null);
-const [selectedPlaceTranslation, setSelectedPlaceTranslation] = useState<{
-  title: string;
-  text: string;
-} | null>(null);
-const [menu, setMenu] = useState<PlaceDishDTO[]>([]);
+  const [selectedNarration, setSelectedNarration] =
+    useState<NarrationResolveResultDTO | null>(null);
+  const [menu, setMenu] = useState<PlaceDishDTO[]>([]);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
   const [statusKey, setStatusKey] = useState('public.map.defaultStatus');
+  const [narrationError, setNarrationError] = useState<string | null>(null);
+  const [loadingNarration, setLoadingNarration] = useState(false);
 
   const {
     language,
@@ -115,75 +127,98 @@ const [menu, setMenu] = useState<PlaceDishDTO[]>([]);
   const geo = useGeolocation();
   const { t } = useI18n();
 
-  const { handlePosition } = useGeofenceWatcher((narration) => {
-    setCurrentNarration(narration);
-    navigate('/app/listen');
-  });
+  const openPlayer = useCallback(
+    (narration: NarrationResolveResultDTO) => {
+      setCurrentNarration(narration);
+      navigate('/app/listen');
+    },
+    [navigate, setCurrentNarration]
+  );
+
+  const { handlePosition } = useGeofenceWatcher(openPlayer);
 
   useEffect(() => {
-    getActivePlaces().then(setPlaces);
+    getActivePlaces()
+      .then(setPlaces)
+      .catch((error) => console.error('Load places failed:', error));
   }, []);
 
   useEffect(() => {
-    if (geo.position) {
-      handlePosition(geo.position);
-    }
+    if (geo.position) void handlePosition(geo.position);
   }, [geo.position, handlePosition]);
-async function loadSelectedPlaceTranslation(place: PlaceDTO) {
-  if (!language) {
-    setSelectedPlaceTranslation(null);
-    return;
-  }
 
-  try {
-    const narrations = await getNarrationsByPlace(place.placeId);
-    const narration = narrations.find((item) => item.isActive) ?? narrations[0];
+  const loadPlaceNarration = useCallback(
+    async (placeId: number) => {
+      setSelectedNarration(null);
+      setNarrationError(null);
 
-    if (!narration) {
-      setSelectedPlaceTranslation(null);
-      return;
-    }
+      if (!language) return;
 
-    const translation = await getTranslation(
-      narration.narrationId,
-      language.languageId
-    );
+      setLoadingNarration(true);
+      try {
+        setSelectedNarration(
+          await resolvePlaceNarration(placeId, language.languageId)
+        );
+      } catch (error) {
+        setNarrationError(
+          narrationErrorMessage(
+            error instanceof Error ? error.message : '',
+            t
+          )
+        );
+      } finally {
+        setLoadingNarration(false);
+      }
+    },
+    [language, t]
+  );
 
-    setSelectedPlaceTranslation({
-      title: translation?.translatedTitle || narration.title || place.placeName,
-      text:
-        translation?.translatedText ||
-        narration.originalText ||
-        place.description ||
-        ''
-    });
-  } catch {
-    setSelectedPlaceTranslation(null);
-  }
-}
-  const openPlace = useCallback(async (place: PlaceDTO) => {
-  setSelectedPlace(place);
-  setSelectedPlaceTranslation(null);
+  const openPlace = useCallback(
+    async (place: PlaceDTO) => {
+      setSelectedPlace(place);
+      setMenu([]);
+      setSelectedNarration(null);
+      setNarrationError(null);
 
-  try {
-    setMenu(await getPlaceDishes(place.placeId));
-  } catch {
-    setMenu([]);
-  }
+      const [menuResult] = await Promise.allSettled([
+        getPlaceDishes(place.placeId),
+        loadPlaceNarration(place.placeId)
+      ]);
 
-  await loadSelectedPlaceTranslation(place);
-}, [language]);
+      setMenu(menuResult.status === 'fulfilled' ? menuResult.value : []);
+    },
+    [loadPlaceNarration]
+  );
 
   async function listenPlace() {
     if (!selectedPlace || !language) return;
 
-    const result = await resolvePlaceNarration(
-      selectedPlace.placeId,
-      language.languageId
-    );
+    if (selectedNarration) {
+      openPlayer(selectedNarration);
+      return;
+    }
 
-    setCurrentNarration(result);
-    navigate('/app/listen');
+    await loadPlaceNarration(selectedPlace.placeId);
+  }
+
+  async function listenDish(dishId: number) {
+    if (!language) return;
+
+    setNarrationError(null);
+    setLoadingNarration(true);
+
+    try {
+      openPlayer(await resolveDishNarration(dishId, language.languageId));
+    } catch (error) {
+      setNarrationError(
+        narrationErrorMessage(
+          error instanceof Error ? error.message : '',
+          t
+        )
+      );
+    } finally {
+      setLoadingNarration(false);
+    }
   }
 
   function requestLocation() {
@@ -193,7 +228,6 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
 
   function toggleTracking() {
     const next = !trackingEnabled;
-
     setTrackingEnabled(next);
 
     if (next) {
@@ -208,16 +242,17 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
   const validPlaces = useMemo(
     () =>
       places.filter(
-        (p): p is PlaceDTO & { latitude: number; longitude: number } =>
-          p.latitude !== null &&
-          p.latitude !== undefined &&
-          p.longitude !== null &&
-          p.longitude !== undefined
+        (place): place is PlaceDTO & {
+          latitude: number;
+          longitude: number;
+        } =>
+          place.latitude !== null &&
+          place.latitude !== undefined &&
+          place.longitude !== null &&
+          place.longitude !== undefined
       ),
     [places]
   );
-
-
 
   return (
     <div className="relative h-screen bg-slate-100 pb-20">
@@ -234,9 +269,9 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
         {validPlaces.map((place) => (
           <Marker
             key={place.placeId}
-            position={[Number(place.latitude), Number(place.longitude)]}
+            position={[place.latitude, place.longitude]}
             icon={placeIcon}
-            eventHandlers={{ click: () => openPlace(place) }}
+            eventHandlers={{ click: () => void openPlace(place) }}
           />
         ))}
 
@@ -248,10 +283,10 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
         )}
 
         <MapAutoFocus
-  places={validPlaces}
-  selectedPlace={selectedPlace}
-  userPosition={geo.position ?? undefined}
-/>
+          places={validPlaces}
+          selectedPlace={selectedPlace}
+          userPosition={geo.position ?? undefined}
+        />
       </MapContainer>
 
       <div className="pointer-events-none absolute left-4 right-4 top-4 z-[700] space-y-3">
@@ -261,11 +296,7 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
               <p className="font-bold text-slate-900">
                 {t('public.map.title')}
               </p>
-
-              <p className="text-xs text-slate-500">
-                {t(statusKey)}
-              </p>
-
+              <p className="text-xs text-slate-500">{t(statusKey)}</p>
               <p className="text-xs font-semibold text-teal-700">
                 {t('public.map.placesLoaded')}: {validPlaces.length}
               </p>
@@ -288,21 +319,31 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
         </Card>
       </div>
 
-      <BottomSheet open={!!selectedPlace} onClose={() => setSelectedPlace(null)}>
+      <BottomSheet
+        open={Boolean(selectedPlace)}
+        onClose={() => {
+          setSelectedPlace(null);
+          setSelectedNarration(null);
+          setNarrationError(null);
+        }}
+      >
         {selectedPlace && (
           <div className="space-y-4">
             <div className="flex items-start justify-between gap-3 pr-10">
               <div>
                 <h2 className="text-xl font-bold text-slate-900">
-  {selectedPlaceTranslation?.title || selectedPlace.placeName}
-</h2>
-
+                  {selectedNarration?.title || selectedPlace.placeName}
+                </h2>
                 <p className="text-sm text-slate-500">
                   {selectedPlace.address || t('public.map.noAddress')}
                 </p>
               </div>
 
-              <Button onClick={listenPlace} className="shrink-0">
+              <Button
+                onClick={() => void listenPlace()}
+                disabled={!language || loadingNarration || !selectedNarration}
+                className="shrink-0"
+              >
                 <Volume2 size={18} />
               </Button>
             </div>
@@ -316,17 +357,28 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
             )}
 
             <p className="text-sm leading-6 text-slate-700">
-  {selectedPlaceTranslation?.text ||
-    selectedPlace.description ||
-    t('public.map.noDescription')}
-</p>  
+              {selectedNarration?.text ||
+                selectedPlace.description ||
+                t('public.map.noDescription')}
+            </p>
+
+            {loadingNarration && (
+              <p className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+                {t('public.map.loadingNarration')}
+              </p>
+            )}
+
+            {narrationError && (
+              <p className="rounded-2xl bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-700">
+                {narrationError}
+              </p>
+            )}
 
             <div className="rounded-2xl bg-slate-50 p-4 text-sm text-slate-600">
               <p>
                 <b>{t('public.map.openingHours')}:</b>{' '}
                 {selectedPlace.openingHours || t('public.map.notUpdated')}
               </p>
-
               <p>
                 <b>{t('public.map.geofenceRadius')}:</b>{' '}
                 {selectedPlace.triggerRadiusMeters}m
@@ -348,25 +400,34 @@ async function loadSelectedPlaceTranslation(place: PlaceDTO) {
                 {menu.map((item) => (
                   <div
                     key={item.placeDishId}
-                    className="rounded-2xl border border-slate-100 p-3 text-sm"
+                    className="flex items-center justify-between gap-3 rounded-2xl border border-slate-100 p-3 text-sm"
                   >
-                    <p className="font-semibold">
-                      {t('public.map.dish')} #{item.dishId}{' '}
-                      {item.isRecommended ? `• ${t('public.map.recommended')}` : ''}
-                    </p>
-
-                    <p className="text-slate-500">
-                      {t('public.map.price')}:{' '}
-                      {item.price
-                        ? `${item.price.toLocaleString()} VND`
-                        : t('public.map.notUpdated')}
-                    </p>
-
-                    {item.note && (
-                      <p className="text-slate-500">
-                        {item.note}
+                    <div>
+                      <p className="font-semibold">
+                        {item.dish?.dishName ||
+                          `${t('public.map.dish')} #${item.dishId}`}{' '}
+                        {item.isRecommended
+                          ? `• ${t('public.map.recommended')}`
+                          : ''}
                       </p>
-                    )}
+                      <p className="text-slate-500">
+                        {t('public.map.price')}:{' '}
+                        {item.price
+                          ? `${item.price.toLocaleString()} VND`
+                          : t('public.map.notUpdated')}
+                      </p>
+                      {item.note && (
+                        <p className="text-slate-500">{item.note}</p>
+                      )}
+                    </div>
+
+                    <Button
+                      variant="secondary"
+                      onClick={() => void listenDish(item.dishId)}
+                      disabled={!language || loadingNarration}
+                    >
+                      <Volume2 size={17} />
+                    </Button>
                   </div>
                 ))}
               </div>

@@ -8,9 +8,52 @@ public class PlaceDAO : GenericCrudDAO<PlaceDTO>
 {
     public PlaceDAO(DbConnectionFactory factory) : base(factory) { }
 
+    public override List<PlaceDTO> GetActive()
+    {
+        return QueryList(@"
+            SELECT p.*
+            FROM places p
+            WHERE p.is_active = TRUE
+              AND (
+                    p.owner_vendor_id IS NULL
+                    OR EXISTS (
+                        SELECT 1
+                        FROM vendor_users vu
+                        JOIN vendor_subscriptions vs
+                          ON vs.vendor_user_id = vu.vendor_user_id
+                         AND vs.status = 'Active'
+                         AND vs.expires_at > CURRENT_TIMESTAMP
+                        WHERE vu.vendor_user_id = p.owner_vendor_id
+                          AND vu.account_status IN ('Active','ExpiringSoon')
+                          AND vu.is_active = TRUE
+                    )
+                  )
+            ORDER BY p.place_id DESC;");
+    }
+
     public List<PlaceDTO> GetPoiEnabledPlaces()
     {
-        return QueryList("SELECT * FROM places WHERE is_active = TRUE AND is_poi = TRUE AND is_geofence_enabled = TRUE ORDER BY priority DESC;");
+        return QueryList(@"
+            SELECT p.*
+            FROM places p
+            WHERE p.is_active = TRUE
+              AND p.is_poi = TRUE
+              AND p.is_geofence_enabled = TRUE
+              AND (
+                    p.owner_vendor_id IS NULL
+                    OR EXISTS (
+                        SELECT 1
+                        FROM vendor_users vu
+                        JOIN vendor_subscriptions vs
+                          ON vs.vendor_user_id = vu.vendor_user_id
+                         AND vs.status = 'Active'
+                         AND vs.expires_at > CURRENT_TIMESTAMP
+                        WHERE vu.vendor_user_id = p.owner_vendor_id
+                          AND vu.account_status IN ('Active','ExpiringSoon')
+                          AND vu.is_active = TRUE
+                    )
+                  )
+            ORDER BY p.priority DESC;");
     }
 
     public List<PlaceDTO> SearchByName(string keyword)
@@ -25,6 +68,20 @@ public class PlaceDAO : GenericCrudDAO<PlaceDTO>
             WHERE is_active = TRUE
               AND is_poi = TRUE
               AND is_geofence_enabled = TRUE
+              AND (
+                    owner_vendor_id IS NULL
+                    OR EXISTS (
+                        SELECT 1
+                        FROM vendor_users vu
+                        JOIN vendor_subscriptions vs
+                          ON vs.vendor_user_id = vu.vendor_user_id
+                         AND vs.status = 'Active'
+                         AND vs.expires_at > CURRENT_TIMESTAMP
+                        WHERE vu.vendor_user_id = places.owner_vendor_id
+                          AND vu.account_status IN ('Active','ExpiringSoon')
+                          AND vu.is_active = TRUE
+                    )
+                  )
               AND latitude IS NOT NULL
               AND longitude IS NOT NULL
               AND (

@@ -21,130 +21,6 @@ static class PaginationHelper
         return (normalizedPage, normalizedPageSize);
     }
 }
-public class QRCodeBUS : ICrudBUS<QRCodeDTO, long>
-{
-    private readonly QRCodeDAO _dao;
-    private readonly TargetTypeDAO _targetTypeDAO;
-    private readonly NarrationContentDAO _narrationDAO;
-    private readonly NarrationTranslationDAO _translationDAO;
-    private readonly AudioFileDAO _audioDAO;
-    private readonly ListeningHistoryDAO _historyDAO;
-
-    public QRCodeBUS(QRCodeDAO dao, TargetTypeDAO targetTypeDAO, NarrationContentDAO narrationDAO, NarrationTranslationDAO translationDAO, AudioFileDAO audioDAO, ListeningHistoryDAO historyDAO)
-    {
-        _dao = dao; _targetTypeDAO = targetTypeDAO; _narrationDAO = narrationDAO; _translationDAO = translationDAO; _audioDAO = audioDAO; _historyDAO = historyDAO;
-    }
-
-    public long Create(QRCodeDTO dto) { ValidateQRCodeTarget(dto); if (_dao.IsQRCodeValueExists(dto.QRCodeValue)) throw new InvalidOperationException("QR code value already exists."); return _dao.Insert(dto); }
-    public bool Update(QRCodeDTO dto) { ValidateQRCodeTarget(dto); return _dao.Update(dto); }
-    public bool Deactivate(long id) => _dao.SoftDelete(id);
-    public bool Restore(long id) => _dao.Restore(id);
-    public QRCodeDTO? GetById(long id) => _dao.GetById(id);
-    public QRCodeDTO? GetByValue(string value) => _dao.GetByValue(value);
-    public List<QRCodeDTO> GetAll() => _dao.GetAll();
-    public List<QRCodeDTO> GetActive() => _dao.GetActive();
-
-    public QRScanResultDTO ResolveQRCode(string qrCodeValue, long languageId, string guestSessionId)
-    {
-        var qr = _dao.GetByValue(qrCodeValue) ?? throw new InvalidOperationException("QR code not found.");
-        if (!qr.IsActive) throw new InvalidOperationException("QR code is inactive.");
-
-        var targetType = _targetTypeDAO.GetById(qr.TargetTypeId)?.Code;
-        NarrationContentDTO? narration = targetType switch
-        {
-            "Place" => qr.PlaceId == null ? null : _narrationDAO.GetMainNarrationByPlaceId(qr.PlaceId.Value),
-            "Dish" => qr.DishId == null ? null : _narrationDAO.GetMainNarrationByDishId(qr.DishId.Value),
-            "Narration" => qr.NarrationId == null ? null : _narrationDAO.GetById(qr.NarrationId.Value),
-            _ => null
-        };
-
-        if (narration == null) throw new InvalidOperationException("Narration not found for QR target.");
-        var translation = _translationDAO.GetByNarrationAndLanguage(narration.NarrationId, languageId) ?? throw new InvalidOperationException("Translation not found for selected language.");
-var audio = _audioDAO.GetActiveAudioByTranslationId(translation.TranslationId);
-var audioUrl = string.IsNullOrWhiteSpace(audio?.AudioUrl) ? null : audio.AudioUrl;
-        _historyDAO.Insert(new ListeningHistoryDTO
-        {
-            GuestSessionId = guestSessionId,
-            NarrationId = narration.NarrationId,
-            LanguageId = languageId,
-            AudioId = audio?.AudioId,
-            QRCodeId = qr.QRCodeId,
-            TriggerSource = "QR",
-            PlaybackStatus = "Played"
-        });
-
-return new QRScanResultDTO
-{
-    PlaceId = qr.PlaceId,
-    DishId = qr.DishId,
-    NarrationId = narration.NarrationId,
-    TranslationId = translation.TranslationId,
-    AudioId = audio?.AudioId,
-    Title = translation.TranslatedTitle,
-    Text = translation.TranslatedText,
-    AudioUrl = audioUrl
-};    }
-
-    public string GenerateQRCodeValue(string targetPrefix, long targetId) => $"{targetPrefix}-{targetId}-{Guid.NewGuid():N}";
-
-    private void ValidateQRCodeTarget(QRCodeDTO dto)
-{
-    var errors = new Dictionary<string, string>();
-
-    if (string.IsNullOrWhiteSpace(dto.QRCodeValue))
-        errors["qrCodeValue"] = "QR Code Value is required.";
-
-    if (dto.TargetTypeId <= 0)
-        errors["targetTypeId"] = "Target Type is required.";
-
-    if (errors.Count == 0)
-    {
-        var type = _targetTypeDAO.GetById(dto.TargetTypeId)?.Code;
-
-        if (string.IsNullOrWhiteSpace(type))
-        {
-            errors["targetTypeId"] = "Target Type is invalid.";
-        }
-        else if (type == "Place")
-        {
-            if (dto.PlaceId == null)
-                errors["placeId"] = "Place is required for Place QR.";
-
-            if (dto.DishId != null)
-                errors["dishId"] = "Dish must be empty for Place QR.";
-
-            if (dto.NarrationId != null)
-                errors["narrationId"] = "Narration must be empty for Place QR.";
-        }
-        else if (type == "Dish")
-        {
-            if (dto.DishId == null)
-                errors["dishId"] = "Dish is required for Dish QR.";
-
-            if (dto.PlaceId != null)
-                errors["placeId"] = "Place must be empty for Dish QR.";
-
-            if (dto.NarrationId != null)
-                errors["narrationId"] = "Narration must be empty for Dish QR.";
-        }
-        else if (type == "Narration")
-        {
-            if (dto.NarrationId == null)
-                errors["narrationId"] = "Narration is required for Narration QR.";
-
-            if (dto.PlaceId != null)
-                errors["placeId"] = "Place must be empty for Narration QR.";
-
-            if (dto.DishId != null)
-                errors["dishId"] = "Dish must be empty for Narration QR.";
-        }
-    }
-
-    if (errors.Count > 0)
-        throw new ApiValidationException(errors);
-}
-}
-
 public class GuestSessionBUS
 {
     private readonly GuestSessionDAO _dao;
@@ -182,90 +58,156 @@ public class GeofenceBUS
     private readonly GeofenceEventDAO _eventDAO;
     private readonly GeofenceEventTypeDAO _eventTypeDAO;
     private readonly GeofenceEventStatusDAO _eventStatusDAO;
-    private readonly NarrationContentDAO _narrationDAO;
-    private readonly NarrationTranslationDAO _translationDAO;
-    private readonly AudioFileDAO _audioDAO;
-    private readonly ListeningHistoryDAO _historyDAO;
+    private readonly PublicNarrationBUS _publicNarrationBUS;
     private readonly GeoDistanceCalculator _distanceCalculator;
 
-
-public PagedResultDTO<GeofenceEventDTO> GetPaged(int page, int pageSize)
-{
-    var normalized = PaginationHelper.Normalize(page, pageSize);
-
-    return new PagedResultDTO<GeofenceEventDTO>
+    public GeofenceBUS(
+        PlaceDAO placeDAO,
+        GuestPoiStateDAO stateDAO,
+        GeofenceEventDAO eventDAO,
+        GeofenceEventTypeDAO eventTypeDAO,
+        GeofenceEventStatusDAO eventStatusDAO,
+        PublicNarrationBUS publicNarrationBUS,
+        GeoDistanceCalculator distanceCalculator)
     {
-        Items = _eventDAO.GetPaged(normalized.Page, normalized.PageSize),
-        Page = normalized.Page,
-        PageSize = normalized.PageSize,
-        TotalItems = _eventDAO.CountAll()
-    };
-}
-    public GeofenceBUS(PlaceDAO placeDAO, GuestPoiStateDAO stateDAO, GeofenceEventDAO eventDAO, GeofenceEventTypeDAO eventTypeDAO, GeofenceEventStatusDAO eventStatusDAO, NarrationContentDAO narrationDAO, NarrationTranslationDAO translationDAO, AudioFileDAO audioDAO, ListeningHistoryDAO historyDAO, GeoDistanceCalculator distanceCalculator)
-    {
-        _placeDAO = placeDAO; _stateDAO = stateDAO; _eventDAO = eventDAO; _eventTypeDAO = eventTypeDAO; _eventStatusDAO = eventStatusDAO; _narrationDAO = narrationDAO; _translationDAO = translationDAO; _audioDAO = audioDAO; _historyDAO = historyDAO; _distanceCalculator = distanceCalculator;
+        _placeDAO = placeDAO;
+        _stateDAO = stateDAO;
+        _eventDAO = eventDAO;
+        _eventTypeDAO = eventTypeDAO;
+        _eventStatusDAO = eventStatusDAO;
+        _publicNarrationBUS = publicNarrationBUS;
+        _distanceCalculator = distanceCalculator;
     }
 
-    public GeofenceCheckResultDTO CheckLocation(string guestSessionId, decimal latitude, decimal longitude, long languageId)
+    public PagedResultDTO<GeofenceEventDTO> GetPaged(int page, int pageSize)
+    {
+        var normalized = PaginationHelper.Normalize(page, pageSize);
+        return new PagedResultDTO<GeofenceEventDTO>
+        {
+            Items = _eventDAO.GetPaged(normalized.Page, normalized.PageSize),
+            Page = normalized.Page,
+            PageSize = normalized.PageSize,
+            TotalItems = _eventDAO.CountAll()
+        };
+    }
+
+    public GeofenceCheckResultDTO CheckLocation(
+        string guestSessionId,
+        decimal latitude,
+        decimal longitude,
+        long languageId)
     {
         var place = FindBestNearbyPlace(latitude, longitude);
-        if (place == null) return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "No nearby POI." };
+        if (place == null)
+            return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "No nearby POI." };
 
-        var distance = _distanceCalculator.CalculateDistanceMeters(latitude, longitude, place.Latitude!.Value, place.Longitude!.Value);
+        var distance = _distanceCalculator.CalculateDistanceMeters(
+            latitude,
+            longitude,
+            place.Latitude!.Value,
+            place.Longitude!.Value);
+
         var state = _stateDAO.GetState(guestSessionId, place.PlaceId);
         _stateDAO.UpdateInsideState(guestSessionId, place.PlaceId, true, distance);
 
         if (IsDebounced(state, place))
         {
-            CreateEvent(guestSessionId, place.PlaceId, null, "Near", "IgnoredDebounce", latitude, longitude, distance, "Ignored by debounce.");
-            return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "IgnoredDebounce", PlaceId = place.PlaceId, DistanceMeters = distance };
+            CreateEvent(guestSessionId, place.PlaceId, null, "Near", "IgnoredDebounce",
+                latitude, longitude, distance, "Ignored by debounce.");
+            return new GeofenceCheckResultDTO
+            {
+                ShouldPlay = false,
+                Reason = "IgnoredDebounce",
+                PlaceId = place.PlaceId,
+                DistanceMeters = distance
+            };
         }
 
         if (IsInCooldown(state))
         {
-            CreateEvent(guestSessionId, place.PlaceId, null, "Near", "IgnoredCooldown", latitude, longitude, distance, "Ignored by cooldown.");
-            return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "IgnoredCooldown", PlaceId = place.PlaceId, DistanceMeters = distance };
+            CreateEvent(guestSessionId, place.PlaceId, null, "Near", "IgnoredCooldown",
+                latitude, longitude, distance, "Ignored by cooldown.");
+            return new GeofenceCheckResultDTO
+            {
+                ShouldPlay = false,
+                Reason = "IgnoredCooldown",
+                PlaceId = place.PlaceId,
+                DistanceMeters = distance
+            };
         }
 
-        var narration = _narrationDAO.GetMainNarrationByPlaceId(place.PlaceId);
-        if (narration == null) return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "Narration not found.", PlaceId = place.PlaceId, DistanceMeters = distance };
-        var translation = _translationDAO.GetByNarrationAndLanguage(narration.NarrationId, languageId);
-        if (translation == null) return new GeofenceCheckResultDTO { ShouldPlay = false, Reason = "Translation not found.", PlaceId = place.PlaceId, NarrationId = narration.NarrationId, DistanceMeters = distance };
-       var audio = _audioDAO.GetActiveAudioByTranslationId(translation.TranslationId);
-var audioUrl = string.IsNullOrWhiteSpace(audio?.AudioUrl) ? null : audio.AudioUrl;
-        var geofenceEvent = CreateEvent(guestSessionId, place.PlaceId, narration.NarrationId, "Near", "Played", latitude, longitude, distance, "Auto played by geofence.");
+        PublicNarrationResultDTO narration;
+        try
+        {
+            narration = _publicNarrationBUS.ResolvePlace(place.PlaceId, languageId);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return new GeofenceCheckResultDTO
+            {
+                ShouldPlay = false,
+                Reason = ex.Message,
+                PlaceId = place.PlaceId,
+                DistanceMeters = distance
+            };
+        }
+
+        var geofenceEvent = CreateEvent(
+            guestSessionId,
+            place.PlaceId,
+            narration.NarrationId,
+            "Near",
+            "Played",
+            latitude,
+            longitude,
+            distance,
+            "Narration opened by geofence. Playback history is created by the player.");
+
         UpdatePoiStateAfterTrigger(guestSessionId, place, distance);
 
-        _historyDAO.Insert(new ListeningHistoryDTO
+        return new GeofenceCheckResultDTO
+        {
+            ShouldPlay = true,
+            Reason = "Ready",
+            PlaceId = place.PlaceId,
+            NarrationId = narration.NarrationId,
+            TranslationId = narration.TranslationId,
+            AudioId = narration.AudioId,
+            GeofenceEventId = geofenceEvent.EventId,
+            Title = narration.Title,
+            Text = narration.Text,
+            AudioUrl = narration.AudioUrl,
+            DistanceMeters = distance
+        };
+    }
+
+    public GeofenceEventDTO CreateEvent(
+        string guestSessionId,
+        long placeId,
+        long? narrationId,
+        string eventTypeCode,
+        string eventStatusCode,
+        decimal latitude,
+        decimal longitude,
+        decimal distance,
+        string? note)
+    {
+        var typeId = _eventTypeDAO.GetByCode(eventTypeCode)?.Id
+            ?? throw new InvalidOperationException($"Event type '{eventTypeCode}' not found.");
+        var statusId = _eventStatusDAO.GetByCode(eventStatusCode)?.Id
+            ?? throw new InvalidOperationException($"Event status '{eventStatusCode}' not found.");
+        var dto = new GeofenceEventDTO
         {
             GuestSessionId = guestSessionId,
-            NarrationId = narration.NarrationId,
-            LanguageId = languageId,
-            AudioId = audio?.AudioId,
-            GeofenceEventId = geofenceEvent.EventId,
-            TriggerSource = "Geofence",
-            PlaybackStatus = "Played"
-        });
-
-return new GeofenceCheckResultDTO
-{
-    ShouldPlay = true,
-    Reason = "Played",
-    PlaceId = place.PlaceId,
-    NarrationId = narration.NarrationId,
-    TranslationId = translation.TranslationId,
-    AudioId = audio?.AudioId,
-    Title = translation.TranslatedTitle,
-    Text = translation.TranslatedText,
-    AudioUrl = audioUrl,
-    DistanceMeters = distance
-};    }
-
-    public GeofenceEventDTO CreateEvent(string guestSessionId, long placeId, long? narrationId, string eventTypeCode, string eventStatusCode, decimal latitude, decimal longitude, decimal distance, string? note)
-    {
-        var typeId = _eventTypeDAO.GetByCode(eventTypeCode)?.Id ?? throw new InvalidOperationException($"Event type '{eventTypeCode}' not found.");
-        var statusId = _eventStatusDAO.GetByCode(eventStatusCode)?.Id ?? throw new InvalidOperationException($"Event status '{eventStatusCode}' not found.");
-        var dto = new GeofenceEventDTO { GuestSessionId = guestSessionId, PlaceId = placeId, NarrationId = narrationId, EventTypeId = typeId, EventStatusId = statusId, UserLatitude = latitude, UserLongitude = longitude, DistanceMeters = distance, Note = note };
+            PlaceId = placeId,
+            NarrationId = narrationId,
+            EventTypeId = typeId,
+            EventStatusId = statusId,
+            UserLatitude = latitude,
+            UserLongitude = longitude,
+            DistanceMeters = distance,
+            Note = note
+        };
         dto.EventId = _eventDAO.Insert(dto);
         return dto;
     }
@@ -279,26 +221,30 @@ return new GeofenceCheckResultDTO
 
     private PlaceDTO? FindBestNearbyPlace(decimal latitude, decimal longitude)
     {
-        var candidates = _placeDAO.GetPoiEnabledPlaces()
+        var candidate = _placeDAO.GetPoiEnabledPlaces()
             .Where(p => p.Latitude != null && p.Longitude != null)
-            .Select(p => new { Place = p, Distance = _distanceCalculator.CalculateDistanceMeters(latitude, longitude, p.Latitude!.Value, p.Longitude!.Value) })
+            .Select(p => new
+            {
+                Place = p,
+                Distance = _distanceCalculator.CalculateDistanceMeters(
+                    latitude,
+                    longitude,
+                    p.Latitude!.Value,
+                    p.Longitude!.Value)
+            })
             .Where(x => x.Distance <= x.Place.TriggerRadiusMeters)
             .OrderByDescending(x => x.Place.Priority)
             .ThenBy(x => x.Distance)
             .FirstOrDefault();
-        return candidates?.Place;
+        return candidate?.Place;
     }
 
-    private static bool IsInCooldown(GuestPoiStateDTO? state)
-    {
-        return state?.CooldownUntil != null && state.CooldownUntil.Value > DateTime.UtcNow;
-    }
+    private static bool IsInCooldown(GuestPoiStateDTO? state) =>
+        state?.CooldownUntil != null && state.CooldownUntil.Value > DateTime.UtcNow;
 
-    private static bool IsDebounced(GuestPoiStateDTO? state, PlaceDTO place)
-    {
-        if (state?.LastTriggeredAt == null) return false;
-        return state.LastTriggeredAt.Value.AddSeconds(place.DebounceSeconds) > DateTime.UtcNow;
-    }
+    private static bool IsDebounced(GuestPoiStateDTO? state, PlaceDTO place) =>
+        state?.LastTriggeredAt != null
+        && state.LastTriggeredAt.Value.AddSeconds(place.DebounceSeconds) > DateTime.UtcNow;
 
     private void UpdatePoiStateAfterTrigger(string guestSessionId, PlaceDTO place, decimal distance)
     {

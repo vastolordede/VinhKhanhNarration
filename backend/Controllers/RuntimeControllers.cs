@@ -4,29 +4,6 @@ using VinhKhanhNarration.Api.DTO;
 
 namespace VinhKhanhNarration.Api.Controllers;
 
-[Route("api/qr-codes")]
-public class QRCodesController : CrudControllerBase<QRCodeDTO>
-{
-    private readonly QRCodeBUS _bus;
-    public QRCodesController(QRCodeBUS bus) : base(bus) => _bus = bus;
-
-    [HttpGet("value/{value}")] public IActionResult GetByValue(string value) => OkData(_bus.GetByValue(value));
-}
-
-[Route("api/public/qr")]
-public class PublicQRController : BaseApiController
-{
-    private readonly QRCodeBUS _bus;
-    public PublicQRController(QRCodeBUS bus) => _bus = bus;
-
-    [HttpPost("resolve")]
-    public IActionResult Resolve([FromBody] QRScanRequestDTO request)
-    {
-        try { return OkData(_bus.ResolveQRCode(request.QRCodeValue, request.LanguageId, request.GuestSessionId)); }
-        catch (Exception ex) { return BadRequestMessage(ex.Message); }
-    }
-}
-
 [Route("api/public/guest-sessions")]
 public class PublicGuestSessionsController : BaseApiController
 {

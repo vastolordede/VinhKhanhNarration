@@ -71,6 +71,47 @@ public class JwtTokenGenerator
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
+
+    public string GenerateVendorAccessToken(VendorAuthUserDTO vendor, DateTime expiresAtUtc)
+    {
+        var secretKey = _configuration["Jwt:SecretKey"];
+
+        if (string.IsNullOrWhiteSpace(secretKey) || secretKey.Length < 32)
+        {
+            throw new InvalidOperationException("Jwt:SecretKey must be at least 32 characters.");
+        }
+
+        var issuer = _configuration["Jwt:Issuer"] ?? "VinhKhanhNarration";
+        var audience = _configuration["Jwt:Audience"] ?? "VinhKhanhNarrationClient";
+
+        var claims = new List<Claim>
+        {
+            new Claim(JwtRegisteredClaimNames.Sub, vendor.VendorUserId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Email, vendor.Email),
+            new Claim(JwtRegisteredClaimNames.Name, vendor.OwnerName),
+            new Claim(ClaimTypes.NameIdentifier, vendor.VendorUserId.ToString()),
+            new Claim(ClaimTypes.Name, vendor.OwnerName),
+            new Claim(ClaimTypes.Email, vendor.Email),
+            new Claim(ClaimTypes.Role, "Vendor"),
+            new Claim("vendorUserId", vendor.VendorUserId.ToString()),
+            new Claim("accountStatus", vendor.AccountStatus),
+            new Claim("role", "Vendor")
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer,
+            audience,
+            claims,
+            expires: expiresAtUtc,
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
     public string GenerateRefreshToken()
     {
         var randomBytes = RandomNumberGenerator.GetBytes(64);

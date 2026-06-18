@@ -7,9 +7,9 @@ import {
   MapPinned,
   MessageSquare,
   Navigation,
-  QrCode,
   ScrollText,
-  Utensils
+  Utensils,
+  Users
 } from 'lucide-react';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { useI18n } from '../../i18n/useI18n';
@@ -20,10 +20,10 @@ const navItems = [
   { to: '/admin/languages', label: 'Languages', icon: Languages },
   { to: '/admin/places', label: 'Places / POI', icon: MapPinned },
   { to: '/admin/dishes', label: 'Dishes', icon: Utensils },
+  { to: '/admin/vendors', label: 'Vendors', icon: Users },
   { to: '/admin/narrations', label: 'Narrations', icon: ScrollText },
   { to: '/admin/translations', label: 'Translations', icon: Languages },
   { to: '/admin/audio', label: 'Audio', icon: FileAudio },
-  { to: '/admin/qr-codes', label: 'QR Codes', icon: QrCode },
   { to: '/admin/feedbacks', label: 'Feedbacks', icon: MessageSquare },
   { to: '/admin/listening-histories', label: 'Listening', icon: ScrollText },
   { to: '/admin/geofence-events', label: 'Geofence', icon: Navigation }
