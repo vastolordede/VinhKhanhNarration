@@ -11,7 +11,7 @@ export default function LanguageSelectionScreen() {
   const [languages, setLanguages] = useState<LanguageDTO[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { guestSession, setLanguage } = useAppContext();
+  const { guestSession, setLanguage, setUiLanguage } = useAppContext();
   const navigate = useNavigate();
   const { t } = useI18n();
 
@@ -26,9 +26,8 @@ export default function LanguageSelectionScreen() {
       await updateGuestLanguage(guestSession.guestSessionId, language.languageId);
     }
 
-    // This changes both public interface language and narration/listening language.
     setLanguage(language);
-
+    setUiLanguage(language.languageCode as 'vi' | 'en' | 'ja' | 'ko' | 'zh');
     navigate('/app/map');
   }
 

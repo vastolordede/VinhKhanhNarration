@@ -4,6 +4,8 @@ using VinhKhanhNarration.Api.Database;
 using VinhKhanhNarration.Api.Swagger;
 using VinhKhanhNarration.Api.Utils;
 using VinhKhanhNarration.Api.DTO;
+using VinhKhanhNarration.Api.Services;
+using VinhKhanhNarration.Api.Services.Interfaces;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -93,13 +95,13 @@ builder.Services.AddScoped<PlaceDishDAO>();
 builder.Services.AddScoped<NarrationContentDAO>();
 builder.Services.AddScoped<NarrationTranslationDAO>();
 builder.Services.AddScoped<AudioFileDAO>();
-builder.Services.AddScoped<QRCodeDAO>();
 builder.Services.AddScoped<GuestSessionDAO>();
 builder.Services.AddScoped<GuestPoiStateDAO>();
 builder.Services.AddScoped<GeofenceEventDAO>();
 builder.Services.AddScoped<ListeningHistoryDAO>();
 builder.Services.AddScoped<FeedbackDAO>();
 builder.Services.AddScoped<AdminRefreshTokenDAO>();
+builder.Services.AddScoped<VendorModuleDAO>();
 
 // BUS
 builder.Services.AddScoped<AdminUserBUS>();
@@ -118,14 +120,17 @@ builder.Services.AddScoped<PlaceDishBUS>();
 builder.Services.AddScoped<NarrationContentBUS>();
 builder.Services.AddScoped<NarrationTranslationBUS>();
 builder.Services.AddScoped<AudioFileBUS>();
-builder.Services.AddScoped<QRCodeBUS>();
+builder.Services.AddScoped<PublicNarrationBUS>();
 builder.Services.AddScoped<GuestSessionBUS>();
 builder.Services.AddScoped<GuestPoiStateBUS>();
 builder.Services.AddScoped<GeofenceBUS>();
 builder.Services.AddScoped<ListeningHistoryBUS>();
 builder.Services.AddScoped<FeedbackBUS>();
-builder.Services.AddHttpClient<AutoTranslationBUS>();
+builder.Services.AddScoped<VendorModuleBUS>();
 builder.Services.AddHttpClient<GeocodingBUS>();
+builder.Services.AddHttpClient<ITranslationService, AzureTranslatorService>();
+builder.Services.AddHttpClient<ITextToSpeechService, AzureSpeechTtsService>();
+builder.Services.AddScoped<IAudioStorage, LocalAudioStorage>();
 
 var app = builder.Build();
 
@@ -138,6 +143,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger";
     });
 }
+
+// Serve generated MP3 files before mapping controllers.
+app.UseStaticFiles();
 
 // CORS phải đặt trước Authorization và MapControllers
 app.UseCors("AppCors");

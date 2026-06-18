@@ -50,14 +50,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
 const [uiLanguage, setUiLanguageState] = useState<UiLanguage>(() => {
-  const savedLanguage = readJson<LanguageDTO>('language');
-
-  if (savedLanguage) {
-    return normalizeUiLanguage(savedLanguage.languageCode);
-  }
-
   const savedUiLanguage = localStorage.getItem('uiLanguage');
-  return normalizeUiLanguage(savedUiLanguage);
+  if (savedUiLanguage) return normalizeUiLanguage(savedUiLanguage);
+
+  const savedContentLanguage = readJson<LanguageDTO>('language');
+  return normalizeUiLanguage(savedContentLanguage?.languageCode);
 });
 const [adminUiLanguage, setAdminUiLanguageState] = useState<AdminUiLanguage>(() =>
   normalizeAdminUiLanguage(localStorage.getItem('adminUiLanguage'))
@@ -90,17 +87,11 @@ const [adminUiLanguage, setAdminUiLanguageState] = useState<AdminUiLanguage>(() 
 
 const setLanguage = (lang: LanguageDTO | null) => {
   setLanguageState(lang);
-
   setCurrentNarration(null);
   sessionStorage.removeItem('currentNarration');
 
   if (lang) {
     localStorage.setItem('language', JSON.stringify(lang));
-
-    const nextUiLanguage = normalizeUiLanguage(lang.languageCode);
-
-    setUiLanguageState(nextUiLanguage);
-    localStorage.setItem('uiLanguage', nextUiLanguage);
   } else {
     localStorage.removeItem('language');
   }

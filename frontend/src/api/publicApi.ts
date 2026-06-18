@@ -1,28 +1,29 @@
 import { endpoints } from './endpoints';
-import { http, unwrap } from './http';
+import { getApiError, http, unwrap } from './http';
 import {
-  AudioFileDTO,
   FeedbackDTO,
   GeofenceCheckResultDTO,
   GuestSessionDTO,
   LanguageDTO,
   ListeningHistoryDTO,
-  NarrationContentDTO,
   NarrationResolveResultDTO,
-  NarrationTranslationDTO,
   PlaceDTO,
   PlaceDishDTO,
-  QRScanResultDTO
+  PublicNarrationResultDTO
 } from '../types';
 
-export async function createGuestSession(deviceInfo?: string): Promise<GuestSessionDTO> {
+export async function createGuestSession(
+  deviceInfo?: string
+): Promise<GuestSessionDTO> {
   const response = await http.post(endpoints.guestSessions, { deviceInfo });
   return unwrap<GuestSessionDTO>(response);
 }
 
 export async function getActiveLanguages(): Promise<LanguageDTO[]> {
   const response = await http.get(`${endpoints.languages}/active`);
-  return unwrap<LanguageDTO[]>(response);
+  return unwrap<LanguageDTO[]>(response).filter(
+    (language) => language.isActive && language.isContentEnabled
+  );
 }
 
 export async function updateGuestLanguage(
@@ -49,146 +50,71 @@ export async function getPlaceDishes(placeId: number): Promise<PlaceDishDTO[]> {
   return unwrap<PlaceDishDTO[]>(response);
 }
 
-export async function getNarrationsByPlace(
-  placeId: number
-): Promise<NarrationContentDTO[]> {
-  const response = await http.get(`${endpoints.narrationContents}/place/${placeId}`);
-  return unwrap<NarrationContentDTO[]>(response);
-}
-
-export async function getNarrationsByDish(
-  dishId: number
-): Promise<NarrationContentDTO[]> {
-  const response = await http.get(`${endpoints.narrationContents}/dish/${dishId}`);
-  return unwrap<NarrationContentDTO[]>(response);
-}
-
-export async function getTranslation(
-  narrationId: number,
-  languageId: number
-): Promise<NarrationTranslationDTO | null> {
-  try {
-    const response = await http.get(
-      `${endpoints.narrationTranslations}/narration/${narrationId}/language/${languageId}`
-    );
-
-    return unwrap<NarrationTranslationDTO | null>(response) ?? null;
-  } catch {
-    return null;
-  }
-}
-
-export async function getPlayableAudio(
-  narrationId: number,
-  languageId: number
-): Promise<AudioFileDTO | null> {
-  try {
-    const response = await http.get(`${endpoints.audioFiles}/playable`, {
-      params: {
-        narrationId,
-        languageId
-      }
-    });
-
-    return unwrap<AudioFileDTO | null>(response) ?? null;
-  } catch {
-    return null;
-  }
-}
-function requireTranslation(
-  translation: NarrationTranslationDTO | null,
-  message = 'Chưa có bản dịch cho ngôn ngữ đang chọn.'
-): NarrationTranslationDTO {
-  if (
-    !translation ||
-    !translation.translatedTitle?.trim() ||
-    !translation.translatedText?.trim()
-  ) {
-    throw new Error(message);
-  }
-
-  return translation;
+function toResolveResult(
+  result: PublicNarrationResultDTO,
+  source: NarrationResolveResultDTO['source']
+): NarrationResolveResultDTO {
+  return {
+    ...result,
+    source
+  };
 }
 
 export async function resolvePlaceNarration(
   placeId: number,
   languageId: number
 ): Promise<NarrationResolveResultDTO> {
-  const narrations = await getNarrationsByPlace(placeId);
-  const narration = narrations.find((x) => x.isActive) ?? narrations[0];
+  try {
+    const response = await http.get(
+      `${endpoints.publicNarrations}/place/${placeId}`,
+      { params: { languageId } }
+    );
 
-  if (!narration) {
-    throw new Error('Không tìm thấy nội dung thuyết minh cho địa điểm này.');
+    return toResolveResult(
+      unwrap<PublicNarrationResultDTO>(response),
+      'place'
+    );
+  } catch (error) {
+    throw new Error(getApiError(error));
   }
-
-  const translation = requireTranslation(
-  await getTranslation(narration.narrationId, languageId)
-);
-const audio = await getPlayableAudio(narration.narrationId, languageId);
-
-  return {
-    placeId,
-    dishId: null,
-    narrationId: narration.narrationId,
-   translationId: translation.translationId,
-audioId: audio?.audioId ?? null,
-title: translation.translatedTitle,
-text: translation.translatedText,
-    audioUrl: audio?.audioUrl ?? null,
-    useTts: !audio?.audioUrl,
-    source: 'place'
-  };
 }
 
 export async function resolveDishNarration(
   dishId: number,
   languageId: number
 ): Promise<NarrationResolveResultDTO> {
-  const narrations = await getNarrationsByDish(dishId);
-  const narration = narrations.find((x) => x.isActive) ?? narrations[0];
+  try {
+    const response = await http.get(
+      `${endpoints.publicNarrations}/dish/${dishId}`,
+      { params: { languageId } }
+    );
 
-  if (!narration) {
-    throw new Error('Không tìm thấy nội dung thuyết minh cho món ăn này.');
+    return toResolveResult(
+      unwrap<PublicNarrationResultDTO>(response),
+      'dish'
+    );
+  } catch (error) {
+    throw new Error(getApiError(error));
   }
-
-  const translation = await getTranslation(narration.narrationId, languageId);
-  const audio = await getPlayableAudio(narration.narrationId, languageId);
-
-  return {
-    placeId: null,
-    dishId,
-    narrationId: narration.narrationId,
-    translationId: translation?.translationId ?? null,
-    audioId: audio?.audioId ?? null,
-    title: translation?.translatedTitle || narration.title,
-    text: translation?.translatedText || narration.originalText,
-    audioUrl: audio?.audioUrl ?? null,
-    useTts: !audio?.audioUrl,
-    source: 'dish'
-  };
 }
 
-export async function resolveQr(
-  qrCodeValue: string,
-  languageId: number,
-  guestSessionId: string
+export async function resolveNarration(
+  narrationId: number,
+  languageId: number
 ): Promise<NarrationResolveResultDTO> {
-  const response = await http.post(endpoints.qrResolve, {
-    qrCodeValue,
-    languageId,
-    guestSessionId
-  });
+  try {
+    const response = await http.get(
+      `${endpoints.publicNarrations}/${narrationId}`,
+      { params: { languageId } }
+    );
 
-  const result = unwrap<QRScanResultDTO>(response);
-
-  return {
-    ...result,
-    translationId: result.translationId ?? null,
-    audioId: result.audioId ?? null,
-    audioUrl: result.audioUrl ?? null,
-    useTts: !result.audioUrl,
-    source: 'qr'
-  };
+    return toResolveResult(
+      unwrap<PublicNarrationResultDTO>(response),
+      'narration'
+    );
+  } catch (error) {
+    throw new Error(getApiError(error));
+  }
 }
 
 export async function checkGeofence(
@@ -207,10 +133,29 @@ export async function checkGeofence(
   return unwrap<GeofenceCheckResultDTO>(response);
 }
 
-export async function submitListeningHistory(
+export async function createListeningHistory(
   payload: ListeningHistoryDTO
+): Promise<number> {
+  const response = await http.post(endpoints.listeningHistories, payload);
+  return unwrap<number>(response);
+}
+
+export async function updateListeningStatus(
+  historyId: number,
+  status: ListeningHistoryDTO['playbackStatus']
 ): Promise<void> {
-  await http.post(endpoints.listeningHistories, payload);
+  await http.patch(`${endpoints.listeningHistories}/${historyId}/status`, {
+    status
+  });
+}
+
+export async function updateListeningDuration(
+  historyId: number,
+  seconds: number
+): Promise<void> {
+  await http.patch(`${endpoints.listeningHistories}/${historyId}/duration`, {
+    seconds: Math.max(0, Math.floor(seconds))
+  });
 }
 
 export async function submitFeedback(payload: FeedbackDTO): Promise<void> {

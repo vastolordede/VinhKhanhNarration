@@ -11,7 +11,10 @@ export const http: AxiosInstance = axios.create({
 });
 
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem('adminToken');
+  const isVendorRoute = window.location.pathname.startsWith('/vendor');
+  const token = isVendorRoute
+    ? localStorage.getItem('vendorToken')
+    : localStorage.getItem('adminToken');
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

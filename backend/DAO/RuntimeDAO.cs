@@ -5,25 +5,6 @@ using VinhKhanhNarration.Api.DTO;
 
 namespace VinhKhanhNarration.Api.DAO;
 
-public class QRCodeDAO : GenericCrudDAO<QRCodeDTO>
-{
-    public QRCodeDAO(DbConnectionFactory factory) : base(factory) { }
-
-    public QRCodeDTO? GetByValue(string qrCodeValue)
-    {
-        return QuerySingle("SELECT * FROM qr_codes WHERE qr_code_value = @value LIMIT 1;", cmd => cmd.Parameters.AddWithValue("@value", qrCodeValue));
-    }
-
-    public List<QRCodeDTO> GetByPlaceId(long placeId) => QueryList("SELECT * FROM qr_codes WHERE place_id = @id ORDER BY qr_code_id DESC;", cmd => cmd.Parameters.AddWithValue("@id", placeId));
-    public List<QRCodeDTO> GetByDishId(long dishId) => QueryList("SELECT * FROM qr_codes WHERE dish_id = @id ORDER BY qr_code_id DESC;", cmd => cmd.Parameters.AddWithValue("@id", dishId));
-    public List<QRCodeDTO> GetByNarrationId(long narrationId) => QueryList("SELECT * FROM qr_codes WHERE narration_id = @id ORDER BY qr_code_id DESC;", cmd => cmd.Parameters.AddWithValue("@id", narrationId));
-
-    public bool IsQRCodeValueExists(string qrCodeValue)
-    {
-        return Exists("SELECT COUNT(1) FROM qr_codes WHERE qr_code_value = @value;", cmd => cmd.Parameters.AddWithValue("@value", qrCodeValue));
-    }
-}
-
 public class GuestSessionDAO : BaseDAO
 {
     public GuestSessionDAO(DbConnectionFactory factory) : base(factory) { }
@@ -388,7 +369,6 @@ public long CountAll()
             narration_id,
             language_id,
             audio_id,
-            qr_code_id,
             geofence_event_id,
             trigger_source,
             playback_status,
@@ -402,7 +382,6 @@ public long CountAll()
             @narration,
             @language,
             @audio,
-            @qr,
             @geofence,
             @trigger,
             @status,
@@ -428,11 +407,6 @@ public long CountAll()
     cmd.Parameters.Add("@audio", NpgsqlDbType.Bigint).Value =
         dto.AudioId.HasValue && dto.AudioId.Value > 0
             ? dto.AudioId.Value
-            : DBNull.Value;
-
-    cmd.Parameters.Add("@qr", NpgsqlDbType.Bigint).Value =
-        dto.QRCodeId.HasValue && dto.QRCodeId.Value > 0
-            ? dto.QRCodeId.Value
             : DBNull.Value;
 
     cmd.Parameters.Add("@geofence", NpgsqlDbType.Bigint).Value =

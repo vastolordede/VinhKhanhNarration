@@ -7,6 +7,7 @@ public class PlaceDTO
 {
     [DbColumn("place_id", IsKey = true, IsIdentity = true)] public long PlaceId { get; set; }
     [DbColumn("place_name")] public string PlaceName { get; set; } = string.Empty;
+    [DbColumn("owner_vendor_id")] public long? OwnerVendorId { get; set; }
     [DbColumn("place_type_id")] public long PlaceTypeId { get; set; }
     [DbColumn("address")] public string? Address { get; set; }
     [DbColumn("description")] public string? Description { get; set; }

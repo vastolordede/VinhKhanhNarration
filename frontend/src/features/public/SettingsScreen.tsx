@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { LanguageSwitcher } from '../../components/common/LanguageSwitcher';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { useAppContext } from '../../contexts/AppContext';
@@ -6,11 +7,11 @@ import { useI18n } from '../../i18n/useI18n';
 
 export default function SettingsScreen() {
   const {
-  guestSession,
-  language,
-  trackingEnabled,
-  setTrackingEnabled
-} = useAppContext();
+    guestSession,
+    language,
+    trackingEnabled,
+    setTrackingEnabled
+  } = useAppContext();
 
   const navigate = useNavigate();
   const { t } = useI18n();
@@ -32,7 +33,19 @@ export default function SettingsScreen() {
           </p>
         </Card>
 
-        
+        <Card>
+          <p className="font-semibold text-slate-900">
+            {t('public.settings.uiLanguage')}
+          </p>
+
+          <p className="mt-1 text-sm text-slate-500">
+            {t('public.settings.uiLanguageDescription')}
+          </p>
+
+          <div className="mt-4">
+            <LanguageSwitcher />
+          </div>
+        </Card>
 
         <Card>
           <p className="text-sm text-slate-500">
@@ -40,7 +53,9 @@ export default function SettingsScreen() {
           </p>
 
           <p className="mt-1 font-semibold text-slate-900">
-            {language?.languageName || t('public.settings.noNarrationLanguage')}
+            {language?.nativeName ||
+              language?.languageName ||
+              t('public.settings.noNarrationLanguage')}
           </p>
 
           <p className="mt-2 text-sm text-slate-500">
