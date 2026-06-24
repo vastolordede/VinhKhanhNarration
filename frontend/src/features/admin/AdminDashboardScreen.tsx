@@ -9,7 +9,6 @@ import {
   Store,
   TicketCheck,
   Utensils,
-  WalletCards,
   type LucideIcon
 } from 'lucide-react';
 import { endpoints } from '../../api/endpoints';
@@ -28,6 +27,12 @@ type SummaryCard = {
   value: string | number;
   icon: LucideIcon;
   hint?: string;
+};
+
+type DistributionRow = {
+  label: string;
+  value: number;
+  barClassName: string;
 };
 
 const periodOptions: Array<{ value: DashboardPeriod; vi: string; en: string }> = [
@@ -58,7 +63,13 @@ const emptyStatistics: AdminDashboardStatisticsDTO = {
 };
 
 function getChartValue(item: AdminDashboardActivityDTO) {
-  return Math.max(item.listening, item.geofence, item.guestSessions, 0);
+  return Math.max(
+    item.listening,
+    item.geofence,
+    item.feedbacks,
+    item.guestSessions,
+    0
+  );
 }
 
 export default function AdminDashboardScreen() {
@@ -137,10 +148,55 @@ export default function AdminDashboardScreen() {
     }
   ];
 
-  const maxActivity = Math.max(
-    ...statistics.activity.map(getChartValue),
+  const distributionRows: DistributionRow[] = [
+    {
+      label: text('Địa điểm / POI', 'Places / POI'),
+      value: statistics.places,
+      barClassName: 'bg-teal-600'
+    },
+    {
+      label: text('Món ăn', 'Dishes'),
+      value: statistics.dishes,
+      barClassName: 'bg-emerald-500'
+    },
+    {
+      label: text('Thuyết minh', 'Narrations'),
+      value: statistics.narrations,
+      barClassName: 'bg-cyan-500'
+    },
+    {
+      label: 'Vendors',
+      value: statistics.vendors,
+      barClassName: 'bg-rose-500'
+    },
+    {
+      label: text('Lượt nghe', 'Listening'),
+      value: statistics.listening,
+      barClassName: 'bg-indigo-500'
+    },
+    {
+      label: 'Geofence',
+      value: statistics.geofence,
+      barClassName: 'bg-violet-500'
+    },
+    {
+      label: 'Feedback',
+      value: statistics.feedbacks,
+      barClassName: 'bg-amber-500'
+    },
+    {
+      label: text('Guest Session mới', 'New Guest sessions'),
+      value: statistics.guestSessions,
+      barClassName: 'bg-sky-500'
+    }
+  ];
+
+  const maxDistributionValue = Math.max(
+    ...distributionRows.map((row) => row.value),
     1
   );
+
+  const maxActivity = Math.max(...statistics.activity.map(getChartValue), 1);
 
   const guestRevenuePercent =
     statistics.totalRevenue > 0
@@ -171,7 +227,7 @@ export default function AdminDashboardScreen() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <PageHeader
           title="Admin Dashboard"
-          description="Tổng quan dữ liệu, lượt sử dụng và doanh thu thực tế theo Guest Session."
+          description="Tổng quan dữ liệu, lượt sử dụng và doanh thu theo khoảng thời gian."
         />
 
         <label className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
@@ -222,88 +278,46 @@ export default function AdminDashboardScreen() {
 
       <div className="mt-6 grid gap-6 xl:grid-cols-3">
         <Card className="xl:col-span-2">
-          <div className="mb-5">
-            <h2 className="text-lg font-semibold text-slate-900">
-              {text('Hoạt động theo thời gian', 'Activity over time')}
-            </h2>
-            <p className="mt-1 text-sm text-slate-500">
-              {text(
-                'Lượt nghe, geofence và Guest Session mới trong khoảng đã chọn.',
-                'Listening, geofence and new paid Guest sessions in the selected period.'
-              )}
-            </p>
+          <div className="mb-5 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-slate-900">
+                {text('Tổng quan dữ liệu và hoạt động', 'Data and activity overview')}
+              </h2>
+              <p className="mt-1 text-sm text-slate-500">
+                {text(
+                  'Nội dung hiển thị tổng hiện có; hoạt động áp dụng theo bộ lọc.',
+                  'Content shows current totals; activity follows the selected period.'
+                )}
+              </p>
+            </div>
+            <BarChart3 className="h-6 w-6 text-teal-700" />
           </div>
 
-          {statistics.activity.length === 0 ? (
-            <div className="flex h-56 items-center justify-center rounded-2xl bg-slate-50 text-sm text-slate-400">
-              {text('Chưa có hoạt động trong khoảng này.', 'No activity in this period.')}
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
+          <div className="space-y-4">
+            {distributionRows.map((row) => (
               <div
-                className="grid min-w-[620px] gap-3"
-                style={{
-                  gridTemplateColumns: `repeat(${statistics.activity.length}, minmax(56px, 1fr))`
-                }}
+                key={row.label}
+                className="grid grid-cols-[112px_1fr_44px] items-center gap-3 sm:grid-cols-[150px_1fr_52px]"
               >
-                {statistics.activity.map((item) => (
-                  <div key={item.periodStart} className="flex flex-col items-center">
-                    <div className="flex h-52 w-full items-end gap-1 rounded-2xl bg-slate-50 px-2 pt-4">
-                      <div className="flex h-full flex-1 flex-col justify-end">
-                        <span className="mb-1 text-center text-[10px] font-semibold text-indigo-700">
-                          {item.listening}
-                        </span>
-                        <div
-                          className="min-h-[2px] rounded-t bg-indigo-500"
-                          style={{
-                            height: `${Math.max((item.listening / maxActivity) * 100, item.listening ? 4 : 1)}%`
-                          }}
-                        />
-                      </div>
-                      <div className="flex h-full flex-1 flex-col justify-end">
-                        <span className="mb-1 text-center text-[10px] font-semibold text-violet-700">
-                          {item.geofence}
-                        </span>
-                        <div
-                          className="min-h-[2px] rounded-t bg-violet-500"
-                          style={{
-                            height: `${Math.max((item.geofence / maxActivity) * 100, item.geofence ? 4 : 1)}%`
-                          }}
-                        />
-                      </div>
-                      <div className="flex h-full flex-1 flex-col justify-end">
-                        <span className="mb-1 text-center text-[10px] font-semibold text-teal-700">
-                          {item.guestSessions}
-                        </span>
-                        <div
-                          className="min-h-[2px] rounded-t bg-teal-600"
-                          style={{
-                            height: `${Math.max((item.guestSessions / maxActivity) * 100, item.guestSessions ? 4 : 1)}%`
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <span className="mt-2 text-xs text-slate-500">
-                      {activityLabel(item.periodStart)}
-                    </span>
-                  </div>
-                ))}
+                <span className="truncate text-sm text-slate-600">{row.label}</span>
+                <div className="h-3 overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${row.barClassName}`}
+                    style={{
+                      width: `${Math.max(
+                        row.value > 0
+                          ? (row.value / maxDistributionValue) * 100
+                          : 0,
+                        row.value > 0 ? 4 : 0
+                      )}%`
+                    }}
+                  />
+                </div>
+                <span className="text-right text-sm font-semibold text-slate-800">
+                  {row.value}
+                </span>
               </div>
-            </div>
-          )}
-
-          <div className="mt-4 flex flex-wrap gap-4 text-xs text-slate-600">
-            <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded bg-indigo-500" />
-              {text('Lượt nghe', 'Listening')}
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded bg-violet-500" /> Geofence
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="h-3 w-3 rounded bg-teal-600" />
-              {text('Guest Session mới', 'New Guest sessions')}
-            </span>
+            ))}
           </div>
         </Card>
 
@@ -313,10 +327,7 @@ export default function AdminDashboardScreen() {
               {text('Cơ cấu doanh thu', 'Revenue breakdown')}
             </h2>
             <p className="mt-1 text-sm text-slate-500">
-              {text(
-                'Guest tính theo giá được lưu trên từng session; Vendor tính theo payment Paid.',
-                'Guest revenue uses the price stored on each session; Vendor revenue uses Paid payments.'
-              )}
+              {text('Guest Session và Vendor payment.', 'Guest Session and Vendor payments.')}
             </p>
           </div>
 
@@ -370,20 +381,120 @@ export default function AdminDashboardScreen() {
       </div>
 
       <Card className="mt-6">
-        <div className="flex items-center gap-3">
-          <WalletCards className="h-5 w-5 text-teal-700" />
+        <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="font-semibold text-slate-900">
-              {text('Nguyên tắc tính doanh thu', 'Revenue calculation rule')}
-            </p>
+            <h2 className="text-lg font-semibold text-slate-900">
+              {text('Hoạt động theo thời gian', 'Activity over time')}
+            </h2>
             <p className="mt-1 text-sm text-slate-500">
               {text(
-                'Không lấy số lượt nghe để tính tiền. Mỗi thanh toán Guest tạo một session mới và giá tại thời điểm mua được lưu trực tiếp trên session.',
-                'Listening count is not used for revenue. Each Guest payment creates a new session and stores its purchase-time price on that session.'
+                'Lượt nghe, geofence, feedback và Guest Session mới trong khoảng đã chọn.',
+                'Listening, geofence, feedback and new Guest sessions in the selected period.'
               )}
             </p>
           </div>
+
+          <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600">
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded bg-indigo-500" />
+              {text('Lượt nghe', 'Listening')}
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded bg-violet-500" /> Geofence
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded bg-amber-500" /> Feedback
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded bg-teal-600" />
+              {text('Guest Session mới', 'New Guest sessions')}
+            </span>
+          </div>
         </div>
+
+        {statistics.activity.length === 0 ? (
+          <div className="flex h-56 items-center justify-center rounded-2xl bg-slate-50 text-sm text-slate-400">
+            {text('Chưa có hoạt động trong khoảng này.', 'No activity in this period.')}
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <div
+              className="grid min-w-[680px] gap-3"
+              style={{
+                gridTemplateColumns: `repeat(${statistics.activity.length}, minmax(66px, 1fr))`
+              }}
+            >
+              {statistics.activity.map((item) => (
+                <div key={item.periodStart} className="flex flex-col items-center">
+                  <div className="flex h-52 w-full items-end gap-1 rounded-2xl bg-slate-50 px-2 pt-4">
+                    <div className="flex h-full min-w-0 flex-1 flex-col justify-end">
+                      <span className="mb-1 text-center text-[10px] font-semibold text-indigo-700">
+                        {item.listening}
+                      </span>
+                      <div
+                        className="min-h-[2px] rounded-t bg-indigo-500"
+                        style={{
+                          height: `${Math.max(
+                            (item.listening / maxActivity) * 100,
+                            item.listening ? 4 : 1
+                          )}%`
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex h-full min-w-0 flex-1 flex-col justify-end">
+                      <span className="mb-1 text-center text-[10px] font-semibold text-violet-700">
+                        {item.geofence}
+                      </span>
+                      <div
+                        className="min-h-[2px] rounded-t bg-violet-500"
+                        style={{
+                          height: `${Math.max(
+                            (item.geofence / maxActivity) * 100,
+                            item.geofence ? 4 : 1
+                          )}%`
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex h-full min-w-0 flex-1 flex-col justify-end">
+                      <span className="mb-1 text-center text-[10px] font-semibold text-amber-700">
+                        {item.feedbacks}
+                      </span>
+                      <div
+                        className="min-h-[2px] rounded-t bg-amber-500"
+                        style={{
+                          height: `${Math.max(
+                            (item.feedbacks / maxActivity) * 100,
+                            item.feedbacks ? 4 : 1
+                          )}%`
+                        }}
+                      />
+                    </div>
+
+                    <div className="flex h-full min-w-0 flex-1 flex-col justify-end">
+                      <span className="mb-1 text-center text-[10px] font-semibold text-teal-700">
+                        {item.guestSessions}
+                      </span>
+                      <div
+                        className="min-h-[2px] rounded-t bg-teal-600"
+                        style={{
+                          height: `${Math.max(
+                            (item.guestSessions / maxActivity) * 100,
+                            item.guestSessions ? 4 : 1
+                          )}%`
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <span className="mt-2 whitespace-nowrap text-xs text-slate-500">
+                    {activityLabel(item.periodStart)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </Card>
     </div>
   );
