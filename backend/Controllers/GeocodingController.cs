@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using VinhKhanhNarration.Api.BUS;
 using VinhKhanhNarration.Api.DTO;
 
 namespace VinhKhanhNarration.Api.Controllers;
 
 [ApiController]
+[Authorize(Roles = "Admin,ContentManager")]
 [Route("api/admin/geocoding")]
 public class GeocodingController : ControllerBase
 {

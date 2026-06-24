@@ -12,19 +12,22 @@ public class VendorModuleBUS
     private readonly JwtTokenGenerator _jwt;
     private readonly IWebHostEnvironment _environment;
     private readonly IConfiguration _configuration;
+    private readonly VendorRefreshTokenDAO _refreshTokenDAO;
 
     public VendorModuleBUS(
         VendorModuleDAO dao,
         PasswordHasher hasher,
         JwtTokenGenerator jwt,
         IWebHostEnvironment environment,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        VendorRefreshTokenDAO refreshTokenDAO)
     {
         _dao = dao;
         _hasher = hasher;
         _jwt = jwt;
         _environment = environment;
         _configuration = configuration;
+        _refreshTokenDAO = refreshTokenDAO;
     }
 
     public async Task<long> RegisterAsync(
@@ -42,7 +45,7 @@ public class VendorModuleBUS
             request.Email.Trim(),
             request.Phone.Trim(),
             _hasher.HashPassword(request.Password),
-            request.PlaceId);
+            null);
 
         var business = await SaveDocumentAsync(
             request.BusinessLicense!, vendorId, "BusinessLicense", cancellationToken);
@@ -73,8 +76,11 @@ public class VendorModuleBUS
         return vendorId;
     }
 
-    public VendorLoginResponseDTO Login(VendorLoginRequestDTO request)
+    public VendorLoginResponseDTO Login(VendorLoginRequestDTO request, string? ipAddress)
     {
+        if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            throw new ArgumentException("Email và mật khẩu là bắt buộc.");
+
         var record = _dao.GetVendorLoginByEmail(request.Email.Trim())
             ?? throw new InvalidOperationException("Email hoặc mật khẩu không đúng.");
 
@@ -86,14 +92,83 @@ public class VendorModuleBUS
 
         RefreshLifecycle(record.User.VendorUserId);
         var vendor = _dao.GetVendorById(record.User.VendorUserId)!;
-        var expiresAt = _jwt.AccessTokenExpiresAtUtc;
+        return CreateAuthResponse(vendor, ipAddress);
+    }
 
-        return new VendorLoginResponseDTO
+    public VendorLoginResponseDTO RefreshAccessToken(string refreshToken, string? ipAddress)
+    {
+        if (string.IsNullOrWhiteSpace(refreshToken))
+            throw new ArgumentException("Refresh token là bắt buộc.");
+
+        var tokenHash = _jwt.HashRefreshToken(refreshToken);
+        var stored = _refreshTokenDAO.GetByTokenHash(tokenHash);
+        if (stored == null)
+            throw new UnauthorizedAccessException("Refresh token không hợp lệ.");
+        if (stored.IsRevoked)
         {
-            AccessToken = _jwt.GenerateVendorAccessToken(vendor, expiresAt),
-            AccessTokenExpiresAt = expiresAt,
-            Vendor = vendor
-        };
+            _refreshTokenDAO.RevokeAllActiveTokens(stored.VendorUserId, ipAddress);
+            throw new UnauthorizedAccessException(
+                "Phát hiện refresh token đã bị sử dụng lại. Tất cả phiên Vendor đã bị thu hồi.");
+        }
+        if (stored.IsExpired)
+            throw new UnauthorizedAccessException("Refresh token đã hết hạn.");
+
+        RefreshLifecycle(stored.VendorUserId);
+        var vendor = _dao.GetVendorById(stored.VendorUserId)
+            ?? throw new UnauthorizedAccessException("Vendor không tồn tại.");
+        if (vendor.AccountStatus == VendorAccountStatuses.Suspended)
+            throw new UnauthorizedAccessException("Tài khoản đang bị tạm ngưng.");
+
+        var next = CreateAuthResponse(vendor, ipAddress);
+        _refreshTokenDAO.RevokeToken(
+            tokenHash,
+            ipAddress,
+            _jwt.HashRefreshToken(next.RefreshToken));
+        return next;
+    }
+
+    public void Logout(string refreshToken, string? ipAddress)
+    {
+        if (string.IsNullOrWhiteSpace(refreshToken)) return;
+        _refreshTokenDAO.RevokeToken(_jwt.HashRefreshToken(refreshToken), ipAddress);
+    }
+
+    public void LogoutAll(long vendorUserId, string? ipAddress) =>
+        _refreshTokenDAO.RevokeAllActiveTokens(vendorUserId, ipAddress);
+
+    public VendorAuthUserDTO UpdateProfile(long vendorUserId, VendorProfileUpdateDTO request)
+    {
+        if (string.IsNullOrWhiteSpace(request.OwnerName))
+            throw new ArgumentException("Tên chủ sạp là bắt buộc.");
+        if (string.IsNullOrWhiteSpace(request.ShopName))
+            throw new ArgumentException("Tên sạp là bắt buộc.");
+
+        request.OwnerName = request.OwnerName.Trim();
+        request.ShopName = request.ShopName.Trim();
+        request.Phone = request.Phone?.Trim() ?? string.Empty;
+        if (!_dao.UpdateProfile(vendorUserId, request))
+            throw new InvalidOperationException("Không thể cập nhật hồ sơ Vendor.");
+        return _dao.GetVendorById(vendorUserId)
+            ?? throw new InvalidOperationException("Vendor không tồn tại.");
+    }
+
+    public bool ChangePassword(
+        long vendorUserId,
+        VendorChangePasswordRequestDTO request,
+        string? ipAddress)
+    {
+        if (string.IsNullOrWhiteSpace(request.NewPassword) || request.NewPassword.Length < 8)
+            throw new ArgumentException("Mật khẩu mới phải có ít nhất 8 ký tự.");
+        if (string.IsNullOrWhiteSpace(request.OldPassword))
+            throw new ArgumentException("Mật khẩu hiện tại là bắt buộc.");
+        var currentHash = _dao.GetPasswordHash(vendorUserId)
+            ?? throw new InvalidOperationException("Vendor không tồn tại.");
+        if (!_hasher.VerifyPassword(request.OldPassword, currentHash))
+            throw new InvalidOperationException("Mật khẩu hiện tại không đúng.");
+        if (!_dao.UpdatePassword(vendorUserId, _hasher.HashPassword(request.NewPassword)))
+            return false;
+        _refreshTokenDAO.RevokeAllActiveTokens(vendorUserId, ipAddress);
+        return true;
     }
 
     public VendorDashboardDTO GetDashboard(long vendorUserId)
@@ -107,6 +182,10 @@ public class VendorModuleBUS
             ? 0
             : Math.Max(0, (int)Math.Ceiling((subscription.ExpiresAt - DateTime.UtcNow).TotalDays));
 
+        var hasActiveSubscription = subscription != null
+            && subscription.Status == "Active"
+            && subscription.ExpiresAt > DateTime.UtcNow;
+
         return new VendorDashboardDTO
         {
             Vendor = vendor,
@@ -114,18 +193,18 @@ public class VendorModuleBUS
             PendingPayment = pendingPayment,
             UnreadNotifications = _dao.GetUnreadCount(vendorUserId),
             DaysRemaining = daysRemaining,
-            CanManageContent = vendor.AccountStatus is
-                VendorAccountStatuses.Active or VendorAccountStatuses.ExpiringSoon,
-            ShouldWarnExpiry = daysRemaining is > 0 and <= 15
+            CanManageContent = hasActiveSubscription && (vendor.AccountStatus is
+                VendorAccountStatuses.Active or VendorAccountStatuses.ExpiringSoon),
+            ShouldWarnExpiry = hasActiveSubscription && daysRemaining is > 0 and <= 15
         };
     }
 
     public List<AdminVendorListItemDTO> GetAdminVendorList()
     {
+        RefreshAllLifecycles();
         var vendors = _dao.GetAllVendors();
         foreach (var vendor in vendors)
         {
-            RefreshLifecycle(vendor.VendorUserId);
             vendor.Documents = _dao.GetDocuments(vendor.VendorUserId);
             vendor.Subscription = _dao.GetLatestSubscription(vendor.VendorUserId);
             vendor.PendingPayment = _dao.GetLatestPendingPayment(vendor.VendorUserId);
@@ -267,38 +346,28 @@ public class VendorModuleBUS
             ?? throw new InvalidOperationException("Mã thanh toán không tồn tại.");
         if (order.VendorUserId != vendorUserId)
             throw new UnauthorizedAccessException("Mã thanh toán không thuộc tài khoản này.");
-        if (order.Status == "Paid") return GetDashboard(vendorUserId);
-        if (order.ExpiresAt <= DateTime.UtcNow)
+        if (order.ExpiresAt <= DateTime.UtcNow && order.Status != "Paid")
             throw new InvalidOperationException("Mã thanh toán đã hết hạn.");
-        if (!_dao.MarkPaymentPaid(order.PaymentOrderId))
-            throw new InvalidOperationException("Không thể xác nhận thanh toán.");
 
-        var current = _dao.GetLatestSubscription(vendorUserId);
-        var startsAt = DateTime.UtcNow;
-        var baseDate = current != null && current.ExpiresAt > startsAt
-            ? current.ExpiresAt
-            : startsAt;
-        var expiresAt = baseDate.AddMonths(6);
-
-        _dao.InsertSubscription(
-            vendorUserId,
+        var expiresAt = _dao.ConfirmPaymentAndActivateSubscription(
             order.PaymentOrderId,
-            startsAt,
-            expiresAt);
-        _dao.SetVendorAccountStatus(vendorUserId, VendorAccountStatuses.Active, true);
+            vendorUserId)
+            ?? throw new InvalidOperationException("Không thể xác nhận thanh toán.");
 
-        var vendor = _dao.GetVendorById(vendorUserId)!;
-        _dao.AssignPlaceOwner(vendor.PlaceId, vendorUserId);
-        if (order.RenewalRequestId.HasValue)
-            _dao.MarkRenewalPaid(order.RenewalRequestId.Value);
-
-        _dao.InsertNotification(
-            vendorUserId,
-            "PaymentSucceeded",
-            "Thanh toán demo thành công",
-            $"Tài khoản được kích hoạt đến {expiresAt:dd/MM/yyyy HH:mm}.",
-            "PaymentOrder",
-            order.PaymentOrderId);
+        if (!_dao.NotificationExists(
+                vendorUserId,
+                "PaymentSucceeded",
+                "PaymentOrder",
+                order.PaymentOrderId))
+        {
+            _dao.InsertNotification(
+                vendorUserId,
+                "PaymentSucceeded",
+                "Thanh toán demo thành công",
+                $"Tài khoản được kích hoạt đến {expiresAt:dd/MM/yyyy HH:mm}.",
+                "PaymentOrder",
+                order.PaymentOrderId);
+        }
 
         return GetDashboard(vendorUserId);
     }
@@ -333,6 +402,32 @@ public class VendorModuleBUS
             narrationId);
     }
 
+
+    private VendorLoginResponseDTO CreateAuthResponse(
+        VendorAuthUserDTO vendor,
+        string? ipAddress)
+    {
+        var accessExpiresAt = _jwt.AccessTokenExpiresAtUtc;
+        var refreshExpiresAt = _jwt.RefreshTokenExpiresAtUtc;
+        var rawRefreshToken = _jwt.GenerateRefreshToken();
+        _refreshTokenDAO.Insert(new VendorRefreshTokenDTO
+        {
+            VendorUserId = vendor.VendorUserId,
+            TokenHash = _jwt.HashRefreshToken(rawRefreshToken),
+            ExpiresAt = refreshExpiresAt,
+            CreatedByIp = ipAddress
+        });
+
+        return new VendorLoginResponseDTO
+        {
+            AccessToken = _jwt.GenerateVendorAccessToken(vendor, accessExpiresAt),
+            RefreshToken = rawRefreshToken,
+            AccessTokenExpiresAt = accessExpiresAt,
+            RefreshTokenExpiresAt = refreshExpiresAt,
+            Vendor = vendor
+        };
+    }
+
     private PaymentOrderDTO CreatePaymentOrder(
         long vendorUserId,
         long? renewalRequestId,
@@ -365,15 +460,24 @@ public class VendorModuleBUS
         return order;
     }
 
-    private void RefreshLifecycle(long vendorUserId)
+    public int RefreshAllLifecycles()
+    {
+        _dao.ExpirePendingPayments();
+        var vendorIds = _dao.GetLifecycleVendorIds();
+        foreach (var vendorId in vendorIds) RefreshLifecycle(vendorId);
+        return vendorIds.Count;
+    }
+
+    public void RefreshLifecycle(long vendorUserId)
     {
         var subscription = _dao.GetLatestSubscription(vendorUserId);
-        if (subscription == null || subscription.Status != "Active") return;
+        if (subscription == null) return;
 
         var remaining = subscription.ExpiresAt - DateTime.UtcNow;
-        if (remaining <= TimeSpan.Zero)
+        if (remaining <= TimeSpan.Zero || subscription.Status == "Expired")
         {
-            _dao.ExpireSubscription(subscription.SubscriptionId);
+            if (subscription.Status == "Active")
+                _dao.ExpireSubscription(subscription.SubscriptionId);
             _dao.SetVendorAccountStatus(vendorUserId, VendorAccountStatuses.Expired, false);
             if (!_dao.NotificationExists(vendorUserId, "SubscriptionExpired", "Subscription", subscription.SubscriptionId))
             {
@@ -387,6 +491,8 @@ public class VendorModuleBUS
             }
             return;
         }
+
+        if (subscription.Status != "Active") return;
 
         if (remaining.TotalDays <= 15)
         {
@@ -441,8 +547,8 @@ public class VendorModuleBUS
             throw new ArgumentException("Tên sạp là bắt buộc.");
         if (!ValidationHelper.IsValidEmail(request.Email))
             throw new ArgumentException("Email không hợp lệ.");
-        if (request.Password.Length < 6)
-            throw new ArgumentException("Mật khẩu phải có ít nhất 6 ký tự.");
+        if (request.Password.Length < 8)
+            throw new ArgumentException("Mật khẩu phải có ít nhất 8 ký tự.");
         if (request.BusinessLicense == null || request.BusinessLicense.Length == 0)
             throw new ArgumentException("Phải tải giấy phép kinh doanh.");
         if (request.FoodSafetyCertificate == null || request.FoodSafetyCertificate.Length == 0)

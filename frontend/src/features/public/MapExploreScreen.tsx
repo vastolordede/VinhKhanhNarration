@@ -17,6 +17,7 @@ import { useGeofenceWatcher } from '../../hooks/useGeofenceWatcher';
 import { useGeolocation } from '../../hooks/useGeolocation';
 import { NarrationResolveResultDTO, PlaceDTO, PlaceDishDTO } from '../../types';
 import { useI18n } from '../../i18n/useI18n';
+import { hasUsableAccessPass } from '../../utils/accessPolicy';
 import FeedbackModal from './FeedbackModal';
 
 const defaultLat = Number(import.meta.env.VITE_DEFAULT_MAP_LAT || 10.7569);
@@ -117,7 +118,9 @@ export default function MapExploreScreen() {
   const [loadingNarration, setLoadingNarration] = useState(false);
 
   const {
+    guestSession,
     language,
+    accessStatus,
     setCurrentNarration,
     trackingEnabled,
     setTrackingEnabled
@@ -126,6 +129,7 @@ export default function MapExploreScreen() {
   const navigate = useNavigate();
   const geo = useGeolocation();
   const { t } = useI18n();
+  const hasAccessPass = hasUsableAccessPass(accessStatus);
 
   const openPlayer = useCallback(
     (narration: NarrationResolveResultDTO) => {
@@ -152,12 +156,16 @@ export default function MapExploreScreen() {
       setSelectedNarration(null);
       setNarrationError(null);
 
-      if (!language) return;
+      if (!language || !guestSession?.guestSessionId || !hasAccessPass) return;
 
       setLoadingNarration(true);
       try {
         setSelectedNarration(
-          await resolvePlaceNarration(placeId, language.languageId)
+          await resolvePlaceNarration(
+            placeId,
+            language.languageId,
+            guestSession.guestSessionId
+          )
         );
       } catch (error) {
         setNarrationError(
@@ -170,7 +178,7 @@ export default function MapExploreScreen() {
         setLoadingNarration(false);
       }
     },
-    [language, t]
+    [language, guestSession?.guestSessionId, hasAccessPass, t]
   );
 
   const openPlace = useCallback(
@@ -181,17 +189,21 @@ export default function MapExploreScreen() {
       setNarrationError(null);
 
       const [menuResult] = await Promise.allSettled([
-        getPlaceDishes(place.placeId),
-        loadPlaceNarration(place.placeId)
+        getPlaceDishes(place.placeId)
       ]);
+      if (hasAccessPass) void loadPlaceNarration(place.placeId);
 
       setMenu(menuResult.status === 'fulfilled' ? menuResult.value : []);
     },
-    [loadPlaceNarration]
+    [loadPlaceNarration, hasAccessPass]
   );
 
   async function listenPlace() {
-    if (!selectedPlace || !language) return;
+    if (!hasAccessPass) {
+      navigate('/app/access');
+      return;
+    }
+    if (!selectedPlace || !language || !guestSession?.guestSessionId) return;
 
     if (selectedNarration) {
       openPlayer(selectedNarration);
@@ -202,13 +214,21 @@ export default function MapExploreScreen() {
   }
 
   async function listenDish(dishId: number) {
-    if (!language) return;
+    if (!hasAccessPass) {
+      navigate('/app/access');
+      return;
+    }
+    if (!language || !guestSession?.guestSessionId) return;
 
     setNarrationError(null);
     setLoadingNarration(true);
 
     try {
-      openPlayer(await resolveDishNarration(dishId, language.languageId));
+      openPlayer(await resolveDishNarration(
+        dishId,
+        language.languageId,
+        guestSession.guestSessionId
+      ));
     } catch (error) {
       setNarrationError(
         narrationErrorMessage(
@@ -227,6 +247,10 @@ export default function MapExploreScreen() {
   }
 
   function toggleTracking() {
+    if (!trackingEnabled && !hasAccessPass) {
+      navigate('/app/access');
+      return;
+    }
     const next = !trackingEnabled;
     setTrackingEnabled(next);
 
@@ -300,6 +324,16 @@ export default function MapExploreScreen() {
               <p className="text-xs font-semibold text-teal-700">
                 {t('public.map.placesLoaded')}: {validPlaces.length}
               </p>
+              <button
+                className={`mt-1 text-left text-xs font-bold ${
+                  hasAccessPass ? 'text-emerald-600' : 'text-amber-600'
+                }`}
+                onClick={() => navigate('/app/access')}
+              >
+                {hasAccessPass
+                  ? `Access Pass: ${(accessStatus?.hoursRemaining ?? 0)}h`
+                  : 'Mua Access Pass để nghe'}
+              </button>
             </div>
 
             <Button variant="secondary" onClick={requestLocation}>
@@ -341,7 +375,7 @@ export default function MapExploreScreen() {
 
               <Button
                 onClick={() => void listenPlace()}
-                disabled={!language || loadingNarration || !selectedNarration}
+                disabled={!language || loadingNarration}
                 className="shrink-0"
               >
                 <Volume2 size={18} />
@@ -404,7 +438,7 @@ export default function MapExploreScreen() {
                   >
                     <div>
                       <p className="font-semibold">
-                        {item.dish?.dishName ||
+                        {item.dishName || item.dish?.dishName ||
                           `${t('public.map.dish')} #${item.dishId}`}{' '}
                         {item.isRecommended
                           ? `• ${t('public.map.recommended')}`

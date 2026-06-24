@@ -29,9 +29,28 @@ public class VendorAuthController : BaseApiController
     [HttpPost("login")]
     public IActionResult Login([FromBody] VendorLoginRequestDTO request)
     {
-        try { return OkData(_bus.Login(request)); }
+        try { return OkData(_bus.Login(request, GetIpAddress())); }
         catch (Exception ex) { return BadRequestException(ex); }
     }
+
+    [HttpPost("refresh")]
+    public IActionResult Refresh([FromBody] VendorRefreshTokenRequestDTO request)
+    {
+        try { return OkData(_bus.RefreshAccessToken(request.RefreshToken, GetIpAddress())); }
+        catch (Exception ex)
+        {
+            return Unauthorized(new { success = false, message = ex.Message, data = (object?)null });
+        }
+    }
+
+    [HttpPost("logout")]
+    public IActionResult Logout([FromBody] VendorLogoutRequestDTO request)
+    {
+        _bus.Logout(request.RefreshToken, GetIpAddress());
+        return OkData(true, "Đã đăng xuất.");
+    }
+
+    private string? GetIpAddress() => HttpContext.Connection.RemoteIpAddress?.ToString();
 }
 
 [Authorize(Roles = "Vendor")]
@@ -47,6 +66,27 @@ public class VendorAccountController : BaseApiController
     {
         try { return OkData(_bus.GetDashboard(GetVendorId())); }
         catch (Exception ex) { return BadRequestException(ex); }
+    }
+
+    [HttpPut("profile")]
+    public IActionResult UpdateProfile([FromBody] VendorProfileUpdateDTO request)
+    {
+        try { return OkData(_bus.UpdateProfile(GetVendorId(), request)); }
+        catch (Exception ex) { return BadRequestException(ex); }
+    }
+
+    [HttpPatch("change-password")]
+    public IActionResult ChangePassword([FromBody] VendorChangePasswordRequestDTO request)
+    {
+        try { return OkData(_bus.ChangePassword(GetVendorId(), request, GetIpAddress())); }
+        catch (Exception ex) { return BadRequestException(ex); }
+    }
+
+    [HttpPost("logout-all")]
+    public IActionResult LogoutAll()
+    {
+        _bus.LogoutAll(GetVendorId(), GetIpAddress());
+        return OkData(true, "Đã đăng xuất khỏi tất cả thiết bị.");
     }
 
     [HttpPost("renewal")]
@@ -83,6 +123,8 @@ public class VendorAccountController : BaseApiController
         try { return OkData(_bus.MarkNotificationRead(GetVendorId(), notificationId)); }
         catch (Exception ex) { return BadRequestException(ex); }
     }
+
+    private string? GetIpAddress() => HttpContext.Connection.RemoteIpAddress?.ToString();
 
     private long GetVendorId()
     {

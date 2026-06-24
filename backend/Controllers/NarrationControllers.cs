@@ -292,30 +292,76 @@ public class AudioFilesController : CrudControllerBase<AudioFileDTO>
 public class PublicNarrationsController : BaseApiController
 {
     private readonly PublicNarrationBUS _bus;
+    private readonly GuestAccessBUS _access;
 
-    public PublicNarrationsController(PublicNarrationBUS bus)
+    public PublicNarrationsController(PublicNarrationBUS bus, GuestAccessBUS access)
     {
         _bus = bus;
+        _access = access;
     }
 
     [HttpGet("place/{placeId:long}")]
-    public IActionResult ResolvePlace(long placeId, [FromQuery] long languageId)
+    public IActionResult ResolvePlace(
+        long placeId,
+        [FromQuery] long languageId,
+        [FromQuery] string guestSessionId)
     {
-        try { return OkData(_bus.ResolvePlace(placeId, languageId)); }
+        try
+        {
+            _access.EnsureActive(guestSessionId);
+            return OkData(ProtectAudio(_bus.ResolvePlace(placeId, languageId), guestSessionId));
+        }
+        catch (UnauthorizedAccessException ex) { return PaymentRequired(ex.Message); }
         catch (InvalidOperationException ex) { return NotFoundMessage(ex.Message); }
     }
 
     [HttpGet("dish/{dishId:long}")]
-    public IActionResult ResolveDish(long dishId, [FromQuery] long languageId)
+    public IActionResult ResolveDish(
+        long dishId,
+        [FromQuery] long languageId,
+        [FromQuery] string guestSessionId)
     {
-        try { return OkData(_bus.ResolveDish(dishId, languageId)); }
+        try
+        {
+            _access.EnsureActive(guestSessionId);
+            return OkData(ProtectAudio(_bus.ResolveDish(dishId, languageId), guestSessionId));
+        }
+        catch (UnauthorizedAccessException ex) { return PaymentRequired(ex.Message); }
         catch (InvalidOperationException ex) { return NotFoundMessage(ex.Message); }
     }
 
     [HttpGet("{narrationId:long}")]
-    public IActionResult ResolveNarration(long narrationId, [FromQuery] long languageId)
+    public IActionResult ResolveNarration(
+        long narrationId,
+        [FromQuery] long languageId,
+        [FromQuery] string guestSessionId)
     {
-        try { return OkData(_bus.ResolveNarration(narrationId, languageId)); }
+        try
+        {
+            _access.EnsureActive(guestSessionId);
+            return OkData(ProtectAudio(_bus.ResolveNarration(narrationId, languageId), guestSessionId));
+        }
+        catch (UnauthorizedAccessException ex) { return PaymentRequired(ex.Message); }
         catch (InvalidOperationException ex) { return NotFoundMessage(ex.Message); }
     }
+
+    private PublicNarrationResultDTO ProtectAudio(
+        PublicNarrationResultDTO result,
+        string guestSessionId)
+    {
+        result.AudioUrl = Url.Action(
+            "Stream",
+            "PublicAudio",
+            new { audioId = result.AudioId, guestSessionId },
+            Request.Scheme) ?? $"/api/public/audio/{result.AudioId}?guestSessionId={Uri.EscapeDataString(guestSessionId)}";
+        return result;
+    }
+
+    private IActionResult PaymentRequired(string message) =>
+        StatusCode(StatusCodes.Status402PaymentRequired, new
+        {
+            success = false,
+            message,
+            data = (object?)null
+        });
 }

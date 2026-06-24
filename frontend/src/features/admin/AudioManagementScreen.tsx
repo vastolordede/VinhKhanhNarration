@@ -8,6 +8,7 @@ import {
   getTranslations
 } from '../../api/narrationApi';
 import { PageHeader } from '../../components/layout/PageHeader';
+import { AuthenticatedAudio } from '../../components/media/AuthenticatedAudio';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import {
@@ -133,12 +134,7 @@ export default function AudioManagementScreen() {
                     </p>
                   )}
                   {audio?.audioUrl && audio.status === 'Ready' && (
-                    <audio
-                      className="mt-3 w-full"
-                      controls
-                      preload="metadata"
-                      src={audio.audioUrl}
-                    />
+                    <AuthenticatedAudio audioId={audio.audioId} className="mt-3 w-full" />
                   )}
                 </div>
 

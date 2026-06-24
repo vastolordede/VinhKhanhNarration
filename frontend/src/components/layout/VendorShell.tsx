@@ -1,8 +1,11 @@
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { Bell, CreditCard, FileText, LayoutDashboard, LogOut } from 'lucide-react';
+import { Bell, CreditCard, FileText, LayoutDashboard, LogOut, Store } from 'lucide-react';
+import { http } from '../../api/http';
+import { endpoints } from '../../api/endpoints';
 
 const navItems = [
   { to: '/vendor', label: 'Tổng quan', icon: LayoutDashboard },
+  { to: '/vendor/catalog', label: 'Sạp & món', icon: Store },
   { to: '/vendor/narrations', label: 'Thuyết minh', icon: FileText },
   { to: '/vendor/subscription', label: 'Gia hạn', icon: CreditCard },
   { to: '/vendor/notifications', label: 'Thông báo', icon: Bell }
@@ -13,10 +16,17 @@ export default function VendorShell() {
   const raw = localStorage.getItem('vendorUser');
   const vendor = raw ? JSON.parse(raw) : null;
 
-  function logout() {
-    localStorage.removeItem('vendorToken');
-    localStorage.removeItem('vendorTokenExpiresAt');
-    localStorage.removeItem('vendorUser');
+  async function logout() {
+    const refreshToken = localStorage.getItem('vendorRefreshToken');
+    try {
+      if (refreshToken) await http.post(endpoints.vendorLogout, { refreshToken });
+    } catch {
+      // Local logout still proceeds when the API is unavailable.
+    }
+    ['vendorToken', 'vendorRefreshToken', 'vendorTokenExpiresAt',
+      'vendorRefreshTokenExpiresAt', 'vendorUser'].forEach((key) =>
+      localStorage.removeItem(key)
+    );
     navigate('/vendor/login');
   }
 

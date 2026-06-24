@@ -9,23 +9,9 @@ public class GuestSessionDAO : BaseDAO
 {
     public GuestSessionDAO(DbConnectionFactory factory) : base(factory) { }
 
-    public bool Insert(GuestSessionDTO dto)
-    {
-        const string sql = @"INSERT INTO guest_sessions (guest_session_id, preferred_language_id, device_info, ip_address, is_active)
-                             VALUES (@id, @lang, @device, @ip, @active);";
-        using var conn = CreateConnection(); conn.Open();
-        using var cmd = new NpgsqlCommand(sql, conn);
-        cmd.Parameters.AddWithValue("@id", dto.GuestSessionId);
-        cmd.Parameters.AddWithValue("@lang", DbValue(dto.PreferredLanguageId));
-        cmd.Parameters.AddWithValue("@device", DbValue(dto.DeviceInfo));
-        cmd.Parameters.AddWithValue("@ip", DbValue(dto.IPAddress));
-        cmd.Parameters.AddWithValue("@active", dto.IsActive);
-        return cmd.ExecuteNonQuery() > 0;
-    }
-
     public bool UpdatePreferredLanguage(string guestSessionId, long languageId)
     {
-        return Execute("UPDATE guest_sessions SET preferred_language_id = @languageId, last_seen_at = CURRENT_TIMESTAMP WHERE guest_session_id = @id;", cmd =>
+        return Execute("UPDATE guest_sessions SET preferred_language_id = @languageId, last_seen_at = CURRENT_TIMESTAMP WHERE guest_session_id = @id AND is_active = TRUE;", cmd =>
         {
             cmd.Parameters.AddWithValue("@languageId", languageId);
             cmd.Parameters.AddWithValue("@id", guestSessionId);
@@ -34,12 +20,12 @@ public class GuestSessionDAO : BaseDAO
 
     public bool UpdateLastSeen(string guestSessionId)
     {
-        return Execute("UPDATE guest_sessions SET last_seen_at = CURRENT_TIMESTAMP WHERE guest_session_id = @id;", cmd => cmd.Parameters.AddWithValue("@id", guestSessionId));
+        return Execute("UPDATE guest_sessions SET last_seen_at = CURRENT_TIMESTAMP WHERE guest_session_id = @id AND is_active = TRUE;", cmd => cmd.Parameters.AddWithValue("@id", guestSessionId));
     }
 
     public bool Deactivate(string guestSessionId)
     {
-        return Execute("UPDATE guest_sessions SET is_active = FALSE WHERE guest_session_id = @id;", cmd => cmd.Parameters.AddWithValue("@id", guestSessionId));
+        return Execute("UPDATE guest_sessions SET is_active = FALSE, deactivated_at = COALESCE(deactivated_at, CURRENT_TIMESTAMP) WHERE guest_session_id = @id;", cmd => cmd.Parameters.AddWithValue("@id", guestSessionId));
     }
 
     public GuestSessionDTO? GetById(string guestSessionId)
@@ -83,6 +69,11 @@ public class GuestSessionDAO : BaseDAO
         IPAddress = reader["ip_address"] == DBNull.Value ? null : Convert.ToString(reader["ip_address"]),
         CreatedAt = Convert.ToDateTime(reader["created_at"]),
         LastSeenAt = Convert.ToDateTime(reader["last_seen_at"]),
+        GuestPaymentOrderId = reader["guest_payment_order_id"] == DBNull.Value ? null : Convert.ToInt64(reader["guest_payment_order_id"]),
+        AccessPrice = reader["access_price"] == DBNull.Value ? 0 : Convert.ToDecimal(reader["access_price"]),
+        AccessStartedAt = reader["access_started_at"] == DBNull.Value ? null : Convert.ToDateTime(reader["access_started_at"]),
+        AccessExpiresAt = reader["access_expires_at"] == DBNull.Value ? null : Convert.ToDateTime(reader["access_expires_at"]),
+        DeactivatedAt = reader["deactivated_at"] == DBNull.Value ? null : Convert.ToDateTime(reader["deactivated_at"]),
         IsActive = Convert.ToBoolean(reader["is_active"])
     };
 }
@@ -240,28 +231,29 @@ public long CountAll()
     using var cmd = new NpgsqlCommand("SELECT COUNT(*) FROM geofence_events;", conn);
     return Convert.ToInt64(cmd.ExecuteScalar());
 }
+
+public int DeleteOlderThan(DateTime cutoff)
+{
+    using var conn = CreateConnection();
+    conn.Open();
+    using var cmd = new NpgsqlCommand(
+        "DELETE FROM geofence_events WHERE detected_at < @cutoff;", conn);
+    cmd.Parameters.AddWithValue("@cutoff", cutoff);
+    return cmd.ExecuteNonQuery();
+}
     public GeofenceEventDAO(DbConnectionFactory factory) : base(factory) { }
 
     public long Insert(GeofenceEventDTO dto)
     {
         const string sql = @"
             INSERT INTO geofence_events
-            (guest_session_id, place_id, narration_id, event_type_id, event_status_id, user_latitude, user_longitude, distance_meters, processed_at, note)
-            VALUES (@guest, @place, @narration, @type, @status, @lat, @lng, @distance, @processed, @note)
+            (guest_session_id, access_pass_id, place_id, narration_id, event_type_id, event_status_id, user_latitude, user_longitude, distance_meters, processed_at, note)
+            VALUES (@guest, @accessPass, @place, @narration, @type, @status, @lat, @lng, @distance, @processed, @note)
             RETURNING event_id;";
         using var conn = CreateConnection(); conn.Open();
         using var cmd = new NpgsqlCommand(sql, conn);
         Bind(cmd, dto);
         return Convert.ToInt64(cmd.ExecuteScalar());
-    }
-
-    public bool UpdateStatus(long eventId, long eventStatusId)
-    {
-        return Execute("UPDATE geofence_events SET event_status_id = @status WHERE event_id = @id;", cmd =>
-        {
-            cmd.Parameters.AddWithValue("@id", eventId);
-            cmd.Parameters.AddWithValue("@status", eventStatusId);
-        });
     }
 
     public bool MarkProcessed(long eventId)
@@ -303,6 +295,7 @@ public long CountAll()
     private static void Bind(NpgsqlCommand cmd, GeofenceEventDTO dto)
     {
         cmd.Parameters.AddWithValue("@guest", dto.GuestSessionId);
+        cmd.Parameters.AddWithValue("@accessPass", DbValue(dto.AccessPassId));
         cmd.Parameters.AddWithValue("@place", dto.PlaceId);
         cmd.Parameters.AddWithValue("@narration", DbValue(dto.NarrationId));
         cmd.Parameters.AddWithValue("@type", dto.EventTypeId);
@@ -318,6 +311,7 @@ public long CountAll()
     {
         EventId = Convert.ToInt64(reader["event_id"]),
         GuestSessionId = Convert.ToString(reader["guest_session_id"]) ?? string.Empty,
+        AccessPassId = reader["access_pass_id"] == DBNull.Value ? null : Convert.ToInt64(reader["access_pass_id"]),
         PlaceId = Convert.ToInt64(reader["place_id"]),
         NarrationId = reader["narration_id"] == DBNull.Value ? null : Convert.ToInt64(reader["narration_id"]),
         EventTypeId = Convert.ToInt64(reader["event_type_id"]),
@@ -366,6 +360,7 @@ public long CountAll()
         INSERT INTO listening_histories
         (
             guest_session_id,
+            access_pass_id,
             narration_id,
             language_id,
             audio_id,
@@ -379,6 +374,7 @@ public long CountAll()
         VALUES
         (
             @guest,
+            @accessPass,
             @narration,
             @language,
             @audio,
@@ -400,6 +396,11 @@ public long CountAll()
         string.IsNullOrWhiteSpace(dto.GuestSessionId)
             ? DBNull.Value
             : dto.GuestSessionId;
+
+    cmd.Parameters.Add("@accessPass", NpgsqlDbType.Bigint).Value =
+        dto.AccessPassId.HasValue && dto.AccessPassId.Value > 0
+            ? dto.AccessPassId.Value
+            : DBNull.Value;
 
     cmd.Parameters.Add("@narration", NpgsqlDbType.Bigint).Value = dto.NarrationId;
     cmd.Parameters.Add("@language", NpgsqlDbType.Bigint).Value = dto.LanguageId;
@@ -441,20 +442,30 @@ public long CountAll()
 
     return Convert.ToInt64(cmd.ExecuteScalar());
 }
-    public bool UpdatePlaybackStatus(long historyId, string status)
+    public bool UpdatePlaybackStatus(long historyId, string guestSessionId, string status)
     {
         using var conn = CreateConnection(); conn.Open();
-        using var cmd = new NpgsqlCommand("UPDATE listening_histories SET playback_status = @status WHERE history_id = @id;", conn);
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE listening_histories
+            SET playback_status = @status
+            WHERE history_id = @id
+              AND guest_session_id = @guestSessionId;", conn);
         cmd.Parameters.AddWithValue("@id", historyId);
+        cmd.Parameters.AddWithValue("@guestSessionId", guestSessionId);
         cmd.Parameters.AddWithValue("@status", status);
         return cmd.ExecuteNonQuery() > 0;
     }
 
-    public bool UpdateListenDuration(long historyId, int seconds)
+    public bool UpdateListenDuration(long historyId, string guestSessionId, int seconds)
     {
         using var conn = CreateConnection(); conn.Open();
-        using var cmd = new NpgsqlCommand("UPDATE listening_histories SET listen_duration_seconds = @seconds WHERE history_id = @id;", conn);
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE listening_histories
+            SET listen_duration_seconds = @seconds
+            WHERE history_id = @id
+              AND guest_session_id = @guestSessionId;", conn);
         cmd.Parameters.AddWithValue("@id", historyId);
+        cmd.Parameters.AddWithValue("@guestSessionId", guestSessionId);
         cmd.Parameters.AddWithValue("@seconds", seconds);
         return cmd.ExecuteNonQuery() > 0;
     }

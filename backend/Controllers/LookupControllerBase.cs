@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using VinhKhanhNarration.Api.BUS;
 using VinhKhanhNarration.Api.DTO.Lookup;
 
 namespace VinhKhanhNarration.Api.Controllers;
 
+[Authorize(Roles = "Admin,ContentManager")]
 public abstract class LookupControllerBase<TDto> : BaseApiController where TDto : LookupDTO, new()
 {
     private readonly LookupBUS<TDto> _bus;
@@ -20,9 +22,11 @@ public abstract class LookupControllerBase<TDto> : BaseApiController where TDto 
     [HttpGet]
     public IActionResult GetAll() => OkData(_bus.GetAll());
 
+    [AllowAnonymous]
     [HttpGet("active")]
     public IActionResult GetActive() => OkData(_bus.GetActive());
 
+    [AllowAnonymous]
     [HttpGet("{id:long}")]
     public IActionResult GetById(long id)
     {
@@ -30,6 +34,7 @@ public abstract class LookupControllerBase<TDto> : BaseApiController where TDto 
         return item == null ? NotFoundMessage() : OkData(item);
     }
 
+    [AllowAnonymous]
     [HttpGet("code/{code}")]
     public IActionResult GetByCode(string code)
     {

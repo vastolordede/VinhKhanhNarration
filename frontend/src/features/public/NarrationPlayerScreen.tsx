@@ -108,14 +108,15 @@ export default function NarrationPlayerScreen() {
     reset: boolean
   ): Promise<void> {
     const historyId = historyIdRef.current;
-    if (!historyId) return;
+    const guestSessionId = guestSession?.guestSessionId;
+    if (!historyId || !guestSessionId) return;
 
     const seconds = audioRef.current?.currentTime ?? currentTime;
 
     try {
       await Promise.all([
-        updateListeningStatus(historyId, status),
-        updateListeningDuration(historyId, seconds)
+        updateListeningStatus(historyId, guestSessionId, status),
+        updateListeningDuration(historyId, guestSessionId, seconds)
       ]);
     } catch (error) {
       console.error('Update listening history failed:', error);

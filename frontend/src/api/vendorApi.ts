@@ -91,7 +91,7 @@ export async function reviewVendorRegistration(
 }
 
 export async function getPendingRenewals(): Promise<VendorRenewalRequestDTO[]> {
-  const response = await http.get(endpoints.adminVendorRenewals);
+  const response = await http.get(`${endpoints.adminVendorRenewals}/pending`);
   return unwrap<VendorRenewalRequestDTO[]>(response);
 }
 
@@ -106,4 +106,58 @@ export async function reviewVendorRenewal(
     { approved, reason: reason || null, amount }
   );
   return unwrap<PaymentOrderDTO>(response);
+}
+
+export async function getVendorCatalog() {
+  const response = await http.get(endpoints.vendorCatalog);
+  return unwrap<import('../types').VendorCatalogDTO>(response);
+}
+
+export async function saveVendorPlace(place: import('../types').PlaceDTO) {
+  const response = await http.put(`${endpoints.vendorCatalog}/place`, place);
+  return unwrap<import('../types').PlaceDTO>(response);
+}
+
+export async function createVendorDish(
+  request: import('../types').VendorDishRequestDTO
+): Promise<number> {
+  const response = await http.post(`${endpoints.vendorCatalog}/dishes`, request);
+  return unwrap<number>(response);
+}
+
+export async function updateVendorDish(
+  dishId: number,
+  request: import('../types').VendorDishRequestDTO
+): Promise<boolean> {
+  const response = await http.put(
+    `${endpoints.vendorCatalog}/dishes/${dishId}`,
+    request
+  );
+  return unwrap<boolean>(response);
+}
+
+export async function setVendorDishActive(
+  dishId: number,
+  active: boolean
+): Promise<boolean> {
+  const response = await http.patch(
+    `${endpoints.vendorCatalog}/dishes/${dishId}/${active ? 'restore' : 'deactivate'}`
+  );
+  return unwrap<boolean>(response);
+}
+
+export async function removeVendorMenuItem(dishId: number): Promise<boolean> {
+  const response = await http.delete(
+    `${endpoints.vendorCatalog}/menu/${dishId}`
+  );
+  return unwrap<boolean>(response);
+}
+
+export async function updateVendorProfile(payload: {
+  ownerName: string;
+  shopName: string;
+  phone: string;
+}) {
+  const response = await http.put(endpoints.vendorProfile, payload);
+  return unwrap<import('../types').VendorAuthUserDTO>(response);
 }

@@ -24,13 +24,7 @@ static class PaginationHelper
 public class GuestSessionBUS
 {
     private readonly GuestSessionDAO _dao;
-    private readonly SessionGenerator _sessionGenerator;
-    public GuestSessionBUS(GuestSessionDAO dao, SessionGenerator sessionGenerator) { _dao = dao; _sessionGenerator = sessionGenerator; }
-    public GuestSessionDTO CreateSession(string? deviceInfo, string? ipAddress, long? preferredLanguageId = null)
-    {
-        var dto = new GuestSessionDTO { GuestSessionId = _sessionGenerator.GenerateGuestSessionId(), DeviceInfo = deviceInfo, IPAddress = ipAddress, PreferredLanguageId = preferredLanguageId, IsActive = true };
-        _dao.Insert(dto); return dto;
-    }
+    public GuestSessionBUS(GuestSessionDAO dao) => _dao = dao;
     public GuestSessionDTO? GetById(string id) => _dao.GetById(id);
     public bool ChangePreferredLanguage(string id, long languageId) => _dao.UpdatePreferredLanguage(id, languageId);
     public bool Touch(string id) => _dao.UpdateLastSeen(id);
@@ -93,6 +87,7 @@ public class GeofenceBUS
 
     public GeofenceCheckResultDTO CheckLocation(
         string guestSessionId,
+        long accessPassId,
         decimal latitude,
         decimal longitude,
         long languageId)
@@ -112,7 +107,7 @@ public class GeofenceBUS
 
         if (IsDebounced(state, place))
         {
-            CreateEvent(guestSessionId, place.PlaceId, null, "Near", "IgnoredDebounce",
+            CreateEvent(guestSessionId, accessPassId, place.PlaceId, null, "Near", "IgnoredDebounce",
                 latitude, longitude, distance, "Ignored by debounce.");
             return new GeofenceCheckResultDTO
             {
@@ -125,7 +120,7 @@ public class GeofenceBUS
 
         if (IsInCooldown(state))
         {
-            CreateEvent(guestSessionId, place.PlaceId, null, "Near", "IgnoredCooldown",
+            CreateEvent(guestSessionId, accessPassId, place.PlaceId, null, "Near", "IgnoredCooldown",
                 latitude, longitude, distance, "Ignored by cooldown.");
             return new GeofenceCheckResultDTO
             {
@@ -154,6 +149,7 @@ public class GeofenceBUS
 
         var geofenceEvent = CreateEvent(
             guestSessionId,
+            accessPassId,
             place.PlaceId,
             narration.NarrationId,
             "Near",
@@ -183,6 +179,7 @@ public class GeofenceBUS
 
     public GeofenceEventDTO CreateEvent(
         string guestSessionId,
+        long accessPassId,
         long placeId,
         long? narrationId,
         string eventTypeCode,
@@ -199,6 +196,7 @@ public class GeofenceBUS
         var dto = new GeofenceEventDTO
         {
             GuestSessionId = guestSessionId,
+            AccessPassId = accessPassId,
             PlaceId = placeId,
             NarrationId = narrationId,
             EventTypeId = typeId,
@@ -217,7 +215,7 @@ public class GeofenceBUS
     public List<GeofenceEventDTO> GetByGuestSessionId(string guestSessionId) => _eventDAO.GetByGuestSessionId(guestSessionId);
     public List<GeofenceEventDTO> GetByPlaceId(long placeId) => _eventDAO.GetByPlaceId(placeId);
     public List<GeofenceEventDTO> GetByDateRange(DateTime from, DateTime to) => _eventDAO.GetByDateRange(from, to);
-    public bool UpdateStatus(long eventId, long eventStatusId) => _eventDAO.UpdateStatus(eventId, eventStatusId);
+    public int CleanupOlderThan(DateTime cutoff) => _eventDAO.DeleteOlderThan(cutoff);
 
     private PlaceDTO? FindBestNearbyPlace(decimal latitude, decimal longitude)
     {
@@ -271,8 +269,22 @@ public class ListeningHistoryBUS
     public List<ListeningHistoryDTO> GetByGuestSessionId(string guestSessionId) => _dao.GetByGuestSessionId(guestSessionId);
     public List<ListeningHistoryDTO> GetByNarrationId(long narrationId) => _dao.GetByNarrationId(narrationId);
     public List<ListeningHistoryDTO> GetByDateRange(DateTime from, DateTime to) => _dao.GetByDateRange(from, to);
-    public bool UpdatePlaybackStatus(long id, string status) => _dao.UpdatePlaybackStatus(id, status);
-    public bool UpdateListenDuration(long id, int seconds) => _dao.UpdateListenDuration(id, seconds);
+    public bool UpdatePlaybackStatus(long id, string guestSessionId, string status)
+    {
+        var allowed = new HashSet<string>(StringComparer.Ordinal)
+        {
+            "Played", "Skipped", "Stopped", "Completed"
+        };
+        if (!allowed.Contains(status))
+            throw new ArgumentException("Playback status không hợp lệ.");
+        return _dao.UpdatePlaybackStatus(id, guestSessionId, status);
+    }
+
+    public bool UpdateListenDuration(long id, string guestSessionId, int seconds)
+    {
+        if (seconds < 0) throw new ArgumentException("Thời lượng nghe không được âm.");
+        return _dao.UpdateListenDuration(id, guestSessionId, seconds);
+    }
 
     public PagedResultDTO<ListeningHistoryDTO> GetPaged(int page, int pageSize)
 {

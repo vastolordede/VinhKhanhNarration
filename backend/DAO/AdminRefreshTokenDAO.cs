@@ -57,4 +57,17 @@ public class AdminRefreshTokenDAO : GenericCrudDAO<AdminRefreshTokenDTO>
 
         cmd.ExecuteNonQuery();
     }
+
+    public int DeleteExpiredAndRevokedTokens(DateTime cutoffUtc)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+
+        using var cmd = new NpgsqlCommand(@"
+            DELETE FROM admin_refresh_tokens
+            WHERE expires_at < @cutoff
+               OR (revoked_at IS NOT NULL AND revoked_at < @cutoff);", conn);
+        cmd.Parameters.AddWithValue("@cutoff", cutoffUtc);
+        return cmd.ExecuteNonQuery();
+    }
 }

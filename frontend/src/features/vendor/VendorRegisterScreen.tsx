@@ -1,24 +1,14 @@
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { vendorRegister } from '../../api/vendorApi';
-import { getList } from '../../api/crud';
-import { endpoints } from '../../api/endpoints';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
-import { PlaceDTO } from '../../types';
 
 export default function VendorRegisterScreen() {
-  const [places, setPlaces] = useState<PlaceDTO[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-
-  useEffect(() => {
-    getList<PlaceDTO>(endpoints.places)
-      .then(setPlaces)
-      .catch(() => setPlaces([]));
-  }, []);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -47,11 +37,10 @@ export default function VendorRegisterScreen() {
           <Input name="ShopName" required placeholder="Tên sạp" />
           <Input name="Email" type="email" required placeholder="Email" />
           <Input name="Phone" placeholder="Số điện thoại" />
-          <Input name="Password" type="password" required minLength={6} placeholder="Mật khẩu" />
-          <select name="PlaceId" className="rounded-2xl border border-slate-200 px-4 py-3 text-sm">
-            <option value="">Chưa liên kết địa điểm</option>
-            {places.map((place) => <option key={place.placeId} value={place.placeId}>{place.placeName}</option>)}
-          </select>
+          <Input name="Password" type="password" required minLength={8} placeholder="Mật khẩu" />
+          <p className="rounded-2xl bg-slate-50 px-4 py-3 text-sm text-slate-600">
+            Sau khi hồ sơ được duyệt và kích hoạt gói, bạn sẽ khai báo sạp và món ăn trong trang quản lý Vendor.
+          </p>
           <label className="text-sm font-semibold text-slate-700">
             Giấy phép kinh doanh
             <input name="BusinessLicense" type="file" accept=".pdf,.jpg,.jpeg,.png,.webp" required className="mt-2 block w-full text-sm" />

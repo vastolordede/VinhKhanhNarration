@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo, useState } from 'react';
-import { GuestSessionDTO, LanguageDTO, NarrationResolveResultDTO } from '../types';
+import { GuestAccessStatusDTO, GuestSessionDTO, LanguageDTO, NarrationResolveResultDTO } from '../types';
 import { normalizeUiLanguage, UiLanguage } from '../i18n/translations';
 
 export type AdminUiLanguage = Extract<UiLanguage, 'vi' | 'en'>;
@@ -9,6 +9,9 @@ type AppContextValue = {
 
   language: LanguageDTO | null;
   setLanguage: (language: LanguageDTO | null) => void;
+
+  accessStatus: GuestAccessStatusDTO | null;
+  setAccessStatus: (status: GuestAccessStatusDTO | null) => void;
 
   uiLanguage: UiLanguage;
   setUiLanguage: (language: UiLanguage) => void;
@@ -48,6 +51,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] = useState<LanguageDTO | null>(() =>
     readJson<LanguageDTO>('language')
   );
+  const [accessStatus, setAccessStatus] = useState<GuestAccessStatusDTO | null>(null);
 
 const [uiLanguage, setUiLanguageState] = useState<UiLanguage>(() => {
   const savedUiLanguage = localStorage.getItem('uiLanguage');
@@ -114,6 +118,8 @@ const setAdminUiLanguage = (lang: AdminUiLanguage) => {
       setGuestSession,
       language,
       setLanguage,
+      accessStatus,
+      setAccessStatus,
       uiLanguage,
       setUiLanguage,
       adminUiLanguage,
@@ -123,7 +129,7 @@ setAdminUiLanguage,
       trackingEnabled,
       setTrackingEnabled
     }),
-    [guestSession, language, uiLanguage, adminUiLanguage, currentNarration, trackingEnabled]
+    [guestSession, language, accessStatus, uiLanguage, adminUiLanguage, currentNarration, trackingEnabled]
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

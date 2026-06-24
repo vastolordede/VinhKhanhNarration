@@ -65,6 +65,7 @@ export interface PlaceDTO {
   triggerModeId: ID;
   debounceSeconds: number;
   cooldownSeconds: number;
+  ownerVendorId?: ID | null;
   isActive: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -83,6 +84,7 @@ export interface DishDTO {
   dishId: ID;
   dishName: string;
   categoryId: ID;
+  ownerVendorId?: ID | null;
   description?: string;
   imageUrl?: string;
   averagePrice?: number | null;
@@ -103,6 +105,12 @@ export interface PlaceDishDTO {
   updatedAt?: string;
   place?: PlaceDTO;
   dish?: DishDTO;
+  dishName?: string;
+  dishDescription?: string | null;
+  dishImageUrl?: string | null;
+  categoryId?: ID | null;
+  dishOwnerVendorId?: ID | null;
+  placeName?: string;
 }
 
 export type NarrationWorkflowStatus =
@@ -277,6 +285,11 @@ export interface GuestSessionDTO {
   ipAddress?: string;
   createdAt?: string;
   lastSeenAt?: string;
+  guestPaymentOrderId?: ID | null;
+  accessPrice: number;
+  accessStartedAt?: string | null;
+  accessExpiresAt?: string | null;
+  deactivatedAt?: string | null;
   isActive: boolean;
 }
 
@@ -310,6 +323,7 @@ export interface FeedbackDTO {
 export interface ListeningHistoryDTO {
   historyId?: ID;
   guestSessionId?: string | null;
+  accessPassId?: ID | null;
   narrationId: ID;
   languageId: ID;
   audioId?: ID | null;
@@ -325,6 +339,7 @@ export interface ListeningHistoryDTO {
 export interface GeofenceEventDTO {
   eventId: ID;
   guestSessionId: string;
+  accessPassId?: ID | null;
   placeId: ID;
   narrationId?: ID | null;
   eventTypeId: ID;
@@ -352,13 +367,16 @@ export interface VendorAuthUserDTO {
   ownerName: string;
   shopName: string;
   email: string;
+  phone?: string | null;
   accountStatus: VendorAccountStatus;
   placeId?: ID | null;
 }
 
 export interface VendorLoginResponseDTO {
   accessToken: string;
+  refreshToken: string;
   accessTokenExpiresAt: string;
+  refreshTokenExpiresAt: string;
   vendor: VendorAuthUserDTO;
 }
 
@@ -443,5 +461,101 @@ export interface VendorRenewalRequestDTO {
   foodSafetyDocumentId: ID;
   status: string;
   reviewReason?: string | null;
+  createdAt: string;
+}
+
+
+export interface GuestPaymentOrderDTO {
+  guestPaymentOrderId: ID;
+  guestSessionId?: string | null;
+  orderCode: string;
+  amount: number;
+  status: 'Pending' | 'Paid' | 'Cancelled' | 'Expired';
+  provider: string;
+  paymentUrl: string;
+  createdAt: string;
+  expiresAt: string;
+  paidAt?: string | null;
+}
+
+export interface GuestAccessPassDTO {
+  accessPassId: ID;
+  guestSessionId: string;
+  guestPaymentOrderId: ID;
+  startsAt: string;
+  expiresAt: string;
+  status: 'Active' | 'Expired' | 'Revoked';
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface GuestAccessStatusDTO {
+  hasActivePass: boolean;
+  guestSession?: GuestSessionDTO | null;
+  accessPass?: GuestAccessPassDTO | null;
+  pendingPayment?: GuestPaymentOrderDTO | null;
+  hoursRemaining: number;
+}
+
+export type DashboardPeriod = 'month' | 'quarter' | 'halfYear' | 'year' | 'all';
+
+export interface AdminDashboardActivityDTO {
+  periodStart: string;
+  listening: number;
+  geofence: number;
+  feedbacks: number;
+  guestSessions: number;
+  guestRevenue: number;
+  vendorRevenue: number;
+}
+
+export interface AdminDashboardStatisticsDTO {
+  period: DashboardPeriod;
+  from: string;
+  to: string;
+  places: number;
+  dishes: number;
+  narrations: number;
+  vendors: number;
+  feedbacks: number;
+  listening: number;
+  geofence: number;
+  guestSessions: number;
+  vendorPayments: number;
+  guestRevenue: number;
+  vendorRevenue: number;
+  totalRevenue: number;
+  activity: AdminDashboardActivityDTO[];
+}
+
+export interface VendorDishRequestDTO {
+  dishName: string;
+  categoryId: ID;
+  description?: string | null;
+  imageUrl?: string | null;
+  averagePrice?: number | null;
+  isSignatureDish: boolean;
+  menuPrice?: number | null;
+  isRecommended: boolean;
+  note?: string | null;
+}
+
+export interface VendorCatalogDTO {
+  place?: PlaceDTO | null;
+  dishes: DishDTO[];
+  menu: PlaceDishDTO[];
+}
+
+export interface AuditLogDTO {
+  auditLogId: ID;
+  actorType: 'Admin' | 'Vendor' | 'Guest' | 'System';
+  actorId?: ID | null;
+  guestSessionId?: string | null;
+  action: string;
+  entityType?: string | null;
+  entityId?: ID | null;
+  details?: Record<string, unknown> | null;
+  ipAddress?: string | null;
+  userAgent?: string | null;
   createdAt: string;
 }

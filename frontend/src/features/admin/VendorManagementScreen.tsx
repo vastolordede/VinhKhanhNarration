@@ -5,18 +5,19 @@ import {
   reviewVendorRegistration,
   reviewVendorRenewal
 } from '../../api/vendorApi';
+import { getApiError, http } from '../../api/http';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { AdminVendorListItemDTO, VendorRenewalRequestDTO } from '../../types';
 
-const apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5151';
 
 export default function VendorManagementScreen() {
   const [vendors, setVendors] = useState<AdminVendorListItemDTO[]>([]);
   const [renewals, setRenewals] = useState<VendorRenewalRequestDTO[]>([]);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [openingDocumentId, setOpeningDocumentId] = useState<number | null>(null);
 
   async function load() {
     const [vendorList, renewalList] = await Promise.all([
@@ -28,6 +29,31 @@ export default function VendorManagementScreen() {
   }
 
   useEffect(() => { void load().catch((e) => setError(e.message)); }, []);
+
+  async function openDocument(documentId: number) {
+    setOpeningDocumentId(documentId);
+    setError(null);
+    try {
+      const response = await http.get<Blob>(
+        `/api/secure-files/vendor-documents/${documentId}`,
+        { responseType: 'blob' }
+      );
+      const objectUrl = URL.createObjectURL(response.data);
+      const opened = window.open(objectUrl, '_blank', 'noopener,noreferrer');
+      if (!opened) {
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.click();
+      }
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000);
+    } catch (openError) {
+      setError(getApiError(openError));
+    } finally {
+      setOpeningDocumentId(null);
+    }
+  }
 
   async function reviewVendor(vendorId: number, approved: boolean) {
     const reason = approved ? undefined : window.prompt('Lý do từ chối:')?.trim();
@@ -66,9 +92,15 @@ export default function VendorManagementScreen() {
                 <p className="text-sm text-slate-600">{vendor.ownerName} · {vendor.email} · {vendor.phone || '-'}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {vendor.documents.map((doc) => (
-                    <a key={doc.documentId} href={`${apiBase}${doc.fileUrl}`} target="_blank" rel="noreferrer" className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-teal-700">
-                      {doc.documentType} · {doc.verificationStatus}
-                    </a>
+                    <button
+                      key={doc.documentId}
+                      type="button"
+                      disabled={openingDocumentId === doc.documentId}
+                      onClick={() => void openDocument(doc.documentId)}
+                      className="rounded-xl bg-slate-100 px-3 py-2 text-sm font-semibold text-teal-700 disabled:cursor-wait disabled:opacity-60"
+                    >
+                      {openingDocumentId === doc.documentId ? 'Đang mở…' : `${doc.documentType} · ${doc.verificationStatus}`}
+                    </button>
                   ))}
                 </div>
                 {vendor.subscription && <p className="mt-2 text-sm">Hết hạn: {new Date(vendor.subscription.expiresAt).toLocaleString('vi-VN')}</p>}
