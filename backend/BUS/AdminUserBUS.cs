@@ -64,9 +64,21 @@ public LoginResponseDTO? Login(string email, string password, string? ipAddress)
     var tokenHash = _jwtTokenGenerator.HashRefreshToken(refreshToken);
     var storedToken = _refreshTokenDAO.GetByTokenHash(tokenHash);
 
-    if (storedToken == null || !storedToken.IsActive)
+    if (storedToken == null)
     {
-        throw new UnauthorizedAccessException("Invalid or expired refresh token.");
+        throw new UnauthorizedAccessException("Invalid refresh token.");
+    }
+
+    if (storedToken.IsRevoked)
+    {
+        _refreshTokenDAO.RevokeAllActiveTokensByAdminId(storedToken.AdminId, ipAddress);
+        throw new UnauthorizedAccessException(
+            "Refresh token reuse detected. All Admin sessions were revoked.");
+    }
+
+    if (storedToken.IsExpired)
+    {
+        throw new UnauthorizedAccessException("Refresh token has expired.");
     }
 
     var user = _dao.GetById(storedToken.AdminId);
@@ -154,11 +166,20 @@ private static AdminAuthUserDTO ToAuthUser(AdminUserDTO user)
     };
 }
 
-    public bool ChangePassword(long adminId, string oldPassword, string newPassword)
+    public bool ChangePassword(
+        long adminId,
+        string oldPassword,
+        string newPassword,
+        string? ipAddress)
     {
-        var user = _dao.GetById(adminId) ?? throw new InvalidOperationException("Admin user not found.");
+        if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 8)
+            throw new ArgumentException("New password must contain at least 8 characters.");
+        var user = _dao.GetById(adminId)
+            ?? throw new InvalidOperationException("Admin user not found.");
         if (!_hasher.VerifyPassword(oldPassword, user.PasswordHash)) return false;
-        return _dao.UpdatePassword(adminId, _hasher.HashPassword(newPassword));
+        if (!_dao.UpdatePassword(adminId, _hasher.HashPassword(newPassword))) return false;
+        _refreshTokenDAO.RevokeAllActiveTokensByAdminId(adminId, ipAddress);
+        return true;
     }
 
     public bool ValidateRole(string role) => AllowedRoles.Contains(role);

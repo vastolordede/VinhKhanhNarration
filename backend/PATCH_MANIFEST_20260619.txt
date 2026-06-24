@@ -1,0 +1,103 @@
+VinhKhanhNarration Full Missing Modules Patch
+Generated: 2026-06-19
+
+Scope
+- Guest mock payment and Access Pass 24 hours (no Guest QR).
+- Vendor refresh-token rotation, profile/password/session security.
+- Vendor-owned stall, dishes, menu and narration ownership enforcement.
+- Public filtering for expired Vendor content.
+- Subscription/pass/payment lifecycle scheduler.
+- Audit log and Admin audit screen.
+- Protected audio and Vendor document endpoints.
+- Frontend/backend tests and GitHub Actions CI.
+
+Database migration order
+1. 20260618_multilingual_narration_tts.sql
+2. 20260618_vendor_admin_mock_payment.sql
+3. 20260619_complete_missing_modules.sql
+
+Local validation
+- npm ci: PASS
+- frontend tests: PASS (7/7)
+- frontend production build: PASS
+- JSON/XML/YAML parse: PASS
+- C# lexical delimiter scan: PASS (76 files)
+- ASP.NET duplicate route scan: PASS (117 routes, 0 duplicates)
+- git diff --check: PASS
+- dotnet build/test: NOT RUN (SDK unavailable in sandbox)
+- PostgreSQL migration execution: NOT RUN (service unavailable in sandbox)
+
+Security packaging
+- No .env file, real key, password, node_modules, dist, bin, obj or .git content.
+
+Files included
+- .github/workflows/ci.yml
+- backend/.env.example
+- backend/BUS/AdminUserBUS.cs
+- backend/BUS/AuditLogBUS.cs
+- backend/BUS/GuestAccessBUS.cs
+- backend/BUS/NarrationBUS.cs
+- backend/BUS/RuntimeBUS.cs
+- backend/BUS/VendorCatalogBUS.cs
+- backend/BUS/VendorModuleBUS.cs
+- backend/Controllers/AdminUsersController.cs
+- backend/Controllers/CompleteModulesControllers.cs
+- backend/Controllers/FoodControllers.cs
+- backend/Controllers/GeocodingController.cs
+- backend/Controllers/LanguagesController.cs
+- backend/Controllers/LookupControllerBase.cs
+- backend/Controllers/NarrationControllers.cs
+- backend/Controllers/RuntimeControllers.cs
+- backend/Controllers/SecureFilesController.cs
+- backend/Controllers/VendorModuleControllers.cs
+- backend/DAO/AdminRefreshTokenDAO.cs
+- backend/DAO/AuditLogDAO.cs
+- backend/DAO/FoodDAO.cs
+- backend/DAO/GuestAccessDAO.cs
+- backend/DAO/NarrationDAO.cs
+- backend/DAO/RuntimeDAO.cs
+- backend/DAO/VendorModuleDAO.cs
+- backend/DAO/VendorRefreshTokenDAO.cs
+- backend/DTO/AuditLogDTO.cs
+- backend/DTO/FoodDTO.cs
+- backend/DTO/GuestAccessDTO.cs
+- backend/DTO/VendorModuleDTO.cs
+- backend/DTO/VendorRefreshTokenDTO.cs
+- backend/Middleware/AuditLoggingMiddleware.cs
+- backend/PATCH_20260619_README.md
+- backend/Program.cs
+- backend/Services/LifecycleHostedService.cs
+- backend/Services/LocalAudioStorage.cs
+- backend/VALIDATION_20260619.md
+- backend/VinhKhanhNarration.Api.csproj
+- backend/appsettings.json
+- backend/data/migrations/20260619_complete_missing_modules.sql
+- backend/tests/VinhKhanhNarration.Api.Tests/CoreUtilityTests.cs
+- backend/tests/VinhKhanhNarration.Api.Tests/VinhKhanhNarration.Api.Tests.csproj
+- frontend/src/App.tsx
+- frontend/src/api/endpoints.ts
+- frontend/src/api/http.ts
+- frontend/src/api/publicApi.ts
+- frontend/src/api/vendorApi.ts
+- frontend/src/components/layout/AdminShell.tsx
+- frontend/src/components/layout/PublicShell.tsx
+- frontend/src/components/layout/RequireVendor.tsx
+- frontend/src/components/layout/VendorShell.tsx
+- frontend/src/components/media/AuthenticatedAudio.tsx
+- frontend/src/contexts/AppContext.tsx
+- frontend/src/features/admin/AudioManagementScreen.tsx
+- frontend/src/features/admin/AuditLogScreen.tsx
+- frontend/src/features/admin/VendorManagementScreen.tsx
+- frontend/src/features/public/GuestAccessScreen.tsx
+- frontend/src/features/public/MapExploreScreen.tsx
+- frontend/src/features/public/NarrationPlayerScreen.tsx
+- frontend/src/features/public/SettingsScreen.tsx
+- frontend/src/features/public/SplashScreen.tsx
+- frontend/src/features/vendor/VendorCatalogScreen.tsx
+- frontend/src/features/vendor/VendorLoginScreen.tsx
+- frontend/src/features/vendor/VendorNarrationScreen.tsx
+- frontend/src/features/vendor/VendorRegisterScreen.tsx
+- frontend/src/hooks/useGeofenceWatcher.ts
+- frontend/src/types/index.ts
+- frontend/src/utils/accessPolicy.test.ts
+- frontend/src/utils/accessPolicy.ts

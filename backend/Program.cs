@@ -6,6 +6,7 @@ using VinhKhanhNarration.Api.Utils;
 using VinhKhanhNarration.Api.DTO;
 using VinhKhanhNarration.Api.Services;
 using VinhKhanhNarration.Api.Services.Interfaces;
+using VinhKhanhNarration.Api.Middleware;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -102,6 +103,10 @@ builder.Services.AddScoped<ListeningHistoryDAO>();
 builder.Services.AddScoped<FeedbackDAO>();
 builder.Services.AddScoped<AdminRefreshTokenDAO>();
 builder.Services.AddScoped<VendorModuleDAO>();
+builder.Services.AddScoped<VendorRefreshTokenDAO>();
+builder.Services.AddScoped<GuestAccessDAO>();
+builder.Services.AddScoped<AuditLogDAO>();
+builder.Services.AddScoped<AdminDashboardDAO>();
 
 // BUS
 builder.Services.AddScoped<AdminUserBUS>();
@@ -127,10 +132,15 @@ builder.Services.AddScoped<GeofenceBUS>();
 builder.Services.AddScoped<ListeningHistoryBUS>();
 builder.Services.AddScoped<FeedbackBUS>();
 builder.Services.AddScoped<VendorModuleBUS>();
+builder.Services.AddScoped<VendorCatalogBUS>();
+builder.Services.AddScoped<GuestAccessBUS>();
+builder.Services.AddScoped<AuditLogBUS>();
+builder.Services.AddScoped<AdminDashboardBUS>();
 builder.Services.AddHttpClient<GeocodingBUS>();
 builder.Services.AddHttpClient<ITranslationService, AzureTranslatorService>();
 builder.Services.AddHttpClient<ITextToSpeechService, AzureSpeechTtsService>();
 builder.Services.AddScoped<IAudioStorage, LocalAudioStorage>();
+builder.Services.AddHostedService<LifecycleHostedService>();
 
 var app = builder.Build();
 
@@ -144,13 +154,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-// Serve generated MP3 files before mapping controllers.
-app.UseStaticFiles();
-
 // CORS phải đặt trước Authorization và MapControllers
 app.UseCors("AppCors");
 
 app.UseAuthentication();
+app.UseMiddleware<AuditLoggingMiddleware>();
 app.UseAuthorization();
 
 app.MapControllers();

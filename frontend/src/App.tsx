@@ -6,6 +6,7 @@ import LanguageSelectionScreen from './features/public/LanguageSelectionScreen';
 import MapExploreScreen from './features/public/MapExploreScreen';
 import NarrationPlayerScreen from './features/public/NarrationPlayerScreen';
 import SettingsScreen from './features/public/SettingsScreen';
+import GuestAccessScreen from './features/public/GuestAccessScreen';
 import AdminLoginScreen from './features/admin/AdminLoginScreen';
 import AdminDashboardScreen from './features/admin/AdminDashboardScreen';
 import LookupManagementScreen from './features/admin/LookupManagementScreen';
@@ -29,6 +30,8 @@ import VendorShell from './components/layout/VendorShell';
 import RequireVendor from './components/layout/RequireVendor';
 import VendorManagementScreen from './features/admin/VendorManagementScreen';
 import RequireAdmin from './components/layout/RequireAdmin';
+import VendorCatalogScreen from './features/vendor/VendorCatalogScreen';
+import AuditLogScreen from './features/admin/AuditLogScreen';
 
 export default function App() {
   return (
@@ -41,6 +44,7 @@ export default function App() {
           <Route path="language" element={<LanguageSelectionScreen />} />
           <Route path="map" element={<MapExploreScreen />} />
           <Route path="listen" element={<NarrationPlayerScreen />} />
+          <Route path="access" element={<GuestAccessScreen />} />
           <Route path="settings" element={<SettingsScreen />} />
         </Route>
 
@@ -49,6 +53,7 @@ export default function App() {
         <Route element={<RequireVendor />}>
           <Route path="/vendor" element={<VendorShell />}>
             <Route index element={<VendorDashboardScreen />} />
+            <Route path="catalog" element={<VendorCatalogScreen />} />
             <Route path="narrations" element={<VendorNarrationScreen />} />
             <Route path="subscription" element={<VendorSubscriptionScreen />} />
             <Route path="mock-payment" element={<VendorMockPaymentScreen />} />
@@ -71,6 +76,7 @@ export default function App() {
             <Route path="feedbacks" element={<FeedbackManagementScreen />} />
             <Route path="listening-histories" element={<ListeningHistoriesScreen />} />
             <Route path="geofence-events" element={<GeofenceEventsScreen />} />
+            <Route path="audit-logs" element={<AuditLogScreen />} />
           </Route>
         </Route>
       </Routes>

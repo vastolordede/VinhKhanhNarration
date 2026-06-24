@@ -44,6 +44,7 @@ public class DishDTO
     [DbColumn("dish_id", IsKey = true, IsIdentity = true)] public long DishId { get; set; }
     [DbColumn("dish_name")] public string DishName { get; set; } = string.Empty;
     [DbColumn("category_id")] public long CategoryId { get; set; }
+    [DbColumn("owner_vendor_id")] public long? OwnerVendorId { get; set; }
     [DbColumn("description")] public string? Description { get; set; }
     [DbColumn("image_url")] public string? ImageUrl { get; set; }
     [DbColumn("average_price")] public decimal? AveragePrice { get; set; }
@@ -64,4 +65,38 @@ public class PlaceDishDTO
     [DbColumn("note")] public string? Note { get; set; }
     [DbColumn("created_at", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public DateTime CreatedAt { get; set; }
     [DbColumn("updated_at", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public DateTime UpdatedAt { get; set; }
+
+    [DbColumn("dish_name", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public string? DishName { get; set; }
+    [DbColumn("dish_description", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public string? DishDescription { get; set; }
+    [DbColumn("dish_image_url", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public string? DishImageUrl { get; set; }
+    [DbColumn("category_id", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public long? CategoryId { get; set; }
+    [DbColumn("dish_owner_vendor_id", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public long? DishOwnerVendorId { get; set; }
+    [DbColumn("place_name", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public string? PlaceName { get; set; }
+}
+
+public class VendorDishRequestDTO
+{
+    public string DishName { get; set; } = string.Empty;
+    public long CategoryId { get; set; }
+    public string? Description { get; set; }
+    public string? ImageUrl { get; set; }
+    public decimal? AveragePrice { get; set; }
+    public bool IsSignatureDish { get; set; }
+    public decimal? MenuPrice { get; set; }
+    public bool IsRecommended { get; set; }
+    public string? Note { get; set; }
+}
+
+public class VendorMenuItemRequestDTO
+{
+    public decimal? Price { get; set; }
+    public bool IsRecommended { get; set; }
+    public string? Note { get; set; }
+}
+
+public class VendorCatalogDTO
+{
+    public PlaceDTO? Place { get; set; }
+    public List<DishDTO> Dishes { get; set; } = new();
+    public List<PlaceDishDTO> Menu { get; set; } = new();
 }

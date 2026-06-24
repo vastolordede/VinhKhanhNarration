@@ -44,6 +44,7 @@ public class VendorAuthUserDTO
     public string OwnerName { get; set; } = string.Empty;
     public string ShopName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public string? Phone { get; set; }
     public string AccountStatus { get; set; } = string.Empty;
     public long? PlaceId { get; set; }
 }
@@ -51,8 +52,33 @@ public class VendorAuthUserDTO
 public class VendorLoginResponseDTO
 {
     public string AccessToken { get; set; } = string.Empty;
+    public string RefreshToken { get; set; } = string.Empty;
     public DateTime AccessTokenExpiresAt { get; set; }
+    public DateTime RefreshTokenExpiresAt { get; set; }
     public VendorAuthUserDTO Vendor { get; set; } = new();
+}
+
+public class VendorRefreshTokenRequestDTO
+{
+    public string RefreshToken { get; set; } = string.Empty;
+}
+
+public class VendorLogoutRequestDTO
+{
+    public string RefreshToken { get; set; } = string.Empty;
+}
+
+public class VendorChangePasswordRequestDTO
+{
+    public string OldPassword { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
+}
+
+public class VendorProfileUpdateDTO
+{
+    public string OwnerName { get; set; } = string.Empty;
+    public string ShopName { get; set; } = string.Empty;
+    public string Phone { get; set; } = string.Empty;
 }
 
 public class VendorDocumentDTO

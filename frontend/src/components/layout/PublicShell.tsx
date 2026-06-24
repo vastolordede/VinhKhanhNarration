@@ -1,14 +1,77 @@
-import { Outlet, NavLink } from 'react-router-dom';
-import { Map, Settings } from 'lucide-react';
+import { useEffect } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Map, Settings, TicketCheck } from 'lucide-react';
+import { getGuestAccessStatus } from '../../api/publicApi';
+import { useAppContext } from '../../contexts/AppContext';
 import { useI18n } from '../../i18n/useI18n';
 
 const navItems = [
   { to: '/app/map', labelKey: 'public.nav.map', icon: Map },
+  { to: '/app/access', labelKey: 'Access Pass', icon: TicketCheck },
   { to: '/app/settings', labelKey: 'public.nav.settings', icon: Settings }
 ];
 
 export default function PublicShell() {
   const { t } = useI18n();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const {
+    guestSession,
+    setGuestSession,
+    setAccessStatus,
+    setCurrentNarration,
+    setTrackingEnabled
+  } = useAppContext();
+
+  useEffect(() => {
+    const guestSessionId = guestSession?.guestSessionId;
+    if (!guestSessionId) return;
+    const activeGuestSessionId = guestSessionId;
+
+    let cancelled = false;
+
+    async function verifyAccess() {
+      try {
+        const status = await getGuestAccessStatus(activeGuestSessionId);
+        if (cancelled) return;
+
+        setAccessStatus(status);
+        if (!status.hasActivePass || !status.guestSession?.isActive) {
+          setGuestSession(null);
+          setCurrentNarration(null);
+          setTrackingEnabled(false);
+          if (location.pathname === '/app/listen') {
+            navigate('/app/access', { replace: true });
+          }
+        }
+      } catch {
+        if (cancelled) return;
+        setGuestSession(null);
+        setAccessStatus(null);
+        setCurrentNarration(null);
+        setTrackingEnabled(false);
+        if (location.pathname === '/app/listen') {
+          navigate('/app/access', { replace: true });
+        }
+      }
+    }
+
+    void verifyAccess();
+    const timer = window.setInterval(() => void verifyAccess(), 60_000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [
+    guestSession?.guestSessionId,
+    location.pathname,
+    navigate,
+    setAccessStatus,
+    setCurrentNarration,
+    setGuestSession,
+    setTrackingEnabled
+  ]);
 
   return (
     <div className="public-page-bg">
@@ -18,7 +81,7 @@ export default function PublicShell() {
         </main>
 
         <nav className="fixed inset-x-0 bottom-0 z-[800] mx-auto w-full max-w-[430px] border-t border-slate-200 bg-white/95 px-4 py-2 backdrop-blur safe-bottom sm:max-w-[520px] md:max-w-[768px] lg:max-w-[1024px]">
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {navItems.map((item) => {
               const Icon = item.icon;
               return (

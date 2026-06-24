@@ -10,14 +10,12 @@ public class GuestSessionDTO
     public string? IPAddress { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime LastSeenAt { get; set; }
+    public long? GuestPaymentOrderId { get; set; }
+    public decimal AccessPrice { get; set; }
+    public DateTime? AccessStartedAt { get; set; }
+    public DateTime? AccessExpiresAt { get; set; }
+    public DateTime? DeactivatedAt { get; set; }
     public bool IsActive { get; set; } = true;
-}
-
-public class CreateGuestSessionRequestDTO
-{
-    public long? PreferredLanguageId { get; set; }
-    public string? DeviceInfo { get; set; }
-    public string? IPAddress { get; set; }
 }
 
 public class ChangeGuestLanguageRequestDTO
@@ -42,6 +40,7 @@ public class GeofenceEventDTO
 {
     public long EventId { get; set; }
     public string GuestSessionId { get; set; } = string.Empty;
+    public long? AccessPassId { get; set; }
     public long PlaceId { get; set; }
     public long? NarrationId { get; set; }
     public long EventTypeId { get; set; }
@@ -82,6 +81,7 @@ public class ListeningHistoryDTO
 {
     [DbColumn("history_id", IsKey = true, IsIdentity = true)] public long HistoryId { get; set; }
     [DbColumn("guest_session_id")] public string? GuestSessionId { get; set; }
+    [DbColumn("access_pass_id")] public long? AccessPassId { get; set; }
     [DbColumn("narration_id")] public long NarrationId { get; set; }
     [DbColumn("language_id")] public long LanguageId { get; set; }
     [DbColumn("audio_id")] public long? AudioId { get; set; }

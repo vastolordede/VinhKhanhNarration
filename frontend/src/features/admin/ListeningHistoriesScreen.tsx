@@ -8,6 +8,12 @@ import { ListeningHistoryDTO, PagedResult } from '../../types';
 
 const PAGE_SIZE = 20;
 
+function formatDate(value?: string | null) {
+  if (!value) return '-';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString('vi-VN');
+}
+
 export default function ListeningHistoriesScreen() {
   const [page, setPage] = useState(1);
   const [result, setResult] = useState<PagedResult<ListeningHistoryDTO>>({
@@ -18,48 +24,55 @@ export default function ListeningHistoriesScreen() {
     totalPages: 0
   });
 
-  async function load(targetPage = page) {
-    const data = await getPagedList<ListeningHistoryDTO>(
-      endpoints.adminListeningHistories,
-      targetPage,
-      PAGE_SIZE
-    );
-
-    setResult(data);
-    setPage(data.page);
-  }
-
   useEffect(() => {
-    load(page);
+    let mounted = true;
+
+    getPagedList<ListeningHistoryDTO>(
+      endpoints.adminListeningHistories,
+      page,
+      PAGE_SIZE
+    ).then((data) => {
+      if (!mounted) return;
+      setResult(data);
+      if (data.page !== page) setPage(data.page);
+    });
+
+    return () => {
+      mounted = false;
+    };
   }, [page]);
 
   return (
     <div>
       <PageHeader
         title="Listening Histories"
-        description="Theo dõi lượt nghe theo QR / Geofence / Manual."
+        description="Nhật ký lượt phát audio thực tế. Guest hết hạn bị chặn nghe nhưng log cũ vẫn được giữ để thống kê."
       />
 
       <DataTable
         headers={[
           'Id',
-          'Guest',
-          'Narration',
-          'Language',
-          'Source',
-          'Status',
-          'Duration',
-          'Time'
+          'Guest Session',
+          'Access Pass',
+          'Thuyết minh',
+          'Ngôn ngữ',
+          'Nguồn',
+          'Trạng thái',
+          'Thời lượng',
+          'Thời gian'
         ]}
         rows={result.items.map((item) => [
-          item.historyId,
-          item.guestSessionId || '',
+          item.historyId ?? '-',
+          item.guestSessionId || '-',
+          item.accessPassId ?? '-',
           item.narrationId,
           item.languageId,
           item.triggerSource,
           item.playbackStatus,
-          item.listenDurationSeconds ?? '',
-          item.listenedAt || ''
+          item.listenDurationSeconds == null
+            ? '-'
+            : `${item.listenDurationSeconds}s`,
+          formatDate(item.listenedAt)
         ])}
       />
 

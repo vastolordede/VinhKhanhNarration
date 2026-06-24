@@ -99,11 +99,6 @@ public class AudioFileDTO
     [DbColumn("source_text_hash")] public string? SourceTextHash { get; set; }
     [DbColumn("generated_at")] public DateTime? GeneratedAt { get; set; }
     [DbColumn("published_at")] public DateTime? PublishedAt { get; set; }
-    [DbColumn("previous_workflow_status")] public string? PreviousWorkflowStatus { get; set; }
-    [DbColumn("moderation_reason")] public string? ModerationReason { get; set; }
-    [DbColumn("moderation_by_admin_id")] public long? ModerationByAdminId { get; set; }
-    [DbColumn("hidden_at")] public DateTime? HiddenAt { get; set; }
-    [DbColumn("deleted_at")] public DateTime? DeletedAt { get; set; }
     [DbColumn("is_active")] public bool IsActive { get; set; } = true;
     [DbColumn("created_at", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public DateTime CreatedAt { get; set; }
     [DbColumn("updated_at", IgnoreOnInsert = true, IgnoreOnUpdate = true)] public DateTime UpdatedAt { get; set; }

@@ -20,6 +20,8 @@ export default function VendorLoginScreen() {
       const result = await vendorLogin(email, password);
       localStorage.setItem('vendorToken', result.accessToken);
       localStorage.setItem('vendorTokenExpiresAt', result.accessTokenExpiresAt);
+      localStorage.setItem('vendorRefreshToken', result.refreshToken);
+      localStorage.setItem('vendorRefreshTokenExpiresAt', result.refreshTokenExpiresAt);
       localStorage.setItem('vendorUser', JSON.stringify(result.vendor));
       navigate('/vendor');
     } catch (loginError) {

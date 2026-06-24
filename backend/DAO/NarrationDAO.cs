@@ -28,6 +28,30 @@ public class NarrationContentDAO : GenericCrudDAO<NarrationContentDTO>
             "SELECT * FROM narration_contents WHERE workflow_status = @status ORDER BY narration_id DESC;",
             cmd => cmd.Parameters.AddWithValue("@status", status));
 
+    public NarrationContentDTO? GetPublishedByIdForPublic(long narrationId) =>
+        QuerySingle(@"
+            SELECT *
+            FROM narration_contents
+            WHERE narration_id = @id
+              AND is_active = TRUE
+              AND workflow_status = 'Published'
+              AND (
+                    submitted_by_vendor_id IS NULL
+                    OR EXISTS (
+                        SELECT 1
+                        FROM vendor_users vu
+                        JOIN vendor_subscriptions vs
+                          ON vs.vendor_user_id = vu.vendor_user_id
+                         AND vs.status = 'Active'
+                         AND vs.expires_at > CURRENT_TIMESTAMP
+                        WHERE vu.vendor_user_id = narration_contents.submitted_by_vendor_id
+                          AND vu.account_status IN ('Active','ExpiringSoon')
+                          AND vu.is_active = TRUE
+                    )
+                  )
+            LIMIT 1;",
+            cmd => cmd.Parameters.AddWithValue("@id", narrationId));
+
     public NarrationContentDTO? GetMainPublishedByPlaceId(long placeId) =>
         QuerySingle(@"
             SELECT *
@@ -474,6 +498,24 @@ public class AudioFileDAO : GenericCrudDAO<AudioFileDTO>
             ORDER BY published_at DESC, audio_id DESC
             LIMIT 1;",
             cmd => cmd.Parameters.AddWithValue("@id", translationId));
+
+    public bool CanVendorAccess(long audioId, long vendorUserId)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(@"
+            SELECT COUNT(1)
+            FROM audio_files a
+            JOIN narration_translations t
+              ON t.translation_id = a.translation_id
+            JOIN narration_contents n
+              ON n.narration_id = t.narration_id
+            WHERE a.audio_id = @audioId
+              AND n.submitted_by_vendor_id = @vendorUserId;", conn);
+        cmd.Parameters.AddWithValue("@audioId", audioId);
+        cmd.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+        return Convert.ToInt64(cmd.ExecuteScalar()) > 0;
+    }
 
     public void DeactivateByTranslationId(long translationId)
     {

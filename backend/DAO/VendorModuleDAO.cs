@@ -51,7 +51,7 @@ public class VendorModuleDAO : BaseDAO
         using var conn = CreateConnection();
         conn.Open();
         using var cmd = new NpgsqlCommand(@"
-            SELECT vendor_user_id, owner_name, shop_name, email, account_status, place_id
+            SELECT vendor_user_id, owner_name, shop_name, email, phone, account_status, place_id
             FROM vendor_users
             WHERE lower(email) = lower(@email)
             LIMIT 1;", conn);
@@ -65,7 +65,7 @@ public class VendorModuleDAO : BaseDAO
         using var conn = CreateConnection();
         conn.Open();
         using var cmd = new NpgsqlCommand(@"
-            SELECT vendor_user_id, owner_name, shop_name, email, account_status,
+            SELECT vendor_user_id, owner_name, shop_name, email, phone, account_status,
                    place_id, password_hash
             FROM vendor_users
             WHERE lower(email) = lower(@email)
@@ -82,7 +82,7 @@ public class VendorModuleDAO : BaseDAO
         using var conn = CreateConnection();
         conn.Open();
         using var cmd = new NpgsqlCommand(@"
-            SELECT vendor_user_id, owner_name, shop_name, email, account_status, place_id
+            SELECT vendor_user_id, owner_name, shop_name, email, phone, account_status, place_id
             FROM vendor_users
             WHERE vendor_user_id = @id
             LIMIT 1;", conn);
@@ -182,6 +182,21 @@ public class VendorModuleDAO : BaseDAO
         cmd.Parameters.AddWithValue("@fileUrl", fileUrl);
         cmd.Parameters.AddWithValue("@expiresAt", DbValue(expiresAt?.Date));
         return Convert.ToInt64(cmd.ExecuteScalar());
+    }
+
+    public VendorDocumentDTO? GetDocumentById(long documentId)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(@"
+            SELECT document_id, vendor_user_id, document_type, file_name, file_url,
+                   expires_at, verification_status, review_reason, created_at
+            FROM vendor_documents
+            WHERE document_id = @documentId
+            LIMIT 1;", conn);
+        cmd.Parameters.AddWithValue("@documentId", documentId);
+        using var reader = cmd.ExecuteReader();
+        return reader.Read() ? MapDocument(reader) : null;
     }
 
     public List<VendorDocumentDTO> GetDocuments(long vendorUserId)
@@ -368,6 +383,145 @@ public class VendorModuleDAO : BaseDAO
         return reader.Read() ? MapPayment(reader) : null;
     }
 
+    public DateTime? ConfirmPaymentAndActivateSubscription(
+        long paymentOrderId,
+        long vendorUserId)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var tx = conn.BeginTransaction();
+
+        string status;
+        DateTime orderExpiresAt;
+        long? renewalRequestId;
+        using (var select = new NpgsqlCommand(@"
+            SELECT status, expires_at, renewal_request_id
+            FROM payment_orders
+            WHERE payment_order_id = @paymentId
+              AND vendor_user_id = @vendorUserId
+            FOR UPDATE;", conn, tx))
+        {
+            select.Parameters.AddWithValue("@paymentId", paymentOrderId);
+            select.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            using var reader = select.ExecuteReader();
+            if (!reader.Read()) return null;
+            status = reader.GetString(0);
+            orderExpiresAt = reader.GetDateTime(1);
+            renewalRequestId = reader.IsDBNull(2) ? null : reader.GetInt64(2);
+        }
+
+        if (status == "Paid")
+        {
+            using var existing = new NpgsqlCommand(@"
+                SELECT expires_at
+                FROM vendor_subscriptions
+                WHERE payment_order_id = @paymentId
+                LIMIT 1;", conn, tx);
+            existing.Parameters.AddWithValue("@paymentId", paymentOrderId);
+            var existingExpiry = existing.ExecuteScalar();
+            if (existingExpiry != null && existingExpiry != DBNull.Value)
+            {
+                tx.Commit();
+                return Convert.ToDateTime(existingExpiry);
+            }
+        }
+        else
+        {
+            if (status != "Pending" || orderExpiresAt <= DateTime.UtcNow)
+                return null;
+
+            using var pay = new NpgsqlCommand(@"
+                UPDATE payment_orders
+                SET status = 'Paid', paid_at = CURRENT_TIMESTAMP
+                WHERE payment_order_id = @paymentId
+                  AND status = 'Pending';", conn, tx);
+            pay.Parameters.AddWithValue("@paymentId", paymentOrderId);
+            if (pay.ExecuteNonQuery() == 0) return null;
+        }
+
+        DateTime baseDate;
+        using (var current = new NpgsqlCommand(@"
+            SELECT expires_at
+            FROM vendor_subscriptions
+            WHERE vendor_user_id = @vendorUserId
+              AND status = 'Active'
+              AND expires_at > CURRENT_TIMESTAMP
+            ORDER BY expires_at DESC
+            LIMIT 1
+            FOR UPDATE;", conn, tx))
+        {
+            current.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            var currentExpiry = current.ExecuteScalar();
+            baseDate = currentExpiry == null || currentExpiry == DBNull.Value
+                ? DateTime.UtcNow
+                : Convert.ToDateTime(currentExpiry);
+        }
+
+        using (var expire = new NpgsqlCommand(@"
+            UPDATE vendor_subscriptions
+            SET status = 'Expired', updated_at = CURRENT_TIMESTAMP
+            WHERE vendor_user_id = @vendorUserId
+              AND status = 'Active';", conn, tx))
+        {
+            expire.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            expire.ExecuteNonQuery();
+        }
+
+        var subscriptionExpiresAt = baseDate.AddMonths(6);
+        using (var create = new NpgsqlCommand(@"
+            INSERT INTO vendor_subscriptions
+            (vendor_user_id, payment_order_id, starts_at, expires_at, status)
+            VALUES
+            (@vendorUserId, @paymentId, CURRENT_TIMESTAMP, @expiresAt, 'Active')
+            ON CONFLICT (payment_order_id)
+            DO UPDATE SET status = 'Active',
+                          expires_at = EXCLUDED.expires_at,
+                          updated_at = CURRENT_TIMESTAMP;", conn, tx))
+        {
+            create.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            create.Parameters.AddWithValue("@paymentId", paymentOrderId);
+            create.Parameters.AddWithValue("@expiresAt", subscriptionExpiresAt);
+            create.ExecuteNonQuery();
+        }
+
+        using (var activate = new NpgsqlCommand(@"
+            UPDATE vendor_users
+            SET account_status = 'Active',
+                is_active = TRUE,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE vendor_user_id = @vendorUserId;", conn, tx))
+        {
+            activate.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            if (activate.ExecuteNonQuery() == 0) return null;
+        }
+
+        using (var assign = new NpgsqlCommand(@"
+            UPDATE places p
+            SET owner_vendor_id = @vendorUserId,
+                updated_at = CURRENT_TIMESTAMP
+            FROM vendor_users vu
+            WHERE vu.vendor_user_id = @vendorUserId
+              AND vu.place_id = p.place_id
+              AND (p.owner_vendor_id IS NULL OR p.owner_vendor_id = @vendorUserId);", conn, tx))
+        {
+            assign.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            assign.ExecuteNonQuery();
+        }
+
+        if (renewalRequestId.HasValue)
+        {
+            using var renewal = new NpgsqlCommand(@"
+                UPDATE vendor_renewal_requests
+                SET status = 'Paid', updated_at = CURRENT_TIMESTAMP
+                WHERE renewal_request_id = @requestId;", conn, tx);
+            renewal.Parameters.AddWithValue("@requestId", renewalRequestId.Value);
+            renewal.ExecuteNonQuery();
+        }
+
+        tx.Commit();
+        return subscriptionExpiresAt;
+    }
+
     public bool MarkPaymentPaid(long paymentOrderId)
     {
         using var conn = CreateConnection();
@@ -546,12 +700,132 @@ public class VendorModuleDAO : BaseDAO
         return cmd.ExecuteNonQuery() > 0;
     }
 
+    public bool UpdateProfile(long vendorUserId, VendorProfileUpdateDTO profile)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE vendor_users
+            SET owner_name = @ownerName,
+                shop_name = @shopName,
+                phone = @phone,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE vendor_user_id = @vendorUserId;", conn);
+        cmd.Parameters.AddWithValue("@ownerName", profile.OwnerName);
+        cmd.Parameters.AddWithValue("@shopName", profile.ShopName);
+        cmd.Parameters.AddWithValue("@phone", DbValue(profile.Phone));
+        cmd.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+        return cmd.ExecuteNonQuery() > 0;
+    }
+
+    public string? GetPasswordHash(long vendorUserId)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(
+            "SELECT password_hash FROM vendor_users WHERE vendor_user_id = @id LIMIT 1;",
+            conn);
+        cmd.Parameters.AddWithValue("@id", vendorUserId);
+        return cmd.ExecuteScalar() as string;
+    }
+
+    public bool UpdatePassword(long vendorUserId, string passwordHash)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE vendor_users
+            SET password_hash = @passwordHash,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE vendor_user_id = @id;", conn);
+        cmd.Parameters.AddWithValue("@passwordHash", passwordHash);
+        cmd.Parameters.AddWithValue("@id", vendorUserId);
+        return cmd.ExecuteNonQuery() > 0;
+    }
+
+    public List<long> GetLifecycleVendorIds()
+    {
+        var result = new List<long>();
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(@"
+            SELECT DISTINCT vendor_user_id
+            FROM vendor_subscriptions
+            WHERE status = 'Active'
+            UNION
+            SELECT vendor_user_id
+            FROM vendor_users
+            WHERE account_status IN ('Active','ExpiringSoon');", conn);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read()) result.Add(reader.GetInt64(0));
+        return result;
+    }
+
+    public int ExpirePendingPayments()
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var cmd = new NpgsqlCommand(@"
+            UPDATE payment_orders
+            SET status = 'Expired'
+            WHERE status = 'Pending'
+              AND expires_at <= CURRENT_TIMESTAMP;", conn);
+        return cmd.ExecuteNonQuery();
+    }
+
+    public bool AssignPlaceToVendor(long vendorUserId, long placeId)
+    {
+        using var conn = CreateConnection();
+        conn.Open();
+        using var tx = conn.BeginTransaction();
+
+        using (var validate = new NpgsqlCommand(@"
+            SELECT COUNT(1)
+            FROM places
+            WHERE place_id = @placeId
+              AND (owner_vendor_id IS NULL OR owner_vendor_id = @vendorUserId);", conn, tx))
+        {
+            validate.Parameters.AddWithValue("@placeId", placeId);
+            validate.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            if (Convert.ToInt64(validate.ExecuteScalar()) == 0)
+                return false;
+        }
+
+        using (var place = new NpgsqlCommand(@"
+            UPDATE places
+            SET owner_vendor_id = @vendorUserId,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE place_id = @placeId
+              AND (owner_vendor_id IS NULL OR owner_vendor_id = @vendorUserId);", conn, tx))
+        {
+            place.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            place.Parameters.AddWithValue("@placeId", placeId);
+            if (place.ExecuteNonQuery() == 0) return false;
+        }
+
+        using (var vendor = new NpgsqlCommand(@"
+            UPDATE vendor_users
+            SET place_id = @placeId,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE vendor_user_id = @vendorUserId
+              AND (place_id IS NULL OR place_id = @placeId);", conn, tx))
+        {
+            vendor.Parameters.AddWithValue("@vendorUserId", vendorUserId);
+            vendor.Parameters.AddWithValue("@placeId", placeId);
+            if (vendor.ExecuteNonQuery() == 0) return false;
+        }
+
+        tx.Commit();
+        return true;
+    }
+
     private static VendorAuthUserDTO MapVendor(NpgsqlDataReader reader) => new()
     {
         VendorUserId = reader.GetInt64(reader.GetOrdinal("vendor_user_id")),
         OwnerName = reader.GetString(reader.GetOrdinal("owner_name")),
         ShopName = reader.GetString(reader.GetOrdinal("shop_name")),
         Email = reader.GetString(reader.GetOrdinal("email")),
+        Phone = ReadNullableString(reader, "phone"),
         AccountStatus = reader.GetString(reader.GetOrdinal("account_status")),
         PlaceId = ReadNullableLong(reader, "place_id")
     };

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace VinhKhanhNarration.Api.Controllers;
 
-[Authorize]
+[Authorize(Roles = "Admin")]
 [Route("api/admin-users")]
 public class AdminUsersController : CrudControllerBase<AdminUserDTO>
 {
@@ -16,7 +16,14 @@ public class AdminUsersController : CrudControllerBase<AdminUserDTO>
     [HttpPatch("{id:long}/change-password")]
     public IActionResult ChangePassword(long id, [FromBody] ChangePasswordRequestDTO request)
     {
-        try { return OkData(_bus.ChangePassword(id, request.OldPassword, request.NewPassword)); }
+        try
+        {
+            return OkData(_bus.ChangePassword(
+                id,
+                request.OldPassword,
+                request.NewPassword,
+                HttpContext.Connection.RemoteIpAddress?.ToString()));
+        }
         catch (Exception ex) { return BadRequestMessage(ex.Message); }
     }
 }

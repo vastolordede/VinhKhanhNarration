@@ -19,6 +19,8 @@ public class NarrationContentBUS : ICrudBUS<NarrationContentDTO, long>
     private readonly ITranslationService _translationService;
     private readonly AudioFileBUS _audioFileBUS;
     private readonly VendorModuleBUS _vendorModuleBUS;
+    private readonly PlaceDAO _placeDAO;
+    private readonly DishDAO _dishDAO;
 
     public NarrationContentBUS(
         NarrationContentDAO dao,
@@ -29,7 +31,9 @@ public class NarrationContentBUS : ICrudBUS<NarrationContentDTO, long>
         TranslationSourceDAO translationSourceDAO,
         ITranslationService translationService,
         AudioFileBUS audioFileBUS,
-        VendorModuleBUS vendorModuleBUS)
+        VendorModuleBUS vendorModuleBUS,
+        PlaceDAO placeDAO,
+        DishDAO dishDAO)
     {
         _dao = dao;
         _contentTypeDAO = contentTypeDAO;
@@ -40,6 +44,8 @@ public class NarrationContentBUS : ICrudBUS<NarrationContentDTO, long>
         _translationService = translationService;
         _audioFileBUS = audioFileBUS;
         _vendorModuleBUS = vendorModuleBUS;
+        _placeDAO = placeDAO;
+        _dishDAO = dishDAO;
     }
 
     public long Create(NarrationContentDTO dto)
@@ -611,19 +617,37 @@ public class NarrationContentBUS : ICrudBUS<NarrationContentDTO, long>
             else if (code.Equals("Place", StringComparison.OrdinalIgnoreCase))
             {
                 if (dto.PlaceId == null)
+                {
                     errors["placeId"] = "Place is required for Place Narration.";
+                }
+                else if (dto.SubmittedByVendorId is long vendorUserId &&
+                         !_placeDAO.IsOwnedByVendor(dto.PlaceId.Value, vendorUserId))
+                {
+                    errors["placeId"] = "Vendor chỉ được tạo narration cho sạp của mình.";
+                }
+
                 if (dto.DishId != null)
                     errors["dishId"] = "Dish must be empty for Place Narration.";
             }
             else if (code.Equals("Dish", StringComparison.OrdinalIgnoreCase))
             {
                 if (dto.DishId == null)
+                {
                     errors["dishId"] = "Dish is required for Dish Narration.";
+                }
+                else if (dto.SubmittedByVendorId is long vendorUserId &&
+                         !_dishDAO.IsOwnedByVendor(dto.DishId.Value, vendorUserId))
+                {
+                    errors["dishId"] = "Vendor chỉ được tạo narration cho món ăn của mình.";
+                }
+
                 if (dto.PlaceId != null)
                     errors["placeId"] = "Place must be empty for Dish Narration.";
             }
             else if (code.Equals("General", StringComparison.OrdinalIgnoreCase))
             {
+                if (dto.SubmittedByVendorId.HasValue)
+                    errors["contentTypeId"] = "Vendor chỉ được tạo narration cho sạp hoặc món ăn của mình.";
                 if (dto.PlaceId != null)
                     errors["placeId"] = "Place must be empty for General Narration.";
                 if (dto.DishId != null)
@@ -938,14 +962,8 @@ public class PublicNarrationBUS
         long narrationId,
         long languageId)
     {
-        var narration = _narrationDAO.GetById(narrationId)
+        var narration = _narrationDAO.GetPublishedByIdForPublic(narrationId)
             ?? throw new InvalidOperationException("NARRATION_NOT_AVAILABLE");
-
-        if (!narration.IsActive
-            || narration.WorkflowStatus != NarrationWorkflowStatuses.Published)
-        {
-            throw new InvalidOperationException("NARRATION_NOT_AVAILABLE");
-        }
 
         return Resolve(
             narration,

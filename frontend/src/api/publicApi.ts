@@ -3,7 +3,8 @@ import { getApiError, http, unwrap } from './http';
 import {
   FeedbackDTO,
   GeofenceCheckResultDTO,
-  GuestSessionDTO,
+  GuestAccessStatusDTO,
+  GuestPaymentOrderDTO,
   LanguageDTO,
   ListeningHistoryDTO,
   NarrationResolveResultDTO,
@@ -11,13 +12,6 @@ import {
   PlaceDishDTO,
   PublicNarrationResultDTO
 } from '../types';
-
-export async function createGuestSession(
-  deviceInfo?: string
-): Promise<GuestSessionDTO> {
-  const response = await http.post(endpoints.guestSessions, { deviceInfo });
-  return unwrap<GuestSessionDTO>(response);
-}
 
 export async function getActiveLanguages(): Promise<LanguageDTO[]> {
   const response = await http.get(`${endpoints.languages}/active`);
@@ -62,12 +56,13 @@ function toResolveResult(
 
 export async function resolvePlaceNarration(
   placeId: number,
-  languageId: number
+  languageId: number,
+  guestSessionId: string
 ): Promise<NarrationResolveResultDTO> {
   try {
     const response = await http.get(
       `${endpoints.publicNarrations}/place/${placeId}`,
-      { params: { languageId } }
+      { params: { languageId, guestSessionId } }
     );
 
     return toResolveResult(
@@ -81,12 +76,13 @@ export async function resolvePlaceNarration(
 
 export async function resolveDishNarration(
   dishId: number,
-  languageId: number
+  languageId: number,
+  guestSessionId: string
 ): Promise<NarrationResolveResultDTO> {
   try {
     const response = await http.get(
       `${endpoints.publicNarrations}/dish/${dishId}`,
-      { params: { languageId } }
+      { params: { languageId, guestSessionId } }
     );
 
     return toResolveResult(
@@ -100,12 +96,13 @@ export async function resolveDishNarration(
 
 export async function resolveNarration(
   narrationId: number,
-  languageId: number
+  languageId: number,
+  guestSessionId: string
 ): Promise<NarrationResolveResultDTO> {
   try {
     const response = await http.get(
       `${endpoints.publicNarrations}/${narrationId}`,
-      { params: { languageId } }
+      { params: { languageId, guestSessionId } }
     );
 
     return toResolveResult(
@@ -123,12 +120,11 @@ export async function checkGeofence(
   longitude: number,
   languageId: number
 ): Promise<GeofenceCheckResultDTO> {
-  const response = await http.post(endpoints.geofenceCheck, {
-    guestSessionId,
-    latitude,
-    longitude,
-    languageId
-  });
+  const response = await http.post(
+    endpoints.geofenceCheck,
+    { guestSessionId, latitude, longitude, languageId },
+    { headers: { 'X-Guest-Session-Id': guestSessionId } }
+  );
 
   return unwrap<GeofenceCheckResultDTO>(response);
 }
@@ -136,28 +132,73 @@ export async function checkGeofence(
 export async function createListeningHistory(
   payload: ListeningHistoryDTO
 ): Promise<number> {
-  const response = await http.post(endpoints.listeningHistories, payload);
+  const response = await http.post(endpoints.listeningHistories, payload, {
+    headers: payload.guestSessionId
+      ? { 'X-Guest-Session-Id': payload.guestSessionId }
+      : undefined
+  });
   return unwrap<number>(response);
 }
 
 export async function updateListeningStatus(
   historyId: number,
+  guestSessionId: string,
   status: ListeningHistoryDTO['playbackStatus']
 ): Promise<void> {
-  await http.patch(`${endpoints.listeningHistories}/${historyId}/status`, {
-    status
-  });
+  await http.patch(
+    `${endpoints.listeningHistories}/${historyId}/status`,
+    { guestSessionId, status },
+    { headers: { 'X-Guest-Session-Id': guestSessionId } }
+  );
 }
 
 export async function updateListeningDuration(
   historyId: number,
+  guestSessionId: string,
   seconds: number
 ): Promise<void> {
-  await http.patch(`${endpoints.listeningHistories}/${historyId}/duration`, {
-    seconds: Math.max(0, Math.floor(seconds))
-  });
+  await http.patch(
+    `${endpoints.listeningHistories}/${historyId}/duration`,
+    { guestSessionId, seconds: Math.max(0, Math.floor(seconds)) },
+    { headers: { 'X-Guest-Session-Id': guestSessionId } }
+  );
 }
 
 export async function submitFeedback(payload: FeedbackDTO): Promise<void> {
-  await http.post(endpoints.feedbacks, payload);
+  await http.post(endpoints.feedbacks, payload, {
+    headers: payload.guestSessionId
+      ? { 'X-Guest-Session-Id': payload.guestSessionId }
+      : undefined
+  });
+}
+
+
+export async function getGuestAccessStatus(
+  guestSessionId: string
+): Promise<GuestAccessStatusDTO> {
+  const response = await http.get(
+    `${endpoints.guestAccess}/status/${encodeURIComponent(guestSessionId)}`
+  );
+  return unwrap<GuestAccessStatusDTO>(response);
+}
+
+export async function createGuestAccessOrder(
+  preferredLanguageId?: number | null,
+  deviceInfo?: string
+): Promise<GuestPaymentOrderDTO> {
+  const response = await http.post(
+    `${endpoints.guestAccess}/orders`,
+    { preferredLanguageId, deviceInfo }
+  );
+  return unwrap<GuestPaymentOrderDTO>(response);
+}
+
+export async function confirmGuestAccessPayment(
+  orderCode: string
+): Promise<GuestAccessStatusDTO> {
+  const response = await http.post(
+    `${endpoints.guestAccess}/orders/${encodeURIComponent(orderCode)}/confirm`,
+    {}
+  );
+  return unwrap<GuestAccessStatusDTO>(response);
 }

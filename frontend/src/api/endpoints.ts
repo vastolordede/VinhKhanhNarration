@@ -41,5 +41,14 @@ export const endpoints = {
   adminFeedbacks: '/api/admin/feedbacks',
   adminListeningHistories: '/api/admin/listening-histories',
   adminGeofenceEvents: '/api/admin/geofence-events',
-  geocodingResolve: '/api/admin/geocoding/resolve'
+  geocodingResolve: '/api/admin/geocoding/resolve',
+  vendorRefresh: '/api/vendor-auth/refresh',
+  vendorLogout: '/api/vendor-auth/logout',
+  vendorProfile: '/api/vendor/account/profile',
+  vendorChangePassword: '/api/vendor/account/change-password',
+  vendorLogoutAll: '/api/vendor/account/logout-all',
+  vendorCatalog: '/api/vendor/catalog',
+  guestAccess: '/api/public/access',
+  adminAuditLogs: '/api/admin/audit-logs',
+  adminDashboardStatistics: '/api/admin/dashboard/statistics'
 };

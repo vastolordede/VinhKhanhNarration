@@ -5,12 +5,9 @@ namespace VinhKhanhNarration.Api.Services;
 public sealed class LocalAudioStorage : IAudioStorage
 {
     private readonly IWebHostEnvironment _environment;
-    private readonly IConfiguration _configuration;
-
-    public LocalAudioStorage(IWebHostEnvironment environment, IConfiguration configuration)
+    public LocalAudioStorage(IWebHostEnvironment environment)
     {
         _environment = environment;
-        _configuration = configuration;
     }
 
     public async Task<string> SaveMp3Async(
@@ -31,8 +28,6 @@ public sealed class LocalAudioStorage : IAudioStorage
         await using var file = File.Create(targetPath);
         await audioStream.CopyToAsync(file, cancellationToken);
 
-        var baseUrl = (_configuration["Storage:PublicBaseUrl"]
-            ?? "http://localhost:5151").TrimEnd('/');
-        return $"{baseUrl}/generated-audio/{Uri.EscapeDataString(safeName)}";
+        return $"/generated-audio/{Uri.EscapeDataString(safeName)}";
     }
 }

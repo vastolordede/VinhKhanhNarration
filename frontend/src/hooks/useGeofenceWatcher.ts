@@ -3,6 +3,7 @@ import { checkGeofence } from '../api/publicApi';
 import { useAppContext } from '../contexts/AppContext';
 import { GeoPoint } from './useGeolocation';
 import { NarrationResolveResultDTO } from '../types';
+import { hasUsableAccessPass } from '../utils/accessPolicy';
 
 const intervalMs = Number(
   import.meta.env.VITE_GEOFENCE_INTERVAL_MS || 10000
@@ -11,7 +12,8 @@ const intervalMs = Number(
 export function useGeofenceWatcher(
   onNarrationDetected: (narration: NarrationResolveResultDTO) => void
 ) {
-  const { guestSession, language, trackingEnabled } = useAppContext();
+  const { guestSession, language, trackingEnabled, accessStatus, setTrackingEnabled } = useAppContext();
+  const hasAccessPass = hasUsableAccessPass(accessStatus);
   const lastSentRef = useRef(0);
   const requestRunningRef = useRef(false);
 
@@ -19,6 +21,7 @@ export function useGeofenceWatcher(
     async (point: GeoPoint) => {
       if (
         !trackingEnabled ||
+        !hasAccessPass ||
         !guestSession?.guestSessionId ||
         !language?.languageId ||
         requestRunningRef.current
@@ -64,6 +67,8 @@ export function useGeofenceWatcher(
           });
         }
       } catch (error) {
+        const message = error instanceof Error ? error.message : '';
+        if (message.includes('Access Pass')) setTrackingEnabled(false);
         console.error('Geofence check failed:', error);
       } finally {
         requestRunningRef.current = false;
@@ -72,6 +77,7 @@ export function useGeofenceWatcher(
       guestSession?.guestSessionId,
       language,
       trackingEnabled,
+      hasAccessPass,
       onNarrationDetected
     ]
   );

@@ -9,7 +9,8 @@ import {
   Navigation,
   ScrollText,
   Utensils,
-  Users
+  Users,
+  ShieldCheck
 } from 'lucide-react';
 import { LanguageSwitcher } from '../common/LanguageSwitcher';
 import { useI18n } from '../../i18n/useI18n';
@@ -26,7 +27,8 @@ const navItems = [
   { to: '/admin/audio', label: 'Audio', icon: FileAudio },
   { to: '/admin/feedbacks', label: 'Feedbacks', icon: MessageSquare },
   { to: '/admin/listening-histories', label: 'Listening', icon: ScrollText },
-  { to: '/admin/geofence-events', label: 'Geofence', icon: Navigation }
+  { to: '/admin/geofence-events', label: 'Geofence', icon: Navigation },
+  { to: '/admin/audit-logs', label: 'Audit Log', icon: ShieldCheck }
 ];
 
 export default function AdminShell() {

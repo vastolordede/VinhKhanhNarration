@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { getList } from '../../api/crud';
 import { endpoints } from '../../api/endpoints';
+import { getVendorCatalog } from '../../api/vendorApi';
 import {
   createVendorNarration,
   getVendorNarrations,
@@ -8,6 +9,7 @@ import {
   moderateVendorNarration,
   updateVendorNarration
 } from '../../api/narrationApi';
+import { AuthenticatedAudio } from '../../components/media/AuthenticatedAudio';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -28,7 +30,7 @@ const emptyForm = {
   title: '',
   originalText: '',
   sourceLanguageId: 0,
-  contentTypeId: 1,
+  contentTypeId: 0,
   placeId: null as number | null,
   dishId: null as number | null
 };
@@ -50,18 +52,25 @@ export default function VendorNarrationScreen() {
   async function load() {
     setError(null);
     try {
-      const [narrations, languageList, typeList, placeList, dishList] = await Promise.all([
+      const [narrations, languageList, typeList, catalog] = await Promise.all([
         getVendorNarrations(),
-        getList<LanguageDTO>(endpoints.languages),
-        getList<LookupDTO>(endpoints.contentTypes),
-        getList<PlaceDTO>(endpoints.places),
-        getList<DishDTO>(endpoints.dishes)
+        getList<LanguageDTO>(`${endpoints.languages}/active`),
+        getList<LookupDTO>(`${endpoints.contentTypes}/active`),
+        getVendorCatalog()
       ]);
+      const activePlace = catalog.place?.isActive ? catalog.place : null;
+      const activeDishes = catalog.dishes.filter((x) => x.isActive);
+      const vendorTypes = typeList.filter(
+        (x) => x.isActive && (
+          (x.code === 'Place' && activePlace != null) ||
+          (x.code === 'Dish' && activeDishes.length > 0)
+        )
+      );
       setItems(narrations);
       setLanguages(languageList.filter((x) => x.isActive && x.isContentEnabled));
-      setContentTypes(typeList.filter((x) => x.isActive));
-      setPlaces(placeList.filter((x) => x.isActive));
-      setDishes(dishList.filter((x) => x.isActive));
+      setContentTypes(vendorTypes);
+      setPlaces(activePlace ? [activePlace] : []);
+      setDishes(activeDishes);
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Không tải được dữ liệu.');
     }
@@ -73,7 +82,11 @@ export default function VendorNarrationScreen() {
 
   function openCreate() {
     const language = languages.find((x) => x.isDefault) ?? languages[0];
-    setForm({ ...emptyForm, sourceLanguageId: language?.languageId ?? 0 });
+    setForm({
+      ...emptyForm,
+      sourceLanguageId: language?.languageId ?? 0,
+      contentTypeId: contentTypes[0]?.id ?? 0
+    });
     setModalOpen(true);
   }
 
@@ -155,11 +168,16 @@ export default function VendorNarrationScreen() {
           <h1 className="text-2xl font-bold">Nội dung thuyết minh</h1>
           <p className="text-sm text-slate-500">Mỗi lần thêm hoặc sửa sẽ tự chuyển sang chờ Admin duyệt.</p>
         </div>
-        <Button onClick={openCreate}>Thêm nội dung</Button>
+        <Button onClick={openCreate} disabled={contentTypes.length === 0 || languages.length === 0}>Thêm nội dung</Button>
       </div>
 
       {message && <p className="mb-4 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-700">{message}</p>}
       {error && <p className="mb-4 rounded-xl bg-rose-50 p-3 text-sm text-rose-600">{error}</p>}
+      {!error && contentTypes.length === 0 && (
+        <p className="mb-4 rounded-xl bg-amber-50 p-3 text-sm text-amber-700">
+          Hãy khai báo sạp hoặc ít nhất một món ăn đang hoạt động trước khi tạo nội dung thuyết minh.
+        </p>
+      )}
 
       <div className="space-y-3">
         {items.map((item) => {
@@ -207,7 +225,7 @@ export default function VendorNarrationScreen() {
                       <div key={translation.translationId} className="rounded-xl bg-slate-50 p-3 text-sm">
                         <p className="font-semibold">Language #{translation.languageId} · Text {translation.status} · Audio {audio?.status || 'Chưa tạo'}</p>
                         <p className="mt-1 text-slate-600">{translation.translatedTitle}</p>
-                        {audio?.audioUrl && audio.status === 'Ready' && <audio controls className="mt-2 w-full" src={audio.audioUrl} />}
+                        {audio?.audioUrl && audio.status === 'Ready' && <AuthenticatedAudio audioId={audio.audioId} className="mt-2 w-full" />}
                       </div>
                     );
                   })}

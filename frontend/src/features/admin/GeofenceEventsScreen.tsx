@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
-import { getPagedList, patchItem } from '../../api/crud';
+import { getPagedList } from '../../api/crud';
 import { endpoints } from '../../api/endpoints';
-import { Button } from '../../components/ui/Button';
 import { DataTable } from '../../components/ui/DataTable';
 import { PaginationBar } from '../../components/ui/PaginationBar';
 import { PageHeader } from '../../components/layout/PageHeader';
 import { GeofenceEventDTO, PagedResult } from '../../types';
 
 const PAGE_SIZE = 20;
+
+function formatDate(value?: string | null) {
+  if (!value) return '-';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString('vi-VN');
+}
 
 export default function GeofenceEventsScreen() {
   const [page, setPage] = useState(1);
@@ -19,62 +24,53 @@ export default function GeofenceEventsScreen() {
     totalPages: 0
   });
 
-  async function load(targetPage = page) {
-    const data = await getPagedList<GeofenceEventDTO>(
-      endpoints.adminGeofenceEvents,
-      targetPage,
-      PAGE_SIZE
-    );
-
-    setResult(data);
-    setPage(data.page);
-  }
-
   useEffect(() => {
-    load(page);
-  }, [page]);
+    let mounted = true;
 
-  async function markProcessed(eventId: number) {
-    await patchItem(`${endpoints.adminGeofenceEvents}/${eventId}/status`, {});
-    await load(page);
-  }
+    getPagedList<GeofenceEventDTO>(
+      endpoints.adminGeofenceEvents,
+      page,
+      PAGE_SIZE
+    ).then((data) => {
+      if (!mounted) return;
+      setResult(data);
+      if (data.page !== page) setPage(data.page);
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [page]);
 
   return (
     <div>
       <PageHeader
-        title="Geofence Events"
-        description="Log thời gian thực khi khách vào/gần/rời POI."
+        title="Geofence Log"
+        description="Nhật ký chỉ đọc phục vụ theo dõi kỹ thuật. Hệ thống tự dọn log quá thời hạn lưu trữ."
       />
 
       <DataTable
         headers={[
           'Id',
-          'Guest',
-          'Place',
-          'Narration',
-          'Type',
-          'Status',
-          'Distance',
-          'Detected',
-          'Actions'
+          'Guest Session',
+          'Access Pass',
+          'Địa điểm',
+          'Thuyết minh',
+          'Loại',
+          'Trạng thái',
+          'Khoảng cách',
+          'Thời điểm phát hiện'
         ]}
         rows={result.items.map((item) => [
           item.eventId,
           item.guestSessionId,
+          item.accessPassId ?? '-',
           item.placeId,
-          item.narrationId ?? '',
+          item.narrationId ?? '-',
           item.eventTypeId,
           item.eventStatusId,
-          item.distanceMeters ?? '',
-          item.detectedAt || '',
-          <Button
-            key="actions"
-            className="px-3 py-2"
-            variant="secondary"
-            onClick={() => markProcessed(item.eventId)}
-          >
-            Update status
-          </Button>
+          item.distanceMeters == null ? '-' : `${item.distanceMeters} m`,
+          formatDate(item.detectedAt)
         ])}
       />
 
