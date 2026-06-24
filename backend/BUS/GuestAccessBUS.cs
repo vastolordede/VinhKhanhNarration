@@ -42,6 +42,15 @@ public class GuestAccessBUS
         };
     }
 
+    public GuestPaymentOrderDTO GetPaymentOrder(string orderCode)
+    {
+        if (string.IsNullOrWhiteSpace(orderCode))
+            throw new ArgumentException("Mã thanh toán là bắt buộc.");
+
+        return _dao.GetPaymentByOrderCode(orderCode.Trim())
+            ?? throw new InvalidOperationException("Mã thanh toán không tồn tại.");
+    }
+
     public GuestPaymentOrderDTO CreatePaymentOrder(
         CreateGuestPaymentRequestDTO request,
         string? ipAddress)

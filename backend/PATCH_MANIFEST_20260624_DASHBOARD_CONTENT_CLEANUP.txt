@@ -1,0 +1,4 @@
+UPDATE frontend/src/features/admin/AdminDashboardScreen.tsx
+NEW    backend/data/migrations/20260624_remove_legacy_content_data.sql
+NEW    backend/PATCH_20260624_DASHBOARD_CONTENT_CLEANUP_README.md
+NEW    backend/PATCH_MANIFEST_20260624_DASHBOARD_CONTENT_CLEANUP.txt

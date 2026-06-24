@@ -31,6 +31,13 @@ public class GuestAccessController : BaseApiController
         catch (Exception ex) { return BadRequestException(ex); }
     }
 
+    [HttpGet("orders/{orderCode}")]
+    public IActionResult GetOrder(string orderCode)
+    {
+        try { return OkData(_bus.GetPaymentOrder(orderCode)); }
+        catch (Exception ex) { return BadRequestException(ex); }
+    }
+
     [HttpPost("orders/{orderCode}/confirm")]
     public IActionResult Confirm(string orderCode)
     {

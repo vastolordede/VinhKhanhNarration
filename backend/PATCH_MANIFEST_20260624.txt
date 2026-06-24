@@ -32,3 +32,13 @@ Frontend
 - src/features/public/GuestAccessScreen.tsx
 - src/features/public/SplashScreen.tsx
 - src/types/index.ts
+
+QR mock payment
+- Controllers/CompleteModulesControllers.cs
+- BUS/GuestAccessBUS.cs
+- .env.example
+- frontend/package.json
+- frontend/package-lock.json
+- frontend/src/api/publicApi.ts
+- frontend/src/features/public/GuestAccessScreen.tsx
+- frontend/.env.example

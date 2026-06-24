@@ -182,6 +182,15 @@ export async function getGuestAccessStatus(
   return unwrap<GuestAccessStatusDTO>(response);
 }
 
+export async function getGuestAccessOrder(
+  orderCode: string
+): Promise<GuestPaymentOrderDTO> {
+  const response = await http.get(
+    `${endpoints.guestAccess}/orders/${encodeURIComponent(orderCode)}`
+  );
+  return unwrap<GuestPaymentOrderDTO>(response);
+}
+
 export async function createGuestAccessOrder(
   preferredLanguageId?: number | null,
   deviceInfo?: string
