@@ -440,8 +440,7 @@ public class VendorModuleBUS
             ?? _configuration["FrontendUrl"]
             ?? "http://localhost:5173";
         var paymentUrl = $"{frontendUrl.TrimEnd('/')}/vendor/mock-payment?orderCode={Uri.EscapeDataString(orderCode)}";
-        var qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
-            + Uri.EscapeDataString(paymentUrl);
+        var qrUrl = $"{frontendUrl.TrimEnd('/')}/mock-payment-qr.svg";
 
         var order = new PaymentOrderDTO
         {

@@ -9,3 +9,10 @@ obj/
 *.user
 *.suo
 *.cache
+# Local Python environment for Edge TTS
+.venv-tts/
+__pycache__/
+*.pyc
+
+# Generated narration audio
+wwwroot/generated-audio/

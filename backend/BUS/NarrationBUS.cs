@@ -569,9 +569,12 @@ public class NarrationContentBUS : ICrudBUS<NarrationContentDTO, long>
                 ?? throw new InvalidOperationException(
                     $"Audio {language.LanguageCode} is not ready.");
 
-            if (string.IsNullOrWhiteSpace(audio.AudioUrl))
+            if (string.IsNullOrWhiteSpace(audio.StorageKey)
+                && string.IsNullOrWhiteSpace(audio.AudioUrl))
+            {
                 throw new InvalidOperationException(
-                    $"Audio {language.LanguageCode} has no URL.");
+                    $"Audio {language.LanguageCode} has no storage reference.");
+            }
         }
 
         if (!_dao.Publish(narrationId, request.AdminId))
@@ -854,7 +857,8 @@ public class AudioFileBUS : ICrudBUS<AudioFileDTO, long>
             && existing.IsActive
             && existing.SourceTextHash == sourceHash
             && existing.VoiceName == voiceName
-            && !string.IsNullOrWhiteSpace(existing.AudioUrl))
+            && (!string.IsNullOrWhiteSpace(existing.StorageKey)
+                || !string.IsNullOrWhiteSpace(existing.AudioUrl)))
         {
             return existing;
         }
@@ -883,7 +887,7 @@ public class AudioFileBUS : ICrudBUS<AudioFileDTO, long>
             await using var stream = new MemoryStream(bytes);
             var fileName =
                 $"narration-{translation.NarrationId}-translation-{translationId}-{DateTime.UtcNow:yyyyMMddHHmmss}.mp3";
-            var audioUrl = await _audioStorage.SaveMp3Async(
+            var storedAudio = await _audioStorage.SaveMp3Async(
                 stream,
                 fileName,
                 cancellationToken);
@@ -893,7 +897,8 @@ public class AudioFileBUS : ICrudBUS<AudioFileDTO, long>
             var ready = new AudioFileDTO
             {
                 TranslationId = translationId,
-                AudioUrl = audioUrl,
+                AudioUrl = storedAudio.LegacyUrl,
+                StorageKey = storedAudio.StorageKey,
                 Provider = _ttsService.ProviderName,
                 VoiceName = voiceName,
                 FileFormat = "mp3",
@@ -1002,7 +1007,8 @@ public class PublicNarrationBUS
             AudioId = audio.AudioId,
             Title = translation.TranslatedTitle,
             Text = translation.TranslatedText,
-            AudioUrl = audio.AudioUrl!,
+            // Controllers replace this value with an authorized playback URL.
+            AudioUrl = audio.AudioUrl ?? string.Empty,
             LanguageCode = language.LanguageCode,
             Locale = language.Locale ?? language.LanguageCode
         };

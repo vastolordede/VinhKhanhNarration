@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using VinhKhanhNarration.Api.DAO;
 using VinhKhanhNarration.Api.DTO;
+using VinhKhanhNarration.Api.Services.Interfaces;
 
 namespace VinhKhanhNarration.Api.Controllers;
 
@@ -13,39 +14,88 @@ public class SecureFilesController : ControllerBase
 {
     private readonly AudioFileDAO _audioDAO;
     private readonly VendorModuleDAO _vendorDAO;
+    private readonly IAudioStorage _audioStorage;
     private readonly IWebHostEnvironment _environment;
     private readonly FileExtensionContentTypeProvider _contentTypes = new();
 
     public SecureFilesController(
         AudioFileDAO audioDAO,
         VendorModuleDAO vendorDAO,
+        IAudioStorage audioStorage,
         IWebHostEnvironment environment)
     {
         _audioDAO = audioDAO;
         _vendorDAO = vendorDAO;
+        _audioStorage = audioStorage;
         _environment = environment;
     }
 
     [HttpGet("audio/{audioId:long}")]
-    public IActionResult Audio(long audioId)
+    public async Task<IActionResult> Audio(
+        long audioId,
+        CancellationToken cancellationToken)
     {
         var audio = _audioDAO.GetById(audioId);
-        if (audio == null || !audio.IsActive || audio.Status != AudioStatuses.Ready ||
-            string.IsNullOrWhiteSpace(audio.AudioUrl))
+        if (audio == null
+            || !audio.IsActive
+            || audio.Status != AudioStatuses.Ready
+            || (string.IsNullOrWhiteSpace(audio.StorageKey)
+                && string.IsNullOrWhiteSpace(audio.AudioUrl)))
+        {
             return NotFound();
+        }
 
         if (User.IsInRole("Vendor"))
         {
             var vendorId = GetVendorId();
-            if (!_audioDAO.CanVendorAccess(audioId, vendorId)) return Forbid();
+            if (!_audioDAO.CanVendorAccess(audioId, vendorId))
+            {
+                return Forbid();
+            }
         }
 
-        if (TryGetExternalUrl(audio.AudioUrl, out var externalUrl))
-            return Redirect(externalUrl);
+        if (!string.IsNullOrWhiteSpace(audio.StorageKey))
+        {
+            var storedAudio = await _audioStorage.OpenReadAsync(
+                audio.StorageKey,
+                cancellationToken);
 
-        var filePath = ResolveStoredFile("generated-audio", audio.AudioUrl);
-        if (filePath == null) return NotFound();
-        return PhysicalFile(filePath, "audio/mpeg", enableRangeProcessing: true);
+            if (storedAudio == null)
+            {
+                return NotFound();
+            }
+
+            if (!string.IsNullOrWhiteSpace(storedAudio.RedirectUrl))
+            {
+                return Redirect(storedAudio.RedirectUrl);
+            }
+
+            if (storedAudio.ContentStream == null)
+            {
+                return NotFound();
+            }
+
+            return File(
+                storedAudio.ContentStream,
+                storedAudio.ContentType,
+                enableRangeProcessing: true);
+        }
+
+        if (TryGetExternalUrl(audio.AudioUrl!, out var externalUrl))
+        {
+            return Redirect(externalUrl);
+        }
+
+        var filePath = ResolveStoredFile("generated-audio", audio.AudioUrl!);
+        if (filePath == null)
+        {
+            return NotFound();
+        }
+
+        return PhysicalFile(
+            filePath,
+            "audio/mpeg",
+            enableRangeProcessing: true);
     }
 
     [HttpGet("vendor-documents/{documentId:long}")]

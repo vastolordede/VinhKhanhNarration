@@ -1,0 +1,55 @@
+services:
+  - type: web
+    runtime: docker
+    name: vinhkhanh-narration-api
+    rootDir: backend
+    healthCheckPath: /health
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_URL
+        sync: false
+      - key: Jwt__SecretKey
+        generateValue: true
+      - key: Jwt__Issuer
+        value: VinhKhanhNarration
+      - key: Jwt__Audience
+        value: VinhKhanhNarrationClient
+      - key: FRONTEND_URL
+        sync: false
+      - key: CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: Translation__Provider
+        value: GoogleFree
+      - key: Speech__Provider
+        value: EdgeTTS
+      - key: EdgeTts__PythonPath
+        value: /opt/edge-tts/bin/python
+      - key: EdgeTts__ScriptPath
+        value: /app/tools/edge_tts_synthesize.py
+      - key: EdgeTts__TimeoutSeconds
+        value: "120"
+      - key: Storage__Provider
+        value: R2
+      - key: R2__AccountId
+        sync: false
+      - key: R2__AccessKeyId
+        sync: false
+      - key: R2__SecretAccessKey
+        sync: false
+      - key: R2__BucketName
+        sync: false
+      - key: R2__Endpoint
+        sync: false
+      - key: R2__Prefix
+        value: audio
+      - key: R2__SignedUrlMinutes
+        value: "5"
+      - key: Payment__Provider
+        value: Mock
+      - key: GuestAccess__Price
+        value: "50000"
+      - key: GuestAccess__DurationHours
+        value: "24"
+      - key: GuestAccess__OrderExpiryMinutes
+        value: "30"

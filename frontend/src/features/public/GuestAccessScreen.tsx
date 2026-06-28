@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Copy, ExternalLink, ShieldCheck } from 'lucide-react';
-import { QRCodeSVG } from 'qrcode.react';
 import { useSearchParams } from 'react-router-dom';
 import {
   confirmGuestAccessPayment,
@@ -209,8 +208,8 @@ export default function GuestAccessScreen() {
         <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
           <p className="font-bold">MÔ PHỎNG THANH TOÁN — KHÔNG CHUYỂN TIỀN</p>
           <p className="mt-1 text-xs leading-5">
-            QR chỉ mở trang xác nhận nội bộ của đồ án. QR không chứa tài khoản
-            ngân hàng, không phải VietQR và không kết nối cổng thanh toán thật.
+            Đây là một ảnh QR Mock cố định dùng chung cho mọi đơn. QR không chứa
+            tài khoản ngân hàng, không phải VietQR và không kết nối cổng thanh toán thật.
           </p>
         </div>
 
@@ -240,13 +239,13 @@ export default function GuestAccessScreen() {
           <Card>
             <p className="font-semibold text-slate-900">Chưa có Access Pass</p>
             <p className="mt-2 text-sm leading-6 text-slate-500">
-              Hệ thống sẽ tạo một đơn Mock, hiển thị QR có thể quét và chỉ sinh
-              Guest Session sau khi bạn bấm xác nhận thanh toán mô phỏng.
+              Hệ thống sẽ tạo một đơn Mock mới nhưng luôn hiển thị cùng một ảnh QR.
+              Guest Session chỉ được sinh sau khi bạn bấm xác nhận thanh toán mô phỏng.
             </p>
 
             {!order && !loadingOrder && (
               <Button className="mt-4 w-full" disabled={busy} onClick={createOrder}>
-                {busy ? 'Đang tạo mã...' : 'Tạo QR thanh toán mô phỏng'}
+                {busy ? 'Đang tạo đơn...' : 'Tạo đơn thanh toán mô phỏng'}
               </Button>
             )}
 
@@ -269,14 +268,12 @@ export default function GuestAccessScreen() {
                 QR thanh toán mô phỏng
               </h2>
 
-              {paymentUrl && isPending && (
+              {isPending && (
                 <div className="mx-auto mt-4 w-fit rounded-3xl border-4 border-white bg-white p-4 shadow-sm ring-1 ring-slate-200">
-                  <QRCodeSVG
-                    value={paymentUrl}
-                    size={220}
-                    level="M"
-                    marginSize={1}
-                    title={`Mock payment ${order.orderCode}`}
+                  <img
+                    src="/mock-payment-qr.svg"
+                    alt="QR thanh toán mô phỏng cố định"
+                    className="h-[220px] w-[220px]"
                   />
                 </div>
               )}
@@ -324,7 +321,7 @@ export default function GuestAccessScreen() {
 
               {isExpired ? (
                 <Button className="mt-4 w-full" disabled={busy} onClick={createOrder}>
-                  Tạo QR Mock mới
+                  Tạo đơn Mock mới
                 </Button>
               ) : (
                 <Button

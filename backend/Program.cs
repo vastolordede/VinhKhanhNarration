@@ -10,6 +10,7 @@ using VinhKhanhNarration.Api.Middleware;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.HttpOverrides;
 
 EnvLoader.Load();
 
@@ -137,9 +138,55 @@ builder.Services.AddScoped<GuestAccessBUS>();
 builder.Services.AddScoped<AuditLogBUS>();
 builder.Services.AddScoped<AdminDashboardBUS>();
 builder.Services.AddHttpClient<GeocodingBUS>();
-builder.Services.AddHttpClient<ITranslationService, AzureTranslatorService>();
-builder.Services.AddHttpClient<ITextToSpeechService, AzureSpeechTtsService>();
-builder.Services.AddScoped<IAudioStorage, LocalAudioStorage>();
+
+builder.Services.AddHttpClient<AzureTranslatorService>();
+builder.Services.AddHttpClient<GoogleFreeTranslationService>();
+builder.Services.AddScoped<ITranslationService>(serviceProvider =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var provider = configuration["Translation:Provider"] ?? "GoogleFree";
+
+    return provider.Equals("AzureTranslator", StringComparison.OrdinalIgnoreCase)
+        ? serviceProvider.GetRequiredService<AzureTranslatorService>()
+        : serviceProvider.GetRequiredService<GoogleFreeTranslationService>();
+});
+
+builder.Services.AddHttpClient<AzureSpeechTtsService>();
+builder.Services.AddScoped<EdgeTtsService>();
+builder.Services.AddScoped<ITextToSpeechService>(serviceProvider =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var provider = configuration["Speech:Provider"] ?? "EdgeTTS";
+
+    return provider.Equals("AzureSpeech", StringComparison.OrdinalIgnoreCase)
+        ? serviceProvider.GetRequiredService<AzureSpeechTtsService>()
+        : serviceProvider.GetRequiredService<EdgeTtsService>();
+});
+
+builder.Services.AddScoped<LocalAudioStorage>();
+builder.Services.AddScoped<R2AudioStorage>();
+builder.Services.AddScoped<IAudioStorage>(serviceProvider =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var provider = configuration["Storage:Provider"] ?? "Local";
+
+    return provider.Equals("R2", StringComparison.OrdinalIgnoreCase)
+        ? serviceProvider.GetRequiredService<R2AudioStorage>()
+        : serviceProvider.GetRequiredService<LocalAudioStorage>();
+});
+
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto;
+
+    // Render terminates TLS at its proxy. Accept forwarded headers from
+    // the platform network so generated API URLs keep the HTTPS scheme.
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
+
 builder.Services.AddHostedService<LifecycleHostedService>();
 
 var app = builder.Build();
@@ -154,12 +201,21 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Render/Vercel production requests arrive through reverse proxies.
+app.UseForwardedHeaders();
+
 // CORS phải đặt trước Authorization và MapControllers
 app.UseCors("AppCors");
 
 app.UseAuthentication();
 app.UseMiddleware<AuditLoggingMiddleware>();
 app.UseAuthorization();
+
+app.MapGet("/health", () => Results.Ok(new
+{
+    status = "ok",
+    utc = DateTime.UtcNow
+}));
 
 app.MapControllers();
 

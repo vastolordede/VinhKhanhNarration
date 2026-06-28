@@ -3,8 +3,12 @@ obj/
 .vs/
 .vscode/
 .env
+.venv-tts/
+wwwroot/generated-audio/
+fixbug/
+tests/TestResults/
 *.user
 *.suo
 *.log
-Dockerfile
-.dockerignore
+.git/
+.gitignore

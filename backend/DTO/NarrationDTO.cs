@@ -88,6 +88,7 @@ public class AudioFileDTO
     [DbColumn("audio_id", IsKey = true, IsIdentity = true)] public long AudioId { get; set; }
     [DbColumn("translation_id")] public long TranslationId { get; set; }
     [DbColumn("audio_url")] public string? AudioUrl { get; set; }
+    [DbColumn("storage_key")] public string? StorageKey { get; set; }
     [DbColumn("provider")] public string? Provider { get; set; }
     [DbColumn("voice_name")] public string? VoiceName { get; set; }
     [DbColumn("voice_gender")] public string? VoiceGender { get; set; }
