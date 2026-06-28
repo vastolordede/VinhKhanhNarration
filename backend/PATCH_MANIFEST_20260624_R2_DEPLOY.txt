@@ -1,0 +1,31 @@
+R2 / Render / Neon / Vercel deployment patch
+
+NEW
+- backend/render.yaml
+- backend/Services/R2AudioStorage.cs
+- backend/data/migrations/20260624_r2_audio_storage.sql
+- backend/deploy/r2-cors.example.json
+- backend/DEPLOY_RENDER_NEON_R2_VERCEL.md
+- backend/PATCH_20260624_R2_DEPLOY_README.md
+- backend/PATCH_MANIFEST_20260624_R2_DEPLOY.txt
+- frontend/scripts/generate_fixed_mock_qr.py
+- frontend/scripts/requirements-qr.txt
+
+UPDATE
+- backend/.dockerignore
+- backend/.env.example
+- backend/appsettings.json
+- backend/BUS/NarrationBUS.cs
+- backend/Controllers/CompleteModulesControllers.cs
+- backend/Controllers/SecureFilesController.cs
+- backend/DAO/NarrationDAO.cs
+- backend/Dockerfile
+- backend/DTO/NarrationDTO.cs
+- backend/Program.cs
+- backend/Services/Interfaces/IAudioStorage.cs
+- backend/Services/LocalAudioStorage.cs
+- backend/VinhKhanhNarration.Api.csproj
+- frontend/.env.example
+- frontend/src/types/index.ts
+
+NO DELETE

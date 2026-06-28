@@ -32,8 +32,15 @@ export default function VendorMockPaymentScreen() {
       {order && <>
         <p className="mt-3 font-semibold">{order.orderCode}</p>
         <p className="text-slate-600">{order.amount.toLocaleString('vi-VN')} VND · {order.purpose}</p>
-        <img className="mx-auto mt-4 h-64 w-64" src={order.qrImageUrl} alt="QR thanh toán demo" />
-        <p className="mt-2 text-xs text-slate-500">QR chỉ mở lại trang demo này, không chuyển tiền thật.</p>
+        <img
+          className="mx-auto mt-4 h-64 w-64"
+          src="/mock-payment-qr.svg"
+          alt="QR thanh toán demo cố định"
+        />
+        <p className="mt-2 text-xs leading-5 text-slate-500">
+          Đây là ảnh QR Mock cố định dùng chung cho mọi đơn. Mã đơn và luồng xác nhận
+          vẫn được xử lý riêng, không có tiền thật được gửi hoặc nhận.
+        </p>
         <Button className="mt-4 w-full" onClick={() => void pay()}>Xác nhận đã thanh toán (Demo)</Button>
       </>}
       {message && <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-emerald-700">{message}</p>}

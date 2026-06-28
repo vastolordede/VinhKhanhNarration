@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using VinhKhanhNarration.Api.BUS;
 using VinhKhanhNarration.Api.DAO;
 using VinhKhanhNarration.Api.DTO;
+using VinhKhanhNarration.Api.Services.Interfaces;
 
 namespace VinhKhanhNarration.Api.Controllers;
 
@@ -138,47 +139,52 @@ public class PublicAudioController : ControllerBase
 {
     private readonly GuestAccessBUS _access;
     private readonly AudioFileDAO _audioDAO;
+    private readonly IAudioStorage _audioStorage;
     private readonly IWebHostEnvironment _environment;
 
     public PublicAudioController(
         GuestAccessBUS access,
         AudioFileDAO audioDAO,
+        IAudioStorage audioStorage,
         IWebHostEnvironment environment)
     {
         _access = access;
         _audioDAO = audioDAO;
+        _audioStorage = audioStorage;
         _environment = environment;
     }
 
     [HttpGet("{audioId:long}")]
-    public IActionResult Stream(long audioId, [FromQuery] string guestSessionId)
+    public async Task<IActionResult> Stream(
+        long audioId,
+        [FromQuery] string guestSessionId,
+        CancellationToken cancellationToken)
     {
         try
         {
             _access.EnsureActive(guestSessionId);
+
             var audio = _audioDAO.GetById(audioId);
-            if (audio == null || !audio.IsActive || audio.Status != AudioStatuses.Ready ||
-                audio.PublishedAt == null || string.IsNullOrWhiteSpace(audio.AudioUrl))
+            if (audio == null
+                || !audio.IsActive
+                || audio.Status != AudioStatuses.Ready
+                || audio.PublishedAt == null
+                || (string.IsNullOrWhiteSpace(audio.StorageKey)
+                    && string.IsNullOrWhiteSpace(audio.AudioUrl)))
+            {
                 return NotFound();
+            }
 
-            if (Uri.TryCreate(audio.AudioUrl, UriKind.Absolute, out var absolute) &&
-                !absolute.AbsolutePath.StartsWith("/generated-audio/", StringComparison.OrdinalIgnoreCase))
-                return Redirect(audio.AudioUrl);
+            if (!string.IsNullOrWhiteSpace(audio.StorageKey))
+            {
+                var storedAudio = await _audioStorage.OpenReadAsync(
+                    audio.StorageKey,
+                    cancellationToken);
 
-            var pathValue = Uri.TryCreate(audio.AudioUrl, UriKind.Absolute, out absolute)
-                ? absolute.AbsolutePath
-                : audio.AudioUrl;
-            var fileName = Path.GetFileName(Uri.UnescapeDataString(pathValue));
-            if (string.IsNullOrWhiteSpace(fileName)) return NotFound();
+                return ToPlaybackResult(storedAudio);
+            }
 
-            var webRoot = string.IsNullOrWhiteSpace(_environment.WebRootPath)
-                ? Path.Combine(_environment.ContentRootPath, "wwwroot")
-                : _environment.WebRootPath;
-            var directory = Path.GetFullPath(Path.Combine(webRoot, "generated-audio"));
-            var filePath = Path.GetFullPath(Path.Combine(directory, fileName));
-            if (!filePath.StartsWith(directory, StringComparison.Ordinal) || !System.IO.File.Exists(filePath))
-                return NotFound();
-            return PhysicalFile(filePath, "audio/mpeg", enableRangeProcessing: true);
+            return OpenLegacyAudio(audio.AudioUrl!);
         }
         catch (UnauthorizedAccessException ex)
         {
@@ -188,5 +194,71 @@ public class PublicAudioController : ControllerBase
                 message = ex.Message
             });
         }
+    }
+
+    private IActionResult ToPlaybackResult(AudioStorageReadResult? audio)
+    {
+        if (audio == null)
+        {
+            return NotFound();
+        }
+
+        if (!string.IsNullOrWhiteSpace(audio.RedirectUrl))
+        {
+            return Redirect(audio.RedirectUrl);
+        }
+
+        if (audio.ContentStream == null)
+        {
+            return NotFound();
+        }
+
+        return File(
+            audio.ContentStream,
+            audio.ContentType,
+            enableRangeProcessing: true);
+    }
+
+    private IActionResult OpenLegacyAudio(string audioUrl)
+    {
+        if (Uri.TryCreate(audioUrl, UriKind.Absolute, out var absolute)
+            && !absolute.AbsolutePath.StartsWith(
+                "/generated-audio/",
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return Redirect(audioUrl);
+        }
+
+        var pathValue = Uri.TryCreate(audioUrl, UriKind.Absolute, out absolute)
+            ? absolute.AbsolutePath
+            : audioUrl;
+        var fileName = Path.GetFileName(Uri.UnescapeDataString(pathValue));
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return NotFound();
+        }
+
+        var webRoot = string.IsNullOrWhiteSpace(_environment.WebRootPath)
+            ? Path.Combine(_environment.ContentRootPath, "wwwroot")
+            : _environment.WebRootPath;
+        var directory = Path.GetFullPath(Path.Combine(webRoot, "generated-audio"));
+        var filePath = Path.GetFullPath(Path.Combine(directory, fileName));
+        var comparison = OperatingSystem.IsWindows()
+            ? StringComparison.OrdinalIgnoreCase
+            : StringComparison.Ordinal;
+        var directoryPrefix = directory.TrimEnd(
+            Path.DirectorySeparatorChar,
+            Path.AltDirectorySeparatorChar) + Path.DirectorySeparatorChar;
+
+        if (!filePath.StartsWith(directoryPrefix, comparison)
+            || !System.IO.File.Exists(filePath))
+        {
+            return NotFound();
+        }
+
+        return PhysicalFile(
+            filePath,
+            "audio/mpeg",
+            enableRangeProcessing: true);
     }
 }

@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "1iVN7DuMwGY=",
+  "dgSpecHash": "3rOhvNxbgiQ=",
   "success": true,
   "projectFilePath": "D:\\School\\VinhKhanhNarration\\tests\\VinhKhanhNarration.Api.Tests.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ADMIN\\.nuget\\packages\\awssdk.core\\3.7.501\\awssdk.core.3.7.501.nupkg.sha512",
+    "C:\\Users\\ADMIN\\.nuget\\packages\\awssdk.s3\\3.7.511.7\\awssdk.s3.3.7.511.7.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\coverlet.collector\\6.0.2\\coverlet.collector.6.0.2.nupkg.sha512",
     "C:\\Users\\ADMIN\\.nuget\\packages\\fluentassertions\\6.12.1\\fluentassertions.6.12.1.nupkg.sha512",

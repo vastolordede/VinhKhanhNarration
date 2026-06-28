@@ -187,6 +187,7 @@ export interface AudioFileDTO {
   audioId: ID;
   translationId: ID;
   audioUrl?: string | null;
+  storageKey?: string | null;
   provider?: string | null;
   voiceName?: string | null;
   voiceGender?: string | null;

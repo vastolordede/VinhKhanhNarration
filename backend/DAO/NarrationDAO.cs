@@ -479,8 +479,10 @@ public class AudioFileDAO : GenericCrudDAO<AudioFileDTO>
             WHERE translation_id = @id
               AND is_active = TRUE
               AND status = 'Ready'
-              AND audio_url IS NOT NULL
-              AND btrim(audio_url) <> ''
+              AND (
+                    (storage_key IS NOT NULL AND btrim(storage_key) <> '')
+                 OR (audio_url IS NOT NULL AND btrim(audio_url) <> '')
+              )
             ORDER BY audio_id DESC
             LIMIT 1;",
             cmd => cmd.Parameters.AddWithValue("@id", translationId));
@@ -493,8 +495,10 @@ public class AudioFileDAO : GenericCrudDAO<AudioFileDTO>
               AND is_active = TRUE
               AND status = 'Ready'
               AND published_at IS NOT NULL
-              AND audio_url IS NOT NULL
-              AND btrim(audio_url) <> ''
+              AND (
+                    (storage_key IS NOT NULL AND btrim(storage_key) <> '')
+                 OR (audio_url IS NOT NULL AND btrim(audio_url) <> '')
+              )
             ORDER BY published_at DESC, audio_id DESC
             LIMIT 1;",
             cmd => cmd.Parameters.AddWithValue("@id", translationId));
