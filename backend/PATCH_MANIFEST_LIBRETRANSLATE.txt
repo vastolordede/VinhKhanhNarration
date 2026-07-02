@@ -1,0 +1,8 @@
+NEW     backend/Services/LibreTranslateService.cs
+UPDATE  backend/Program.cs
+UPDATE  backend/appsettings.json
+UPDATE  backend/.env.example
+UPDATE  backend/render.yaml
+NEW     backend/docker-compose.libretranslate.yml
+NEW     backend/PATCH_LIBRETRANSLATE_README.md
+NEW     backend/PATCH_MANIFEST_LIBRETRANSLATE.txt

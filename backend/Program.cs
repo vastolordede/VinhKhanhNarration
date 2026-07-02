@@ -141,14 +141,29 @@ builder.Services.AddHttpClient<GeocodingBUS>();
 
 builder.Services.AddHttpClient<AzureTranslatorService>();
 builder.Services.AddHttpClient<GoogleFreeTranslationService>();
+builder.Services.AddHttpClient<LibreTranslateService>((serviceProvider, httpClient) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var timeoutSeconds = configuration.GetValue<int?>("Translation:TimeoutSeconds") ?? 180;
+    httpClient.Timeout = TimeSpan.FromSeconds(Math.Clamp(timeoutSeconds, 10, 600));
+});
 builder.Services.AddScoped<ITranslationService>(serviceProvider =>
 {
     var configuration = serviceProvider.GetRequiredService<IConfiguration>();
-    var provider = configuration["Translation:Provider"] ?? "GoogleFree";
+    var provider = (configuration["Translation:Provider"] ?? "LibreTranslate").Trim();
 
-    return provider.Equals("AzureTranslator", StringComparison.OrdinalIgnoreCase)
-        ? serviceProvider.GetRequiredService<AzureTranslatorService>()
-        : serviceProvider.GetRequiredService<GoogleFreeTranslationService>();
+    return provider.ToLowerInvariant() switch
+    {
+        "libretranslate" or "libre" =>
+            serviceProvider.GetRequiredService<LibreTranslateService>(),
+        "azuretranslator" or "azure" =>
+            serviceProvider.GetRequiredService<AzureTranslatorService>(),
+        "googlefree" =>
+            serviceProvider.GetRequiredService<GoogleFreeTranslationService>(),
+        _ => throw new InvalidOperationException(
+            $"Unsupported Translation:Provider '{provider}'. " +
+            "Use LibreTranslate, AzureTranslator or GoogleFree.")
+    };
 });
 
 builder.Services.AddHttpClient<AzureSpeechTtsService>();

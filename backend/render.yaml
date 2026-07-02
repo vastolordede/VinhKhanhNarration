@@ -20,7 +20,17 @@ services:
       - key: CORS_ALLOWED_ORIGINS
         sync: false
       - key: Translation__Provider
-        value: GoogleFree
+        value: LibreTranslate
+      - key: Translation__LibreTranslateUrl
+        sync: false
+      - key: Translation__LibreTranslateApiKey
+        sync: false
+      - key: Translation__TimeoutSeconds
+        value: "180"
+      - key: Translation__RetryAttempts
+        value: "3"
+      - key: Translation__RetryBaseDelayMilliseconds
+        value: "750"
       - key: Speech__Provider
         value: EdgeTTS
       - key: EdgeTts__PythonPath
