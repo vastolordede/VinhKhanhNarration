@@ -4,6 +4,7 @@ import { Map, Settings, TicketCheck } from 'lucide-react';
 import { getGuestAccessStatus } from '../../api/publicApi';
 import { useAppContext } from '../../contexts/AppContext';
 import { useI18n } from '../../i18n/useI18n';
+import { isDefinitiveGuestSessionFailure } from '../../utils/guestSessionPolicy';
 
 const navItems = [
   { to: '/app/map', labelKey: 'public.nav.map', icon: Map },
@@ -30,6 +31,17 @@ export default function PublicShell() {
 
     let cancelled = false;
 
+    function clearInvalidSession() {
+      setGuestSession(null);
+      setAccessStatus(null);
+      setCurrentNarration(null);
+      setTrackingEnabled(false);
+
+      if (location.pathname === '/app/listen') {
+        navigate('/app/access', { replace: true });
+      }
+    }
+
     async function verifyAccess() {
       try {
         const status = await getGuestAccessStatus(activeGuestSessionId);
@@ -37,22 +49,19 @@ export default function PublicShell() {
 
         setAccessStatus(status);
         if (!status.hasActivePass || !status.guestSession?.isActive) {
-          setGuestSession(null);
-          setCurrentNarration(null);
-          setTrackingEnabled(false);
-          if (location.pathname === '/app/listen') {
-            navigate('/app/access', { replace: true });
-          }
+          clearInvalidSession();
         }
-      } catch {
+      } catch (error) {
         if (cancelled) return;
-        setGuestSession(null);
-        setAccessStatus(null);
-        setCurrentNarration(null);
-        setTrackingEnabled(false);
-        if (location.pathname === '/app/listen') {
-          navigate('/app/access', { replace: true });
+
+        if (isDefinitiveGuestSessionFailure(error)) {
+          clearInvalidSession();
+          return;
         }
+
+        // Giữ session/cache khi chỉ là lỗi mạng, timeout, cold start hoặc 5xx.
+        // Protected API ở backend vẫn là lớp xác thực cuối cùng.
+        console.warn('Guest access verification temporarily failed:', error);
       }
     }
 

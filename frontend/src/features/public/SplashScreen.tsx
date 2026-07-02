@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getGuestAccessStatus } from '../../api/publicApi';
 import { useAppContext } from '../../contexts/AppContext';
+import { isDefinitiveGuestSessionFailure } from '../../utils/guestSessionPolicy';
 
 export default function SplashScreen() {
   const navigate = useNavigate();
@@ -19,39 +20,41 @@ export default function SplashScreen() {
     let mounted = true;
 
     async function init() {
-      try {
-        if (guestSession?.guestSessionId) {
-          try {
-            const status = await getGuestAccessStatus(guestSession.guestSessionId);
-            if (!mounted) return;
+      if (guestSession?.guestSessionId) {
+        try {
+          const status = await getGuestAccessStatus(guestSession.guestSessionId);
+          if (!mounted) return;
 
-            if (status.hasActivePass && status.guestSession?.isActive) {
-              setGuestSession(status.guestSession);
-              setAccessStatus(status);
-            } else {
-              setGuestSession(null);
-              setAccessStatus(status);
-              setCurrentNarration(null);
-              setTrackingEnabled(false);
-            }
-          } catch {
-            if (!mounted) return;
+          if (status.hasActivePass && status.guestSession?.isActive) {
+            setGuestSession(status.guestSession);
+            setAccessStatus(status);
+          } else {
             setGuestSession(null);
             setAccessStatus(null);
             setCurrentNarration(null);
             setTrackingEnabled(false);
           }
-        }
+        } catch (error) {
+          if (!mounted) return;
 
-        if (!mounted) return;
-        setMessage('Đã sẵn sàng');
-        window.setTimeout(
-          () => navigate(language ? '/app/map' : '/app/language', { replace: true }),
-          300
-        );
-      } catch {
-        if (mounted) setMessage('Không thể kết nối backend API.');
+          if (isDefinitiveGuestSessionFailure(error)) {
+            setGuestSession(null);
+            setAccessStatus(null);
+            setCurrentNarration(null);
+            setTrackingEnabled(false);
+          } else {
+            // Mobile/cold start có thể lỗi tạm thời. Không xóa phiên đã lưu.
+            console.warn('Guest session bootstrap temporarily failed:', error);
+          }
+        }
       }
+
+      if (!mounted) return;
+      setMessage('Đã sẵn sàng');
+      window.setTimeout(
+        () => navigate(language ? '/app/map' : '/app/language', { replace: true }),
+        300
+      );
     }
 
     void init();
