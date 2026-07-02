@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Copy, ExternalLink, ShieldCheck } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   confirmGuestAccessPayment,
   createGuestAccessOrder,
@@ -24,6 +24,7 @@ export default function GuestAccessScreen() {
     setCurrentNarration
   } = useAppContext();
 
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedOrderCode = searchParams.get('orderCode')?.trim() ?? '';
 
@@ -51,44 +52,6 @@ export default function GuestAccessScreen() {
   }, [order]);
 
   useEffect(() => {
-    const guestSessionId = guestSession?.guestSessionId;
-    if (!guestSessionId) {
-      setAccessStatus(null);
-      return;
-    }
-
-    let mounted = true;
-    getGuestAccessStatus(guestSessionId)
-      .then((status) => {
-        if (!mounted) return;
-        setAccessStatus(status);
-        if (!status.hasActivePass || !status.guestSession?.isActive) {
-          setGuestSession(null);
-          setCurrentNarration(null);
-          setTrackingEnabled(false);
-        }
-      })
-      .catch((loadError) => {
-        if (!mounted) return;
-        setGuestSession(null);
-        setAccessStatus(null);
-        setCurrentNarration(null);
-        setTrackingEnabled(false);
-        setError(getApiError(loadError));
-      });
-
-    return () => {
-      mounted = false;
-    };
-  }, [
-    guestSession?.guestSessionId,
-    setAccessStatus,
-    setCurrentNarration,
-    setGuestSession,
-    setTrackingEnabled
-  ]);
-
-  useEffect(() => {
     if (!requestedOrderCode) return;
 
     let mounted = true;
@@ -111,6 +74,7 @@ export default function GuestAccessScreen() {
             setCurrentNarration(null);
             setOrder(null);
             setSearchParams({}, { replace: true });
+            navigate('/app/map', { replace: true });
           }
         }
       })
@@ -128,6 +92,7 @@ export default function GuestAccessScreen() {
     };
   }, [
     requestedOrderCode,
+    navigate,
     setAccessStatus,
     setCurrentNarration,
     setGuestSession,
@@ -174,6 +139,7 @@ export default function GuestAccessScreen() {
       setSearchParams({}, { replace: true });
       setTrackingEnabled(false);
       setCurrentNarration(null);
+      navigate('/app/map', { replace: true });
     } catch (requestError) {
       setError(getApiError(requestError));
     } finally {
