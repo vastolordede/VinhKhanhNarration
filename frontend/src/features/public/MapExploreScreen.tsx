@@ -366,7 +366,7 @@ export default function MapExploreScreen() {
             <div className="flex items-start justify-between gap-3 pr-10">
               <div>
                 <h2 className="text-xl font-bold text-slate-900">
-                  {selectedNarration?.title || selectedPlace.placeName}
+                  {selectedPlace.placeName}
                 </h2>
                 <p className="text-sm text-slate-500">
                   {selectedPlace.address || t('public.map.noAddress')}
