@@ -1,0 +1,4 @@
+UPDATE frontend/src/features/public/MapExploreScreen.tsx
+UPDATE frontend/src/features/admin/PlacesManagementScreen.tsx
+NEW frontend/PATCH_PUBLIC_PLACE_NAME_REMOVE_GEOCODING_README.md
+NEW frontend/PATCH_MANIFEST_PUBLIC_PLACE_NAME_REMOVE_GEOCODING.txt
