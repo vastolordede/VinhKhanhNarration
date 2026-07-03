@@ -124,7 +124,7 @@ export default function AdminDashboardScreen() {
     { label: 'Vendors', value: statistics.vendors, icon: Store },
     {
       label: 'Listening',
-      value: statistics.listening * 2,
+      value: statistics.listening ,
       icon: Headphones,
       hint: text('Trong khoảng đã chọn', 'In selected period')
     },
