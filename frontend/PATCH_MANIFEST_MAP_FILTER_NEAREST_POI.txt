@@ -1,0 +1,4 @@
+UPDATE frontend/src/features/public/MapExploreScreen.tsx
+UPDATE frontend/src/i18n/translations.ts
+NEW frontend/PATCH_MAP_FILTER_NEAREST_POI_README.md
+NEW frontend/PATCH_MANIFEST_MAP_FILTER_NEAREST_POI.txt
