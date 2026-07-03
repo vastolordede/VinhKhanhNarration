@@ -468,7 +468,8 @@ export default function MapExploreScreen() {
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
             <input
-              type="search"
+              type="text"
+inputMode="search"
               value={placeQuery}
               onChange={(event) => setPlaceQuery(event.target.value)}
               placeholder={t('public.map.searchPlaceholder')}
