@@ -1,13 +1,14 @@
 import { ButtonHTMLAttributes, ReactNode } from 'react';
 import { useI18n } from '../../i18n/useI18n';
 
-type Variant = 'primary' | 'secondary' | 'ghost' | 'danger';
+type Variant = 'primary' | 'secondary' | 'ghost' | 'danger' | 'happyhappy';
 
 const styles: Record<Variant, string> = {
   primary: 'bg-teal-700 text-white hover:bg-teal-800 active:bg-teal-900',
   secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-200',
   ghost: 'bg-transparent text-slate-700 hover:bg-slate-100',
-  danger: 'bg-rose-600 text-white hover:bg-rose-700'
+  danger: 'bg-rose-600 text-white hover:bg-rose-700',
+  happyhappy: '!bg-orange-600 hover:!bg-orange-700 !text-white'
 };
 
 export function Button({
