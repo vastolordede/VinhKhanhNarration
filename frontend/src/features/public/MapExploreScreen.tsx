@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DivIcon, latLngBounds } from 'leaflet';
 import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet';
-import { LocateFixed, Volume2 } from 'lucide-react';
+import { LocateFixed, Navigation, Search, Volume2, X } from 'lucide-react';
 import {
   getActivePlaces,
   getPlaceDishes,
@@ -38,25 +38,69 @@ const userIcon = new DivIcon({
   iconAnchor: [11, 11]
 });
 
+type MappablePlace = PlaceDTO & {
+  latitude: number;
+  longitude: number;
+};
+
+function normalizePlaceName(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase()
+    .trim();
+}
+
+function toRadians(value: number) {
+  return (value * Math.PI) / 180;
+}
+
+function calculateDistanceMeters(
+  from: { latitude: number; longitude: number },
+  to: { latitude: number; longitude: number }
+) {
+  const earthRadiusMeters = 6_371_000;
+  const latitudeDelta = toRadians(to.latitude - from.latitude);
+  const longitudeDelta = toRadians(to.longitude - from.longitude);
+  const fromLatitude = toRadians(from.latitude);
+  const toLatitude = toRadians(to.latitude);
+
+  const haversine =
+    Math.sin(latitudeDelta / 2) ** 2 +
+    Math.cos(fromLatitude) *
+      Math.cos(toLatitude) *
+      Math.sin(longitudeDelta / 2) ** 2;
+
+  return (
+    2 *
+    earthRadiusMeters *
+    Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine))
+  );
+}
+
+function formatDistance(distanceMeters: number) {
+  if (distanceMeters < 1000) {
+    return `${Math.max(1, Math.round(distanceMeters))} m`;
+  }
+
+  const digits = distanceMeters < 10_000 ? 1 : 0;
+  return `${(distanceMeters / 1000).toFixed(digits)} km`;
+}
+
 function MapAutoFocus({
   places,
   selectedPlace,
-  userPosition
+  userPosition,
+  filterActive
 }: {
-  places: Array<PlaceDTO & { latitude: number; longitude: number }>;
+  places: MappablePlace[];
   selectedPlace: PlaceDTO | null;
   userPosition?: { latitude: number; longitude: number };
+  filterActive: boolean;
 }) {
   const map = useMap();
 
   useEffect(() => {
-    if (userPosition) {
-      map.setView([userPosition.latitude, userPosition.longitude], 17, {
-        animate: true
-      });
-      return;
-    }
-
     if (
       selectedPlace?.latitude !== null &&
       selectedPlace?.latitude !== undefined &&
@@ -64,6 +108,34 @@ function MapAutoFocus({
       selectedPlace?.longitude !== undefined
     ) {
       map.setView([selectedPlace.latitude, selectedPlace.longitude], 17, {
+        animate: true
+      });
+      return;
+    }
+
+    if (filterActive && places.length === 1) {
+      map.setView([places[0].latitude, places[0].longitude], 17, {
+        animate: true
+      });
+      return;
+    }
+
+    if (filterActive && places.length > 1) {
+      const bounds = latLngBounds(
+        places.map((place) => [place.latitude, place.longitude])
+      );
+
+      map.fitBounds(bounds, {
+        paddingTopLeft: [40, 210],
+        paddingBottomRight: [40, 120],
+        maxZoom: 17,
+        animate: true
+      });
+      return;
+    }
+
+    if (userPosition) {
+      map.setView([userPosition.latitude, userPosition.longitude], 17, {
         animate: true
       });
       return;
@@ -82,13 +154,13 @@ function MapAutoFocus({
       );
 
       map.fitBounds(bounds, {
-        paddingTopLeft: [40, 140],
+        paddingTopLeft: [40, 210],
         paddingBottomRight: [40, 120],
         maxZoom: 17,
         animate: true
       });
     }
-  }, [map, places, selectedPlace, userPosition]);
+  }, [filterActive, map, places, selectedPlace, userPosition]);
 
   return null;
 }
@@ -116,6 +188,7 @@ export default function MapExploreScreen() {
   const [statusKey, setStatusKey] = useState('public.map.defaultStatus');
   const [narrationError, setNarrationError] = useState<string | null>(null);
   const [loadingNarration, setLoadingNarration] = useState(false);
+  const [placeQuery, setPlaceQuery] = useState('');
 
   const {
     guestSession,
@@ -266,10 +339,7 @@ export default function MapExploreScreen() {
   const validPlaces = useMemo(
     () =>
       places.filter(
-        (place): place is PlaceDTO & {
-          latitude: number;
-          longitude: number;
-        } =>
+        (place): place is MappablePlace =>
           place.latitude !== null &&
           place.latitude !== undefined &&
           place.longitude !== null &&
@@ -277,6 +347,55 @@ export default function MapExploreScreen() {
       ),
     [places]
   );
+
+  const normalizedPlaceQuery = useMemo(
+    () => normalizePlaceName(placeQuery),
+    [placeQuery]
+  );
+
+  const filteredPlaces = useMemo(
+    () =>
+      normalizedPlaceQuery
+        ? validPlaces.filter((place) =>
+            normalizePlaceName(place.placeName).includes(normalizedPlaceQuery)
+          )
+        : validPlaces,
+    [normalizedPlaceQuery, validPlaces]
+  );
+
+  const nearestPlace = useMemo(() => {
+    if (!geo.position || filteredPlaces.length === 0) return null;
+
+    return filteredPlaces.reduce<{
+      place: MappablePlace;
+      distanceMeters: number;
+    } | null>((nearest, place) => {
+      const distanceMeters = calculateDistanceMeters(geo.position!, place);
+
+      if (!nearest || distanceMeters < nearest.distanceMeters) {
+        return { place, distanceMeters };
+      }
+
+      return nearest;
+    }, null);
+  }, [filteredPlaces, geo.position]);
+
+  const selectedPlaceDistance = useMemo(() => {
+    if (
+      !geo.position ||
+      selectedPlace?.latitude === null ||
+      selectedPlace?.latitude === undefined ||
+      selectedPlace?.longitude === null ||
+      selectedPlace?.longitude === undefined
+    ) {
+      return null;
+    }
+
+    return calculateDistanceMeters(geo.position, {
+      latitude: selectedPlace.latitude,
+      longitude: selectedPlace.longitude
+    });
+  }, [geo.position, selectedPlace]);
 
   return (
     <div className="relative h-screen bg-slate-100 pb-20">
@@ -290,7 +409,7 @@ export default function MapExploreScreen() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {validPlaces.map((place) => (
+        {filteredPlaces.map((place) => (
           <Marker
             key={place.placeId}
             position={[place.latitude, place.longitude]}
@@ -307,22 +426,24 @@ export default function MapExploreScreen() {
         )}
 
         <MapAutoFocus
-          places={validPlaces}
+          places={filteredPlaces}
           selectedPlace={selectedPlace}
           userPosition={geo.position ?? undefined}
+          filterActive={Boolean(normalizedPlaceQuery)}
         />
       </MapContainer>
 
       <div className="pointer-events-none absolute left-4 right-4 top-4 z-[700] space-y-3">
         <Card className="pointer-events-auto">
-          <div className="flex items-center justify-between gap-3">
-            <div>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
               <p className="font-bold text-slate-900">
                 {t('public.map.title')}
               </p>
               <p className="text-xs text-slate-500">{t(statusKey)}</p>
               <p className="text-xs font-semibold text-teal-700">
-                {t('public.map.placesLoaded')}: {validPlaces.length}
+                {t('public.map.placesVisible')}: {filteredPlaces.length}/
+                {validPlaces.length}
               </p>
               <button
                 className={`mt-1 text-left text-xs font-bold ${
@@ -340,6 +461,64 @@ export default function MapExploreScreen() {
               <LocateFixed size={18} />
             </Button>
           </div>
+
+          <div className="relative mt-3">
+            <Search
+              size={17}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+            />
+            <input
+              type="search"
+              value={placeQuery}
+              onChange={(event) => setPlaceQuery(event.target.value)}
+              placeholder={t('public.map.searchPlaceholder')}
+              aria-label={t('public.map.searchPlaceholder')}
+              className="h-11 w-full rounded-2xl border border-slate-200 bg-white pl-10 pr-10 text-sm text-slate-800 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+            />
+            {placeQuery && (
+              <button
+                type="button"
+                onClick={() => setPlaceQuery('')}
+                title={t('public.map.clearSearch')}
+                aria-label={t('public.map.clearSearch')}
+                className="absolute right-2 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full text-slate-500 hover:bg-slate-100"
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+
+          {normalizedPlaceQuery && filteredPlaces.length === 0 && (
+            <p className="mt-2 text-xs font-semibold text-amber-700">
+              {t('public.map.noSearchResults')}
+            </p>
+          )}
+
+          {nearestPlace ? (
+            <button
+              type="button"
+              onClick={() => void openPlace(nearestPlace.place)}
+              className="mt-3 flex w-full items-center gap-3 rounded-2xl bg-teal-50 px-3 py-2 text-left transition hover:bg-teal-100"
+            >
+              <Navigation size={18} className="shrink-0 text-teal-700" />
+              <span className="min-w-0">
+                <span className="block truncate text-xs font-bold text-teal-900">
+                  {t('public.map.nearestPoi')}: {nearestPlace.place.placeName}
+                </span>
+                <span className="block text-xs text-teal-700">
+                  {t('public.map.distance')}: {formatDistance(nearestPlace.distanceMeters)}
+                </span>
+              </span>
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={requestLocation}
+              className="mt-3 w-full rounded-2xl bg-slate-50 px-3 py-2 text-left text-xs text-slate-600"
+            >
+              {t('public.map.locationDistanceHint')}
+            </button>
+          )}
 
           <Button
             onClick={toggleTracking}
@@ -417,6 +596,12 @@ export default function MapExploreScreen() {
                 <b>{t('public.map.geofenceRadius')}:</b>{' '}
                 {selectedPlace.triggerRadiusMeters}m
               </p>
+              {selectedPlaceDistance !== null && (
+                <p>
+                  <b>{t('public.map.distanceFromYou')}:</b>{' '}
+                  {formatDistance(selectedPlaceDistance)}
+                </p>
+              )}
             </div>
 
             <div>
